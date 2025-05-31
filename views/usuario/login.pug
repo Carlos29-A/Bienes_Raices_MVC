@@ -8,8 +8,16 @@ block contenido
                     div(class="flex items-center space-x-4 justify-center mb-12")
                         i(class="fas fa-user-circle text-4xl text-blue-500")
                         h1(class="text-2xl font-semibold text-gray-900") Iniciar Sesión
-                    
+                    if errores && errores.length > 0
+                        div(class="md:w-80 px-4 py-8 bg-red-50 shadow-sm sm:rounded-lg sm:p-8 border-l-4 border-red-500")
+                            div(class="flex items-center space-x-3 mb-6")
+                                i(class="fas fa-exclamation-circle text-2xl text-red-500")
+                                h2(class="text-lg font-semibold text-red-700") Errores
+                            ul(class="list-disc list-inside text-red-700")
+                                each error in errores
+                                    li= error.msg  
                     form(action="" method="POST" class="space-y-8")
+                        input(type="hidden" name="_csrf" value=csrfToken)
                         div(class="space-y-6")
                             div
                                 label(for="email" class="block text-sm font-medium text-gray-600 mb-2") Correo Electrónico
@@ -38,13 +46,7 @@ block contenido
                                 p(class="text-sm text-gray-600") ¿No tienes una cuenta? 
                                     a(href="/auth/registro" class="font-medium text-blue-500 hover:text-blue-600") Regístrate aquí
 
-         
-                // Panel de Errores
-                if errores && errores.length > 0
-                    div(class="md:w-80 px-4 py-8 bg-red-50 shadow-sm sm:rounded-lg sm:p-8 border-l-4 border-red-500")
-                        div(class="flex items-center space-x-3 mb-6")
-                            i(class="fas fa-exclamation-circle text-2xl text-red-500")
-                            h2(class="text-lg font-semibold text-red-700") Errores
+                 
                         
 
 block scripts

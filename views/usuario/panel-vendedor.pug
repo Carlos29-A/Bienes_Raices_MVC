@@ -1,0 +1,152 @@
+extends ../layout/index.pug
+
+block contenido
+    div(class="min-h-screen flex")
+        // Sidebar
+        div(class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out")
+            div(class="flex items-center space-x-2 px-4")
+                span(class="text-2xl font-extrabold") InmoElegante
+            
+            nav
+                a(href="/auth/vendedor/panel" class="block py-2.5 px-4 rounded transition duration-200 bg-gray-900 text-white")
+                    i(class="fas fa-home mr-2")
+                    | Inicio
+                a(href="/propiedades/crear" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white")
+                    i(class="fas fa-plus-circle mr-2")
+                    | Publicar Propiedad
+                a(href="/admin/propiedades" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white")
+                    i(class="fas fa-building mr-2")
+                    | Mis Propiedades
+                a(href="/admin/mensajes" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white")
+                    i(class="fas fa-envelope mr-2")
+                    | Mensajes
+                a(href="/auth/editar-perfil" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white")
+                    i(class="fas fa-user mr-2")
+                    | Mi Perfil
+
+        // Main Content
+        div(class="flex-1")
+            // Top Navigation
+            header(class="bg-white shadow")
+                div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
+                    h1(class="text-3xl font-bold text-gray-900") Panel de Vendedor
+                    div(class="flex items-center space-x-4")
+                        div(class="relative")
+                            button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
+                                img(class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=Vendedor&background=0D8ABC&color=fff" alt="Vendedor")
+                                span= usuario.nombre
+
+            // Dashboard Content
+            main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
+                // Stats Cards
+                div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8")
+                    // Propiedades Activas
+                    div(class="bg-white overflow-hidden shadow rounded-lg")
+                        div(class="p-5")
+                            div(class="flex items-center")
+                                div(class="flex-shrink-0 bg-blue-500 rounded-md p-3")
+                                    i(class="fas fa-building text-white text-2xl")
+                                div(class="ml-5 w-0 flex-1")
+                                    dl
+                                        dt(class="text-sm font-medium text-gray-500 truncate") Propiedades Activas
+                                        dd(class="text-lg font-semibold text-gray-900") 12
+
+                    // Vistas Totales
+                    div(class="bg-white overflow-hidden shadow rounded-lg")
+                        div(class="p-5")
+                            div(class="flex items-center")
+                                div(class="flex-shrink-0 bg-green-500 rounded-md p-3")
+                                    i(class="fas fa-eye text-white text-2xl")
+                                div(class="ml-5 w-0 flex-1")
+                                    dl
+                                        dt(class="text-sm font-medium text-gray-500 truncate") Vistas Totales
+                                        dd(class="text-lg font-semibold text-gray-900") 1,234
+
+                    // Mensajes Nuevos
+                    div(class="bg-white overflow-hidden shadow rounded-lg")
+                        div(class="p-5")
+                            div(class="flex items-center")
+                                div(class="flex-shrink-0 bg-yellow-500 rounded-md p-3")
+                                    i(class="fas fa-envelope text-white text-2xl")
+                                div(class="ml-5 w-0 flex-1")
+                                    dl
+                                        dt(class="text-sm font-medium text-gray-500 truncate") Mensajes Nuevos
+                                        dd(class="text-lg font-semibold text-gray-900") 5
+
+
+                // Mis Propiedades
+                div(class="bg-white shadow rounded-lg mb-8")
+                    div(class="px-4 py-5 sm:px-6 flex justify-between items-center")
+                        h3(class="text-lg leading-6 font-medium text-gray-900") Mis Propiedades
+                        a(href="/propiedades/crear" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm")
+                            i(class="fas fa-plus mr-2")
+                            | Agregar Propiedad
+                    
+                    div(class="border-t border-gray-200")
+                        div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6")
+                            // Propiedad 1
+                            div(class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden")
+                                img(src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Casa" class="w-full h-48 object-cover")
+                                div(class="p-4")
+                                    div(class="flex justify-between items-start")
+                                        div
+                                            h4(class="text-lg font-semibold text-gray-900") Casa Moderna
+                                            p(class="text-gray-600") $350,000
+                                        span(class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded") Activa
+                                    p(class="text-gray-500 text-sm mt-2") 3 habitaciones • 2 baños • 200m²
+                                    div(class="mt-4 flex space-x-2")
+                                        a(href="/propiedades/editar/1" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 text-sm text-center") Editar
+                                        button(class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 text-sm") Desactivar
+
+                            // Propiedad 2
+                            div(class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden")
+                                img(src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Departamento" class="w-full h-48 object-cover")
+                                div(class="p-4")
+                                    div(class="flex justify-between items-start")
+                                        div
+                                            h4(class="text-lg font-semibold text-gray-900") Departamento Centro
+                                            p(class="text-gray-600") $250,000
+                                        span(class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded") Pendiente
+                                    p(class="text-gray-500 text-sm mt-2") 2 habitaciones • 2 baños • 120m²
+                                    div(class="mt-4 flex space-x-2")
+                                        a(href="/propiedades/editar/2" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 text-sm text-center") Editar
+                                        button(class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 text-sm") Activar
+
+                            // Propiedad 3
+                            div(class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden")
+                                img(src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Casa" class="w-full h-48 object-cover")
+                                div(class="p-4")
+                                    div(class="flex justify-between items-start")
+                                        div
+                                            h4(class="text-lg font-semibold text-gray-900") Villa Residencial
+                                            p(class="text-gray-600") $450,000
+                                        span(class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded") Vendida
+                                    p(class="text-gray-500 text-sm mt-2") 4 habitaciones • 3 baños • 300m²
+                                    div(class="mt-4 flex space-x-2")
+                                        a(href="/propiedades/3" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 text-sm text-center") Ver Detalles
+                                        button(class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 text-sm") Archivar
+
+                // Mensajes Recientes
+                div(class="bg-white shadow rounded-lg")
+                    div(class="px-4 py-5 sm:px-6")
+                        h3(class="text-lg leading-6 font-medium text-gray-900") Mensajes Recientes
+                    
+                    div(class="border-t border-gray-200")
+                        ul(class="divide-y divide-gray-200")
+                            li(class="px-4 py-4")
+                                div(class="flex items-center space-x-4")
+                                    div(class="flex-shrink-0")
+                                        img(class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Maria+Garcia&background=0D8ABC&color=fff" alt="Maria Garcia")
+                                    div(class="flex-1 min-w-0")
+                                        p(class="text-sm font-medium text-gray-900") Maria Garcia
+                                        p(class="text-sm text-gray-500 truncate") Me interesa la casa moderna, ¿podría agendar una visita?
+                                    div(class="text-sm text-gray-500") Hace 2 horas
+                            
+                            li(class="px-4 py-4")
+                                div(class="flex items-center space-x-4")
+                                    div(class="flex-shrink-0")
+                                        img(class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Carlos+Lopez&background=0D8ABC&color=fff" alt="Carlos Lopez")
+                                    div(class="flex-1 min-w-0")
+                                        p(class="text-sm font-medium text-gray-900") Carlos Lopez
+                                        p(class="text-sm text-gray-500 truncate") ¿La villa residencial sigue disponible? Me gustaría hacer una oferta.
+                                    div(class="text-sm text-gray-500") Hace 5 horas

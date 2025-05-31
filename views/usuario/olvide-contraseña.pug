@@ -13,7 +13,7 @@ block contenido
                         
                         p(class="text-center text-gray-600 mb-8") Ingresa tu correo electrónico y te enviaremos las instrucciones para recuperar tu contraseña
                         
-                        form(action="" method="POST" class="space-y-8")
+                        form(action="" method="POST" class="space-y-8" novalidate)
                             input(type="hidden" name="_csrf" value=csrfToken)
                             div(class="space-y-6")
                                 div
@@ -48,22 +48,3 @@ block contenido
                                     span= error.msg
 
 block scripts
-    script.
-        // Validación del formulario
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const email = document.getElementById('email').value;
-            const errores = [];
-            
-            if (!email) {
-                errores.push('El correo electrónico es obligatorio');
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                errores.push('El correo electrónico no es válido');
-            }
-            
-            if (errores.length > 0) {
-                e.preventDefault();
-                // Aquí podrías mostrar los errores en el panel
-                alert(errores.join('\n'));
-            }
-        });
-    
