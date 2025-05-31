@@ -1,5 +1,5 @@
 import { validationResult, check } from "express-validator"
-import Usuario from "../models/Usuario.js"
+import { Usuario, Propiedad, Categoria } from "../models/index.js"
 import { generarId, generarJWT } from "../helpers/token.js"
 import { emailRegistro, emailOlvidePassword } from "../helpers/email.js"
 import bcrypt from "bcrypt"
@@ -253,18 +253,37 @@ const iniciarSesion = async (req, res) => {
     }
 }
 
+const cerrarSesion = (req, res) => {
+    res.clearCookie('_token')
+    res.redirect('/auth/login')
+}
+
 const panelVendedor = async (req, res) => {
 
     const usuario = await Usuario.findOne({ where: { id: req.usuario.id } })
+    const propiedades = await Propiedad.findAll({ where: { usuarioId: req.usuario.id } })
+    const propiedadesPublicadas = propiedades.filter(propiedad => propiedad.publicado === true)
+
+    console.log(propiedades.length)
+
 
     res.render('usuario/panel-vendedor', {
         titulo: 'Panel de Vendedor',
-        usuario
+        propiedades,
+        usuario,
+        propiedadesPublicadas
     })
 }
-const panelComprador = (req, res) => {
+
+const panelComprador = async (req, res) => {
+
+    const { id } = req.usuario
+    const usuario = await Usuario.findOne({ where: { id } })
+
+
     res.render('usuario/panel-comprador', {
-        titulo: 'Panel de Comprador'
+        titulo: 'Panel de Comprador',
+        usuario
     })
 }
 
@@ -354,6 +373,32 @@ const actualizarPerfil = async (req, res) => {
     await usuario.save()
     res.redirect('/auth/editar-perfil')
 }
+
+const buscarPropiedades = async (req, res) => {
+    const propiedades = await Propiedad.findAll({
+        where: {
+            publicado: true
+        },
+        include: [
+            {
+                model: Categoria,
+                as: 'categoriaRelacion',
+                attributes: ['nombre']
+            },
+            {
+                model: Usuario,
+                as: 'usuarioRelacion',
+                attributes: ['nombre', 'apellido']
+            }
+
+        ]
+    })
+    res.render('propiedades/buscarPropiedades', {
+        titulo: 'Buscar Propiedades',
+        csrfToken: req.csrfToken(),
+        propiedades
+    })
+}
 export {
     registro,
     crearUsuario,
@@ -364,8 +409,10 @@ export {
     nuevaContraseña,
     login,
     iniciarSesion,
+    cerrarSesion,
     panelVendedor,
     panelComprador,
     editarPerfil,
-    actualizarPerfil
+    actualizarPerfil,
+    buscarPropiedades
 }

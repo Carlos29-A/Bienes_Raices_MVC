@@ -1,0 +1,24 @@
+// Sidebar
+div(class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out")
+    div(class="flex items-center space-x-2 px-4")
+        span(class="text-2xl font-extrabold") InmoElegante
+    
+    nav
+        a(href="/auth/vendedor/panel" class="block py-2.5 px-4 rounded transition duration-200 bg-gray-900 text-white")
+            i(class="fas fa-home mr-2")
+            | Inicio
+        a(href="/propiedades/crearPropiedad" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white")
+            i(class="fas fa-plus-circle mr-2")
+            | Publicar Propiedad
+        a(href="/propiedades/mis-propiedades" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white")
+            i(class="fas fa-building mr-2")
+            | Mis Propiedades
+        a(href="/admin/mensajes" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white")
+            i(class="fas fa-envelope mr-2")
+            | Mensajes
+        a(href="/auth/editar-perfil" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white")
+            i(class="fas fa-user mr-2")
+            | Mi Perfil
+        a(href="/auth/cerrar-sesion" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white")
+            i(class="fas fa-sign-out-alt mr-2")
+            | Cerrar Sesión

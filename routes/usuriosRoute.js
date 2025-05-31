@@ -1,5 +1,5 @@
 import express from 'express'
-import { registro, login, olvideContraseña, crearUsuario, confirmar, resetearPassword, reestablecerPassword, nuevaContraseña, iniciarSesion, panelVendedor, panelComprador, editarPerfil, actualizarPerfil } from '../controllers/usuarioControllers.js'
+import { registro, login, olvideContraseña, crearUsuario, confirmar, resetearPassword, reestablecerPassword, nuevaContraseña, iniciarSesion, panelVendedor, panelComprador, editarPerfil, actualizarPerfil, cerrarSesion, buscarPropiedades } from '../controllers/usuarioControllers.js'
 import protegerRuta from '../middlewares/protegerRuta.js'
 
 const router = express.Router()
@@ -26,10 +26,14 @@ router.get('/vendedor/panel', protegerRuta, panelVendedor)
 
 // Comprador
 router.get('/comprador/panel', protegerRuta, panelComprador)
+router.get('/comprador/buscar-propiedades', protegerRuta, buscarPropiedades)
 
 
 // Editar perfil
 router.get('/editar-perfil', protegerRuta, editarPerfil)
 router.post('/editar-perfil', protegerRuta, actualizarPerfil)
+
+// Cerrar sesión
+router.get('/cerrar-sesion', protegerRuta, cerrarSesion)
 
 export default router

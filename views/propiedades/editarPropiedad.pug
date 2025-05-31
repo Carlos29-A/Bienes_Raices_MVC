@@ -11,7 +11,7 @@ block contenido
             // Top Navigation
             header(class="bg-white shadow")
                 div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
-                    h1(class="text-3xl font-bold text-gray-900") Publicar Nueva Propiedad
+                    h1(class="text-3xl font-bold text-gray-900") Editar  Propiedad #{propiedad.titulo}
                     div(class="flex items-center space-x-4")
                         div(class="relative")
                             button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
@@ -25,7 +25,7 @@ block contenido
             main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
                 div(class="px-4 py-6 sm:px-0")
                     div(class="bg-white shadow rounded-lg")
-                        form(action="/propiedades/crearPropiedad" method="POST"  class="px-4 py-5 sm:p-6 space-y-8 divide-y divide-gray-200" novalidate)
+                        form(action=`/propiedades/actualizar/${propiedad.id}` method="POST" class="px-4 py-5 sm:p-6 space-y-8 divide-y divide-gray-200" novalidate)
                             input(type="hidden" name="_csrf" value=csrfToken)
                             
                             // Información Principal
@@ -44,12 +44,12 @@ block contenido
                                     div(class="sm:col-span-3")
                                         label(for="titulo" class="block text-sm font-medium text-gray-700") Título
                                         div(class="mt-1")
-                                            input(type="text" name="titulo" id="titulo" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.titulo? oldInfo.titulo : '')
+                                            input(type="text" name="titulo" id="titulo" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=propiedad.titulo? propiedad.titulo : '')
 
                                     div(class="sm:col-span-3")
                                         label(for="precio" class="block text-sm font-medium text-gray-700") Precio
                                         div(class="mt-1")
-                                            input(type="number" name="precio" id="precio" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.precio? oldInfo.precio : '')
+                                            input(type="number" name="precio" id="precio" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=propiedad.precio? propiedad.precio : '')
 
                                     div(class="sm:col-span-3")
                                         label(for="categoria" class="block text-sm font-medium text-gray-700") Categoría
@@ -57,14 +57,14 @@ block contenido
                                             select(name="categoria" id="categoria" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
                                                 option(value="") -- Seleccione --
                                                 each categoria in categorias
-                                                    option(value=categoria.id selected=oldInfo.categoria? oldInfo.categoria == categoria.id : false)= categoria.nombre
+                                                    option(value=categoria.id selected=propiedad.categoriaId? propiedad.categoriaId === categoria.id : false)= categoria.nombre
                                     div(class="sm:col-span-3")
                                         label(for="habitaciones" class="block text-sm font-medium text-gray-700") Habitaciones
                                         div(class="mt-1")
                                             select(name="habitaciones" id="habitaciones" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
                                                 option(value="") -- Seleccione --
-                                                each habitacion in [0,1, 2, 3, 4, 5]
-                                                    option(value=habitacion selected=oldInfo.habitaciones? oldInfo.habitaciones == habitacion : false)= habitacion
+                                                each habitacion in [0, 1,  2, 3, 4, 5]
+                                                    option(value=habitacion selected=propiedad.habitaciones? propiedad.habitaciones.toString() === habitacion.toString() : false)= habitacion
 
                                     div(class="sm:col-span-3")
                                         label(for="wc" class="block text-sm font-medium text-gray-700") Baños
@@ -72,7 +72,7 @@ block contenido
                                             select(name="wc" id="wc" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
                                                 option(value="") -- Seleccione --
                                                 each wc in [0,1, 2, 3, 4, 5]
-                                                    option(value=wc selected=oldInfo.wc? oldInfo.wc == wc : false)= wc
+                                                    option(value=wc selected=propiedad.wc? propiedad.wc.toString() === wc.toString() : false)= wc
 
                                     div(class="sm:col-span-3")
                                         label(for="estacionamiento" class="block text-sm font-medium text-gray-700") Estacionamientos
@@ -80,7 +80,7 @@ block contenido
                                             select(name="estacionamiento" id="estacionamiento" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
                                                 option(value="") -- Seleccione --
                                                 each estacionamiento in [0,1, 2, 3, 4, 5]
-                                                    option(value=estacionamiento selected=oldInfo.estacionamiento? oldInfo.estacionamiento == estacionamiento : false)= estacionamiento
+                                                    option(value=estacionamiento selected=propiedad.estacionamiento? propiedad.estacionamiento.toString() === estacionamiento.toString() : false)= estacionamiento
 
                             // Ubicación
                             div(class="pt-8")
@@ -92,17 +92,17 @@ block contenido
                                     div(class="sm:col-span-3")
                                         label(for="calle" class="block text-sm font-medium text-gray-700") Calle
                                         div(class="mt-1")
-                                            input(type="text" name="calle" id="calle" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.calle? oldInfo.calle : '')
+                                            input(type="text" name="calle" id="calle" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=propiedad.calle? propiedad.calle : '')
 
                                     div(class="sm:col-span-3")
                                         label(for="lat" class="block text-sm font-medium text-gray-700") Latitud
                                         div(class="mt-1")
-                                            input(type="text" name="lat" id="lat" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.lat? oldInfo.lat : '')
+                                            input(type="text" name="lat" id="lat" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=propiedad.lat? propiedad.lat : '')
 
                                     div(class="sm:col-span-3")
                                         label(for="lng" class="block text-sm font-medium text-gray-700") Longitud
                                         div(class="mt-1")
-                                            input(type="text" name="lng" id="lng" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.lng? oldInfo.lng : '')
+                                            input(type="text" name="lng" id="lng" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=propiedad.lng? propiedad.lng : '')
 
                                     div(class="sm:col-span-6")
                                         div(id="mapa" class="h-96 mt-4 rounded-lg shadow-lg")
@@ -116,7 +116,7 @@ block contenido
                                 div(class="mt-6")
                                     label(for="descripcion" class="block text-sm font-medium text-gray-700") Descripción
                                     div(class="mt-1")
-                                        textarea(name="descripcion" id="descripcion" rows="4" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.descripcion? oldInfo.descripcion : '')
+                                        textarea(name="descripcion" id="descripcion" rows="4" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" )= propiedad.descripcion
                             // Botones de Acción
                             div(class="pt-8")
                                 div(class="flex justify-end space-x-4")
@@ -125,7 +125,7 @@ block contenido
                                         | Cancelar
                                     button(type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105")
                                         i(class="fas fa-save mr-2")
-                                        | Publicar Propiedad
+                                        | Editar Propiedad
 block scripts
     link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
     link(rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.13/dist/esri-leaflet-geocoder.css")

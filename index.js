@@ -5,7 +5,7 @@ import csrf from 'csurf'
 import db from './config/db.js'
 import authRouter from './routes/usuriosRoute.js'
 import propiedadesRouter from './routes/propiedadRoute.js'
-import { Usuario, Propiedad, Categoria } from './models/index.js'
+import { Usuario, Propiedad, Categoria, Favorito } from './models/index.js'
 
 dotenv.config()
 
