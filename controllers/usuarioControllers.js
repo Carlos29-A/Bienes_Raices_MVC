@@ -1,11 +1,9 @@
 import { validationResult, check } from "express-validator"
-import { render } from "pug"
 import Usuario from "../models/Usuario.js"
 import { generarId, generarJWT } from "../helpers/token.js"
 import { emailRegistro, emailOlvidePassword } from "../helpers/email.js"
 import bcrypt from "bcrypt"
 import cookieParser from "cookie-parser"
-import { where } from "sequelize"
 const registro = (req, res) => {
     res.render('usuario/registro', {
         csrfToken: req.csrfToken()

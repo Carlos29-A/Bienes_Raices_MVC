@@ -1,55 +1,57 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import path from 'path'
 import cookieParser from 'cookie-parser'
 import csrf from 'csurf'
-import usuariosRoutes from './routes/usuriosRoute.js'
 import db from './config/db.js'
-import Usuario from './models/Usuario.js'
-dotenv.config({ path: '.env' })
+import authRouter from './routes/usuriosRoute.js'
+import propiedadesRouter from './routes/propiedadRoute.js'
+import { Usuario, Propiedad, Categoria } from './models/index.js'
 
-// Creamos el servidor
+dotenv.config()
+
+// Configuración de la aplicación
 const app = express()
 
-// Conectar a la base de datos
+
 try {
     await db.authenticate()
-    // Usar alter para modificar la base de datos sin perder los datos
-    await db.sync({ alter: true })
-    console.log('Conectado a la base de datos')
+    await db.sync()
+    console.log('Conexión a la base de datos establecida correctamente')
 } catch (error) {
-    console.log('Error al conectar a la base de datos')
     console.log(error)
 }
 
-// Habilitar que se pueda leer los datos del formulario
+// Middleware
+app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Habilitamos cookies
 app.use(cookieParser())
-
-// Habilitamos csrf
 app.use(csrf({ cookie: true }))
 
 // Habilitar Pug
 app.set('view engine', 'pug')
 app.set('views', './views')
 
-// Carpeta Publica
-app.use(express.static('public'))
+// Carpeta pública
+app.use(express.static('./public'))
 
-// Routing
-app.use('/auth', usuariosRoutes)
-
-
-// Ventana
-app.get('/', (req, res) => {
-    res.send('Hola Mundo')
+// Middleware para pasar las categorias a la vista
+app.use(async (req, res, next) => {
+    try {
+        const categorias = await Categoria.findAll()
+        res.locals.categorias = categorias
+        next()
+    } catch (error) {
+        next(error)
+    }
 })
 
+// Rutas
+app.use('/auth', authRouter)
+app.use('/propiedades', propiedadesRouter)
 
-
-// Activar el servidor
-app.listen(process.env.PORT, () => {
-    console.log(`El servidor esta funcionando en el puerto ${process.env.PORT}`)
+// Puerto
+const port = process.env.PORT || 3000
+app.listen(port, () => {
+    console.log(`Servidor corriendo en el puerto ${port}`)
 })

@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon index.js",
-    "build:css": "node build-css.js"
+    "build:css": "node build-css.js",
+    "js": "webpack --watch",
+    "seed": "node seed/seed.js categorias"
   },
   "author": "Carlos Aguilar",
   "license": "ISC",
@@ -17,10 +19,11 @@
     "cookie-parser": "^1.4.7",
     "csurf": "^1.11.0",
     "dotenv": "^16.5.0",
-    "dropzone": "^6.0.0-beta.2",
+    "dropzone": "^5.9.3",
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.0",
     "mysql2": "^3.14.1",
     "nodemailer": "^7.0.3",
     "pug": "^3.0.3",
