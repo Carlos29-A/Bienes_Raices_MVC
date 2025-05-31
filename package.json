@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon index.js"
+    "server": "nodemon index.js",
+    "build:css": "node build-css.js"
   },
   "author": "Carlos Aguilar",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@tailwindcss/cli": "^4.1.8",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "csurf": "^1.11.0",
@@ -27,6 +29,9 @@
     "webpack-cli": "^6.0.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "autoprefixer": "^10.4.21",
+    "nodemon": "^3.1.10",
+    "postcss": "^8.5.4",
+    "tailwindcss": "^4.1.8"
   }
 }

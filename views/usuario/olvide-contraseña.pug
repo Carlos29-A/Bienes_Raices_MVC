@@ -1,0 +1,69 @@
+extends ../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-50 py-12 flex flex-col justify-center sm:py-16")
+        div(class="py-3 sm:max-w-3xl sm:mx-auto w-full px-4 sm:px-0")
+            div(class="flex flex-col md:flex-row gap-8")
+                // Formulario
+                div(class="flex-1 px-4 py-8 bg-white shadow-sm sm:rounded-lg sm:p-12")
+                    div(class="max-w-sm mx-auto")
+                        div(class="flex items-center space-x-4 justify-center mb-8")
+                            i(class="fas fa-key text-4xl text-blue-500")
+                            h1(class="text-2xl font-semibold text-gray-900") Recuperar Contraseña
+                        
+                        p(class="text-center text-gray-600 mb-8") Ingresa tu correo electrónico y te enviaremos las instrucciones para recuperar tu contraseña
+                        
+                        form(action="" method="POST" class="space-y-8")
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            div(class="space-y-6")
+                                div
+                                    label(for="email" class="block text-sm font-medium text-gray-600 mb-2") Correo Electrónico
+                                    div(class="relative")
+                                        i(class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400")
+                                        input(type="email" name="email" id="email" placeholder="Ejm: usuario@gmail.com" class="w-full pl-10 pr-3 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200")
+                                
+                                div(class="pt-6")
+                                    input(type="submit" value="Enviar Instrucciones" class="w-full py-3 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 cursor-pointer")
+                                
+                                div(class="mt-6 text-center space-y-4")
+                                    a(href="/auth/login" class="block text-sm text-blue-500 hover:text-blue-600")
+                                        i(class="fas fa-arrow-left mr-2")
+                                        | Volver al Inicio de Sesión
+                                    
+                                    div(class="border-t border-gray-200 pt-4")
+                                        p(class="text-sm text-gray-600") ¿No tienes una cuenta? 
+                                            a(href="/auth/registro" class="font-medium text-blue-500 hover:text-blue-600") Regístrate aquí
+
+                // Panel de Errores
+                if errores && errores.length > 0
+                    div(class="md:w-80 px-4 py-8 bg-red-50 shadow-sm sm:rounded-lg sm:p-8 border-l-4 border-red-500")
+                        div(class="flex items-center space-x-3 mb-6")
+                            i(class="fas fa-exclamation-circle text-2xl text-red-500")
+                            h2(class="text-lg font-semibold text-red-700") Errores
+                        
+                        ul(class="space-y-3")
+                            each error in errores
+                                li(class="flex items-start space-x-2 text-sm text-red-600")
+                                    i(class="fas fa-times-circle mt-1")
+                                    span= error.msg
+
+block scripts
+    script.
+        // Validación del formulario
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const email = document.getElementById('email').value;
+            const errores = [];
+            
+            if (!email) {
+                errores.push('El correo electrónico es obligatorio');
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                errores.push('El correo electrónico no es válido');
+            }
+            
+            if (errores.length > 0) {
+                e.preventDefault();
+                // Aquí podrías mostrar los errores en el panel
+                alert(errores.join('\n'));
+            }
+        });
+    

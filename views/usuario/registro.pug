@@ -1,0 +1,107 @@
+extends ../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-50 py-12 flex flex-col justify-center sm:py-16")
+        div(class="py-3 sm:max-w-4xl sm:mx-auto w-full px-4 sm:px-0")
+            div(class="flex flex-col md:flex-row gap-8")
+                // Formulario Principal
+                div(class="flex-1 px-4 py-8 bg-white shadow-sm sm:rounded-lg sm:p-12")
+                    div(class="max-w-xl mx-auto")
+                        div(class="flex items-center space-x-4 justify-center mb-12")
+                            i(class="fas fa-user-plus text-3xl text-blue-500")
+                            h1(class="text-2xl font-semibold text-gray-900") Crear Cuenta
+                        
+                        form(action="" method="POST" novalidate)
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            div(class="space-y-8")
+                                div(class="space-y-6")
+                                    div
+                                        label(for="nombre" class="block text-sm font-medium text-gray-600 mb-2") Nombres
+                                        input(type="text" name="nombre" placeholder="Ingresa tu Nombre" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200" value=oldData ? oldData.nombre : '')
+                                    
+                                    div
+                                        label(for="apellido" class="block text-sm font-medium text-gray-600 mb-2") Apellidos
+                                        input(type="text" name="apellido" placeholder="Ingresa tu Apellido" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200" value=oldData ? oldData.apellido : '')
+                                    
+                                    div
+                                        label(for="email" class="block text-sm font-medium text-gray-600 mb-2") Correo Electrónico
+                                        input(type="email" name="email" placeholder="Ejm: usuario@gmail.com" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200" value=oldData ? oldData.email : '')
+                                    
+                                    div
+                                        label(for="telefono" class="block text-sm font-medium text-gray-600 mb-2") Teléfono
+                                        input(type="tel" name="telefono" placeholder="Ejm: 923 456 789" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200" value=oldData ? oldData.telefono : '')
+                                    
+                                    div
+                                        label(for="edad" class="block text-sm font-medium text-gray-600 mb-2") Edad
+                                        input(type="number" name="edad" placeholder="Ingresa tu Edad" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200" value=oldData ? oldData.edad : '')
+                                    
+                                    div(class="relative")
+                                        label(for="password" class="block text-sm font-medium text-gray-600 mb-2") Password
+                                        div(class="relative")
+                                            input#password(type="password" name="password" placeholder="Tu Password" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200")
+                                            button(type="button" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePassword('password')")
+                                                i(class="fas fa-eye")
+                                    
+                                    div(class="relative")
+                                        label(for="password2" class="block text-sm font-medium text-gray-600 mb-2") Confirmar Password
+                                        div(class="")
+                                            input#password2(type="password" name="password2" placeholder="Confirmar Password" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200")
+                                            button(type="button" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePassword('password2')")
+                                                i(class="fas fa-eye")
+                                    
+                                    div
+                                        label(class="block text-sm font-medium text-gray-600 mb-4") Tipo de Usuario
+                                        div(class="grid grid-cols-2 gap-4")
+                                            div(class="group")
+                                                input(type="radio" name="tipo" value="1" id="vendedor" class="hidden peer" checked)
+                                                label(for="vendedor" class="flex items-center justify-center p-6 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-blue-400 peer-checked:from-blue-400 peer-checked:to-blue-500 hover:border-blue-200 hover:bg-gray-50 transition-all duration-300 transform hover:scale-[1.02] peer-checked:scale-[1.02] peer-checked:shadow-lg peer-checked:shadow-blue-100")
+                                                    i(class="fas fa-store text-2xl text-gray-600 transition-all duration-300 peer-checked:text-white mr-3")
+                                                    div(class="flex flex-col justify-center items-center text-gray-700 peer-checked:text-white transition-all duration-300")
+                                                        span(class="text-base font-semibold") Vendedor
+                                                        p(class="text-xs mt-1 text-gray-500 peer-checked:text-white") Publicar Propiedades
+
+                                            
+                                            div(class="group")
+                                                input(type="radio" name="tipo" value="2" id="comprador" class="hidden peer")
+                                                label(for="comprador" class="flex items-center justify-center p-6 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-blue-400  peer-checked:from-blue-400 peer-checked:to-blue-500 hover:border-blue-200 hover:bg-gray-50 transition-all duration-300 transform hover:scale-[1.02] peer-checked:scale-[1.02] peer-checked:shadow-lg peer-checked:shadow-blue-100")
+                                                    i(class="fas fa-shopping-cart text-2xl text-gray-600 peer-checked:text-blue-50 mr-3")
+                                                    div(class="flex flex-col justify-center items-center")
+                                                        span(class="text-base font-semibold text-gray-700 peer-checked:text-blue-50") Comprador
+                                                        p(class="text-xs mt-1 text-gray-500 peer-checked:text-blue-100") Buscar Propiedades
+
+                                    div(class="flex justify-between items-center")
+                                        a(href="/auth/login" class="text-sm text-gray-500 hover:text-gray-700") ¿Ya tienes una cuenta? Inicia sesión
+                                        a(href="/auth/olvide-password" class="text-sm text-gray-500 hover:text-gray-700") ¿Olvidaste tu contraseña?
+
+                                div(class="pt-8")
+                                    input(type="submit" value="Crear Cuenta" class="w-full py-3 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 cursor-pointer ")
+
+                // Panel de Errores
+                if errores && errores.length > 0
+                    div(class="md:w-80 px-4 py-8 bg-red-50 shadow-sm sm:rounded-lg sm:p-8 border-l-4 border-red-500")
+                        div(class="flex items-center space-x-3 mb-6")
+                            i(class="fas fa-exclamation-circle text-2xl text-red-500")
+                            h2(class="text-lg font-semibold text-red-700") Errores
+                        
+                        ul(class="space-y-3")
+                            each error in errores
+                                li(class="flex items-start space-x-2 text-sm text-red-600")
+                                    i(class="fas fa-times-circle mt-1")
+                                    span= error.msg
+
+block scripts
+    script.
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
