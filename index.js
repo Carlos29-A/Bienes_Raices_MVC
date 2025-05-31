@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser'
 import csrf from 'csurf'
 import usuariosRoutes from './routes/usuriosRoute.js'
 import db from './config/db.js'
-
+import Usuario from './models/Usuario.js'
 dotenv.config({ path: '.env' })
 
 // Creamos el servidor

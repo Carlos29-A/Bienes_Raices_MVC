@@ -1,0 +1,28 @@
+extends ../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-50 py-12 flex flex-col justify-center sm:py-16")
+        div(class="py-3 sm:max-w-md sm:mx-auto w-full px-4 sm:px-0")
+            div(class="px-4 py-8 bg-white shadow-sm sm:rounded-lg sm:p-12 w-full")
+                div(class="max-w-sm mx-auto text-center")
+                    // Icono según el tipo de mensaje
+                    if tipo === 'error'
+                        div(class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4")
+                            i(class="fas fa-exclamation-circle text-2xl text-red-600")
+                    else if tipo === 'exito'
+                        div(class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4")
+                            i(class="fas fa-check-circle text-2xl text-green-600")
+                    else
+                        div(class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4")
+                            i(class="fas fa-info-circle text-2xl text-blue-600")
+                    
+                    // Título del mensaje
+                    h2(class="text-2xl font-semibold text-gray-900 mb-4")= titulo || 'Mensaje'
+                    
+                    // Contenido del mensaje
+                    p(class="text-gray-600 mb-8")= mensaje
+                    
+                    // Enlace a iniciar sesión
+                    a(href="/auth/login" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200")
+                        i(class="fas fa-sign-in-alt mr-2")
+                        | Iniciar Sesión
