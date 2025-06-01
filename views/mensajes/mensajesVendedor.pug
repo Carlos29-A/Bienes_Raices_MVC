@@ -1,0 +1,68 @@
+extends ../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-100 flex")
+        include ../usuario/vendedor-Sidebar/Vendedor-Sidebar.pug
+
+        //- Contenido Principal
+        div(class="flex-1 flex flex-col")
+            //- Encabezado
+            header(class="bg-white border-b border-gray-200 shadow-sm px-8 py-6")
+                div(class="flex items-center justify-between")
+                    div(class="flex items-center space-x-4")
+                        div(class="bg-blue-100 p-3 rounded-full")
+                            i(class="fas fa-envelope text-2xl text-blue-600")
+                        div
+                            h1(class="text-2xl font-bold text-gray-900") Mensajes de #{destinatario.nombre}
+
+            //- Contenedor de Mensajes
+            div(class="flex-1 p-8 bg-gray-50")
+                //- Lista de Conversaciones
+                div(class="max-w-4xl mx-auto space-y-6")
+                    //- Conversación 1
+                    div(class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300")
+                        //- Encabezado de Conversación
+                        each mensaje in mensajes
+                            div(class="flex flex-col  border-b border-gray-100 shadow-sm")
+                                div(class="p-6 border-b border-gray-100")
+                                    div(class="flex items-center justify-between")
+                                        div(class="flex items-start space-x-4 flex-col")
+                                            img(
+                                                src="/uploads/perfil.jpg"
+                                                class="w-12 h-12 rounded-full object-cover border-2 border-blue-100"
+                                            )
+                                            div 
+                                                //- Datos del comprador
+                                                h3(class="text-lg font-semibold text-gray-900")= mensaje.remitenteRelacion.nombre
+                                                p(class="text-sm text-gray-600")= mensaje.remitenteRelacion.email
+                                            div 
+                                                //- Datos de la propiedad
+                                                h3(class="text-lg font-semibold text-gray-900")= mensaje.propiedadRelacion.titulo
+                                                p(class="text-sm text-gray-600 font-bold")= `$ ${mensaje.propiedadRelacion.precio}`
+                                        div(class="flex flex-col space-y-2")
+                                            span(class="text-sm text-gray-500") Hace 2 horas
+                                            a(href=`` class="text-sm text-gray-500 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 hover:scale-105 transition-all duration-300 cursor-pointer")
+                                                i(class="fas fa-reply mr-2") 
+                                                | Responder
+
+
+                                //- Último Mensaje
+                                div(class="p-6 bg-gray-50 mb")
+                                    p(class="text-gray-700")= mensaje.mensaje
+
+
+                //- Mensaje Informativo
+                div(class="max-w-4xl mx-auto mt-8 bg-blue-50 rounded-lg p-6")
+                    div(class="flex items-start space-x-4")
+                        div(class="flex-shrink-0")
+                            i(class="fas fa-info-circle text-2xl text-blue-600")
+                        div
+                            h4(class="text-lg font-semibold text-blue-900 mb-2") Información Importante
+                            p(class="text-blue-700")
+                                | Para mantener una comunicación efectiva, te recomendamos:
+                            ul(class="list-disc list-inside mt-2 space-y-1 text-blue-700")
+                                li Ser claro y conciso en tus respuestas
+                                li Mantener un tono profesional y cordial
+
+block scripts
+    

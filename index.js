@@ -5,8 +5,9 @@ import csrf from 'csurf'
 import db from './config/db.js'
 import authRouter from './routes/usuriosRoute.js'
 import propiedadesRouter from './routes/propiedadRoute.js'
-import { Usuario, Propiedad, Categoria, Favorito } from './models/index.js'
+import { Usuario, Propiedad, Categoria, Favorito, Mensaje } from './models/index.js'
 import favoritosRouter from './routes/favoritosRoute.js'
+import mensajeRouter from './routes/mensajeRoute.js'
 
 dotenv.config()
 
@@ -51,6 +52,7 @@ app.use(async (req, res, next) => {
 app.use('/auth', authRouter)
 app.use('/propiedades', propiedadesRouter)
 app.use('/favoritos', favoritosRouter)
+app.use('/mensajes', mensajeRouter)
 
 // Puerto
 const port = process.env.PORT || 3000

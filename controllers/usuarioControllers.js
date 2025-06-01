@@ -1,5 +1,5 @@
 import { validationResult, check } from "express-validator"
-import { Usuario, Propiedad, Categoria, Favorito } from "../models/index.js"
+import { Usuario, Propiedad, Categoria, Favorito, Mensaje } from "../models/index.js"
 import { generarId, generarJWT } from "../helpers/token.js"
 import { emailRegistro, emailOlvidePassword } from "../helpers/email.js"
 import bcrypt from "bcrypt"
@@ -261,17 +261,34 @@ const cerrarSesion = (req, res) => {
 const panelVendedor = async (req, res) => {
 
     const usuario = await Usuario.findOne({ where: { id: req.usuario.id } })
+    
+    if(!usuario){
+        return res.redirect('/auth/login')
+    }
+    
     const propiedades = await Propiedad.findAll({ where: { usuarioId: req.usuario.id } })
     const propiedadesPublicadas = propiedades.filter(propiedad => propiedad.publicado === true)
+    
+    // Mensajes recibidos
+    const mensajes = await Mensaje.findAll({
+        where : {
+            destinatarioId : req.usuario.id
+        },
+        include : [
+            {
+                model : Usuario,
+                as : "remitenteRelacion",
+                attributes : ['nombre', 'apellido']
+            },
+        ]
 
-    console.log(propiedades.length)
-
-
+    })
     res.render('usuario/panel-vendedor', {
         titulo: 'Panel de Vendedor',
         propiedades,
         usuario,
-        propiedadesPublicadas
+        propiedadesPublicadas,
+        mensajes
     })
 }
 
@@ -280,10 +297,29 @@ const panelComprador = async (req, res) => {
     const { id } = req.usuario
     const usuario = await Usuario.findOne({ where: { id } })
 
+    // propiedades favoritas
+    const propiedadesFavoritas = await Favorito.findAll({
+        where:{
+            usuarioId : id
+        },
+        include : [
+            {
+                model : Propiedad,
+                as : "propiedadRelacion",
+                include : [
+                    {
+                        model : Categoria,
+                        as : "categoriaRelacion"
+                    }
+                ]
+            }
+        ]
+    })
 
     res.render('usuario/panel-comprador', {
         titulo: 'Panel de Comprador',
-        usuario
+        usuario,
+        propiedadesFavoritas
     })
 }
 

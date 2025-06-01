@@ -123,7 +123,7 @@ block contenido
                                     //- Imagen de la Propiedad
                                     div(class="relative")
                                         img(
-                                            class="w-full h-48 object-cover"
+                                            class="w-full h-48 object-cover hover:scale-105 transition-all duration-300"
                                             src=`/uploads/${propiedad.imagen}`
                                             alt=propiedad.titulo
                                         )
@@ -164,12 +164,12 @@ block contenido
                                         div(class="flex space-x-2")
                                             a(
                                                 href=`/propiedades/${propiedad.id}`
-                                                class="flex-1 bg-blue-600 text-white text-center py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                                                class="flex-1 bg-blue-600 text-white text-center py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm cursor-pointer"
                                             )
                                                 | Ver Detalles
-                                            button(
-                                                class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
-                                                onclick=`contactarVendedor(${propiedad.id})`
+                                            a(
+                                                class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 transition-colors text-sm cursor-pointer"
+                                                href=`/mensajes/enviar/${propiedad.id}/${propiedad.usuarioRelacion.id}`
                                             )
                                                 | Contactar
                                             //- Botón de Favoritos

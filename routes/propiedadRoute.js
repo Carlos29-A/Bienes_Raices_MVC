@@ -35,4 +35,5 @@ router.get('/buscar', protegerRuta, buscarPropiedades)
 
 // Ver una propiedad en detalle
 router.get('/:id', protegerRuta, verPropiedad)
+
 export default router

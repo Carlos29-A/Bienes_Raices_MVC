@@ -68,13 +68,13 @@ block contenido
                                         div(class="flex justify-between items-start")
                                             div
                                                 h4(class="text-lg font-semibold text-gray-900")= propiedad.titulo
-                                                p(class="text-gray-600") $#{propiedad.precio}
+                                                p(class="text-blue-600 font-bold mb-2") $ #{propiedad.precio.toLocaleString()}
                                             span(class=`${propiedad.publicado? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} text-xs font-semibold px-2.5 py-0.5 rounded`)= propiedad.publicado ? 'Activa' : 'Inactiva'
                                         
                                         p(class="text-gray-500 text-sm mt-2") #{propiedad.habitaciones} habitaciones • #{propiedad.wc} baños • #{propiedad.estacionamiento} estacionamientos
                                         div(class="mt-4 flex space-x-2")
-                                            a(href=`/propiedades/editar/${propiedad.id}` class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 text-sm text-center transition-all duration-300") Editar
-                                            button(class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 text-sm") Desactivar
+                                            a(href=`/propiedades/editar/${propiedad.id}` class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 text-sm text-center transition-all duration-300 cursor-pointer") Editar
+                                            button(class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 text-sm cursor-pointer transition-all duration-300") Desactivar
 
                             
 
@@ -84,21 +84,17 @@ block contenido
                         h3(class="text-lg leading-6 font-medium text-gray-900") Mensajes Recientes
                     
                     div(class="border-t border-gray-200")
-                        ul(class="divide-y divide-gray-200")
-                            li(class="px-4 py-4")
-                                div(class="flex items-center space-x-4")
-                                    div(class="flex-shrink-0")
-                                        img(class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Maria+Garcia&background=0D8ABC&color=fff" alt="Maria Garcia")
-                                    div(class="flex-1 min-w-0")
-                                        p(class="text-sm font-medium text-gray-900") Maria Garcia
-                                        p(class="text-sm text-gray-500 truncate") Me interesa la casa moderna, ¿podría agendar una visita?
-                                    div(class="text-sm text-gray-500") Hace 2 horas
+                        if mensajes.length
+                            ul(class="divide-y divide-gray-200")
+                                each mensaje in mensajes
+                                    li(class="px-4 py-4")
+                                        div(class="flex items-center space-x-4")
+                                            div(class="flex-shrink-0")
+                                                img(class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Maria+Garcia&background=0D8ABC&color=fff" alt="Maria Garcia")
+                                            div(class="flex-1 min-w-0")
+                                                p(class="text-sm font-medium text-gray-900")= mensaje.remitenteRelacion.nombre + ' ' + mensaje.remitenteRelacion.apellido
+                                                p(class="text-sm text-gray-500 truncate")= mensaje.mensaje
+                                            div(class="text-sm text-gray-500") Hace 2 horas
+                        else
+                            p(class="text-gray-500 text-center") No hay mensajes recientes
                             
-                            li(class="px-4 py-4")
-                                div(class="flex items-center space-x-4")
-                                    div(class="flex-shrink-0")
-                                        img(class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Carlos+Lopez&background=0D8ABC&color=fff" alt="Carlos Lopez")
-                                    div(class="flex-1 min-w-0")
-                                        p(class="text-sm font-medium text-gray-900") Carlos Lopez
-                                        p(class="text-sm text-gray-500 truncate") ¿La villa residencial sigue disponible? Me gustaría hacer una oferta.
-                                    div(class="text-sm text-gray-500") Hace 5 horas

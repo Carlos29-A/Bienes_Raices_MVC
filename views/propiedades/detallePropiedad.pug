@@ -68,7 +68,7 @@ block contenido
                     //- Botones de Acción
                     div(class="flex space-x-4 mt-8")
                         a(
-                            href=`mailto:${propiedad.usuarioRelacion.email}`
+                            href=`/mensajes/enviar/${propiedad.id}/${propiedad.usuarioRelacion.id}`	
                             class="flex-1 bg-blue-600 text-white text-center py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
                         )
                             i(class="fas fa-envelope mr-2")
