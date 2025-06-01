@@ -6,6 +6,7 @@ import db from './config/db.js'
 import authRouter from './routes/usuriosRoute.js'
 import propiedadesRouter from './routes/propiedadRoute.js'
 import { Usuario, Propiedad, Categoria, Favorito } from './models/index.js'
+import favoritosRouter from './routes/favoritosRoute.js'
 
 dotenv.config()
 
@@ -49,6 +50,7 @@ app.use(async (req, res, next) => {
 // Rutas
 app.use('/auth', authRouter)
 app.use('/propiedades', propiedadesRouter)
+app.use('/favoritos', favoritosRouter)
 
 // Puerto
 const port = process.env.PORT || 3000

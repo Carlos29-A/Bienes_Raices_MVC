@@ -1,5 +1,7 @@
 extends ../layout/index
 
+block styles
+    meta(name="csrf-token" content=csrfToken)
 block contenido
     div(class="min-h-screen bg-gray-100 flex")
         include ../usuario/comprador-Sidebar/compradorSidebar.pug
@@ -127,7 +129,7 @@ block contenido
                                         )
                                         //- Botón de Favoritos
                                         button(
-                                            class="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors"
+                                            class="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors agregar-favorito"
                                             data-propiedad-id=propiedad.id
                                         )
                                             i(class="fas fa-heart")
@@ -172,7 +174,7 @@ block contenido
                                                 | Contactar
                                             //- Botón de Favoritos
                                             button(
-                                                class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 transition-colors cursor-pointer"
+                                                class=`flex-1 ${favoritos.some(favorito => favorito.propiedadId === propiedad.id) ? 'text-red-500' : 'text-gray-700'}  py-2 px-4 rounded-md transition-colors cursor-pointer agregar-favorito`
                                                 data-propiedad-id=propiedad.id
                                                 data-usuario-id=propiedad.usuarioRelacion.id
                                             )
@@ -184,33 +186,4 @@ block contenido
                             p(class="text-gray-400 mt-2") Intenta ajustar los filtros para ver más resultados
 
 block scripts
-    script.
-        function contactarVendedor(propiedadId) {
-            // Implementar lógica de contacto
-            console.log('Contactar vendedor de propiedad:', propiedadId)
-        }
-
-        // Manejar favoritos
-        document.querySelectorAll('[data-propiedad-id]').forEach(button => {
-            button.addEventListener('click', async (e) => {
-                const propiedadId = e.currentTarget.dataset.propiedadId
-                try {
-                    const response = await fetch(`/propiedades/favorito/${propiedadId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    const data = await response.json()
-                    
-                    if (data.resultado) {
-                        const icon = e.currentTarget.querySelector('i')
-                        icon.classList.toggle('text-red-500')
-                        icon.classList.toggle('text-gray-400')
-                    }
-                } catch (error) {
-                    console.error('Error al actualizar favorito:', error)
-                }
-            })
-        })
+    script(src="/js/agregarFavorito.js")

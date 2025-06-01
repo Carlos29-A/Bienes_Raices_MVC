@@ -1,5 +1,5 @@
 import { validationResult, check } from "express-validator"
-import { Usuario, Propiedad, Categoria } from "../models/index.js"
+import { Usuario, Propiedad, Categoria, Favorito } from "../models/index.js"
 import { generarId, generarJWT } from "../helpers/token.js"
 import { emailRegistro, emailOlvidePassword } from "../helpers/email.js"
 import bcrypt from "bcrypt"
@@ -388,15 +388,28 @@ const buscarPropiedades = async (req, res) => {
             {
                 model: Usuario,
                 as: 'usuarioRelacion',
-                attributes: ['nombre', 'apellido']
+                attributes: ['nombre', 'apellido', 'id']
             }
 
         ]
     })
+    const favoritos = await Favorito.findAll({
+        where: {
+            usuarioId: req.usuario.id
+        },
+        include: [
+            {
+                model: Propiedad,
+                as: 'propiedadRelacion'
+            }
+        ]
+    })
+
     res.render('propiedades/buscarPropiedades', {
         titulo: 'Buscar Propiedades',
         csrfToken: req.csrfToken(),
-        propiedades
+        propiedades,
+        favoritos
     })
 }
 export {

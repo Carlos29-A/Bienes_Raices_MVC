@@ -1,0 +1,89 @@
+extends ../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-100 flex")
+        include ../usuario/comprador-Sidebar/compradorSidebar.pug
+
+        //- Contenido Principal
+        div(class="flex-1")
+            //- Encabezado
+            header(class="bg-white shadow")
+                div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8")
+                    h1(class="text-3xl font-bold text-gray-900") Mis Favoritos
+                    p(class="mt-2 text-sm text-gray-600") Propiedades que te han gustado
+
+            //- Contenido de Favoritos
+            main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
+                if favoritos && favoritos.length
+                    //- Grid de Propiedades Favoritas
+                    div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
+                        each propiedad in favoritos
+                            div(class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden")
+                                //- Imagen
+                                div(class="relative")
+                                    img(
+                                        class="w-full h-48 object-cover"
+                                        src=`/uploads/${propiedad.propiedadRelacion.imagen}`
+                                        alt=propiedad.propiedadRelacion.titulo
+                                    )
+                                    //- Indicador de Favorito
+                                    div(class="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md")
+                                        i(class="fas fa-heart text-red-500")
+                                
+                                //- Detalles de la Propiedad
+                                div(class="p-4")
+                                    //- Título y Precio
+                                    div(class="flex justify-between items-start mb-2")
+                                        h3(class="text-normal font-semibold text-gray-900")= propiedad.propiedadRelacion.titulo
+                                        p(class="text-blue-600 font-bold") $#{propiedad.propiedadRelacion.precio.toLocaleString()}
+                                    
+                                    //- Ubicación y Categoría
+                                    div(class="flex items-center space-x-4 text-sm text-gray-600 mb-4")
+                                        p(class="flex items-center")
+                                            i(class="fas fa-map-marker-alt mr-1")
+                                            | #{propiedad.propiedadRelacion.calle}
+                                        p(class="flex items-center")
+                                            i(class="fas fa-building mr-1")
+                                            | #{propiedad.propiedadRelacion.categoriaRelacion.nombre}
+                                    
+                                    //- Características
+                                    div(class="grid grid-cols-3 gap-2 text-sm text-gray-500 mb-4")
+                                        div(class="flex items-center")
+                                            i(class="fas fa-bed mr-1")
+                                            | #{propiedad.propiedadRelacion.habitaciones} hab
+                                        div(class="flex items-center")
+                                            i(class="fas fa-bath mr-1")
+                                            | #{propiedad.propiedadRelacion.wc} baños
+                                        div(class="flex items-center")
+                                            i(class="fas fa-car mr-1")
+                                            | #{propiedad.propiedadRelacion.estacionamiento} est
+                                    
+                                    //- Vendedor
+                                    div(class="flex items-center space-x-2 mb-4 p-2 bg-gray-50 rounded-lg")
+                                        img(
+                                            class="h-8 w-8 rounded-full"
+                                            src=`https://ui-avatars.com/api/?name=${propiedad.propiedadRelacion.usuarioRelacion.nombre}&background=0D8ABC&color=fff`
+                                            alt=propiedad.propiedadRelacion.usuarioRelacion.nombre
+                                        )
+                                        p(class="text-sm text-gray-600")= propiedad.propiedadRelacion.usuarioRelacion.nombre
+                                    
+                                    //- Botón de Acción
+                                    div(class="flex")
+                                        a(
+                                            href=`/propiedades/${propiedad.propiedadRelacion.id}`
+                                            class="w-full bg-blue-600 text-white text-center py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                                        )
+                                            | Ver Detalles
+                else
+                    //- Mensaje cuando no hay favoritos
+                    div(class="text-center py-12 bg-white rounded-lg shadow-sm")
+                        div(class="mb-4")
+                            i(class="fas fa-heart text-gray-300 text-5xl")
+                        h3(class="text-lg font-medium text-gray-900 mb-2") No tienes propiedades favoritas
+                        p(class="text-gray-500 mb-6") Cuando encuentres una propiedad que te guste, haz clic en el corazón para guardarla aquí
+                        a(
+                            href="/propiedades/buscar"
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                        )
+                            i(class="fas fa-search mr-2")
+                            | Buscar Propiedades

@@ -1,5 +1,5 @@
 import { check, validationResult } from 'express-validator'
-import { Usuario, Propiedad, Categoria } from '../models/index.js'
+import { Usuario, Propiedad, Categoria, Favorito } from '../models/index.js'
 import { Op } from 'sequelize'
 
 const registrarPropiedad = async (req, res) => {
@@ -384,6 +384,45 @@ const buscarPropiedades = async (req, res) => {
 
 }
 
+// Ver una propiedad en detalle
+const verPropiedad = async (req, res) => {
+    const { id } = req.params
+
+    // Recuperamos el usuario
+    const usuario = await Usuario.findByPk(req.usuario.id)
+
+    if (!usuario) {
+        return res.redirect('/auth/login')
+    }
+    const propiedad = await Propiedad.findByPk(id, {
+        include: [
+            {
+                model: Categoria,
+                as: 'categoriaRelacion',
+            },
+            {
+                model: Usuario,
+                as: 'usuarioRelacion',
+            }
+        ]
+    })
+
+    // Recuperamos los favoritos del usuario
+    const favoritos = await Favorito.findAll({
+        where: {
+            usuarioId: req.usuario.id
+        }
+    })
+    
+    res.render('propiedades/detallePropiedad', {
+        propiedad,
+        usuario,
+        favoritos,
+        csrfToken: req.csrfToken()
+    })
+}
+
+
 export {
     registrarPropiedad,
     publicarPropiedad,
@@ -395,5 +434,6 @@ export {
     eliminarPropiedad,
     cambiarEstado,
     obtenerPropiedades,
-    buscarPropiedades
+    buscarPropiedades,
+    verPropiedad
 }

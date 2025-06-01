@@ -1,0 +1,84 @@
+extends ../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-100 flex")
+        include ../usuario/comprador-Sidebar/compradorSidebar.pug
+
+        //- Contenido Principal
+        div(class="flex-1 p-8")
+            //- Encabezado
+            header(class="mb-8")
+                h1(class="text-3xl font-bold text-gray-900")= propiedad.titulo
+                p(class="text-gray-600 mt-2")= propiedad.calle
+
+            //- Contenedor Principal
+            div(class="bg-white rounded-lg shadow-lg overflow-hidden")
+                //- Imagen Principal
+                div(class="relative h-96")
+                    img(
+                        src=`/uploads/${propiedad.imagen}`
+                        alt=propiedad.titulo
+                        class="w-full h-full object-cover"
+                    )
+                    //- Botón de Favorito
+                    button(class=`absolute top-4 right-4 ${favoritos.some(favorito => favorito.propiedadId === propiedad.id) ? 'text-red-500' : 'text-gray-700'}  py-2 px-4 rounded-md transition-colors cursor-pointer agregar-favorito text-2xl` data-propiedad-id=propiedad.id data-usuario-id=propiedad.usuarioRelacion.id ) 
+                        i(class="fas fa-heart")
+
+                //- Información Principal
+                div(class="p-6")
+                    //- Precio y Categoría
+                    div(class="flex justify-between items-center mb-6")
+                        p(class="text-3xl font-bold text-blue-600") $ #{propiedad.precio.toLocaleString()}
+                        span(class="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold")= propiedad.categoriaRelacion.nombre
+
+                    //- Características Principales
+                    div(class="grid grid-cols-3 gap-4 mb-8")
+                        div(class="text-center p-4 bg-gray-50 rounded-lg")
+                            i(class="fas fa-bed text-2xl text-gray-600 mb-2")
+                            p(class="text-gray-800 font-semibold")= `${propiedad.habitaciones} Habitaciones`
+                        div(class="text-center p-4 bg-gray-50 rounded-lg")
+                            i(class="fas fa-bath text-2xl text-gray-600 mb-2")
+                            p(class="text-gray-800 font-semibold")= `${propiedad.wc} Baños`
+                        div(class="text-center p-4 bg-gray-50 rounded-lg")
+                            i(class="fas fa-car text-2xl text-gray-600 mb-2")
+                            p(class="text-gray-800 font-semibold")= `${propiedad.estacionamiento} Estacionamientos`
+
+                    //- Descripción
+                    div(class="mb-8")
+                        h2(class="text-xl font-semibold text-gray-900 mb-4") Descripción
+                        p(class="text-gray-600 leading-relaxed")= propiedad.descripcion
+
+                    //- Información del Vendedor
+                    div(class="border-t border-gray-200 pt-6")
+                        h2(class="text-xl font-semibold text-gray-900 mb-4") Información del Vendedor
+                        div(class="flex items-center space-x-4")
+                            if propiedad.usuarioRelacion.imagen
+                                img(
+                                    src=`/uploads/${propiedad.usuarioRelacion.imagen}`
+                                    alt=propiedad.usuarioRelacion.nombre
+                                    class="w-16 h-16 rounded-full object-cover"
+                                )
+                            else
+                                div(class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center")
+                                    i(class="fas fa-user text-2xl text-gray-400")
+                            div
+                                p(class="font-semibold text-gray-900")= propiedad.usuarioRelacion.nombre
+                                p(class="text-gray-600")= propiedad.usuarioRelacion.email
+
+                    //- Botones de Acción
+                    div(class="flex space-x-4 mt-8")
+                        a(
+                            href=`mailto:${propiedad.usuarioRelacion.email}`
+                            class="flex-1 bg-blue-600 text-white text-center py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+                        )
+                            i(class="fas fa-envelope mr-2")
+                            | Contactar Vendedor
+                        button(
+                            onclick=`contactarVendedor(${propiedad.id})`
+                            class="flex-1 bg-gray-100 text-gray-700 text-center py-3 px-6 rounded-lg hover:bg-gray-200 transition-colors"
+                        )
+                            i(class="fas fa-phone mr-2")
+                            | Ver Teléfono
+
+block scripts
+    script(src="/js/agregarFavorito.js")

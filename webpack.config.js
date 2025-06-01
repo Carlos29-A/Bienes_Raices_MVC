@@ -6,7 +6,8 @@ export default {
         mapa: './src/js/mapa.js',
         agregarImagen: './src/js/agregarImagen.js',
         cambiarEstado: './src/js/cambiarEstado.js',
-        filtrarPropiedades: './src/js/filtrarPropiedades.js'
+        filtrarPropiedades: './src/js/filtrarPropiedades.js',
+        agregarFavorito: './src/js/agregarFavorito.js'
     },
     output: {
         filename: '[name].js',
