@@ -1,0 +1,79 @@
+extends ../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-50 flex")
+        include ./Administrador-Sidebar/administradorSidebar.pug
+
+        //- Contenido Principal
+        main(class="flex-1 p-6")
+            //- Encabezado
+            div(class="mb-8")
+                h1(class="text-2xl font-semibold text-gray-800") Propiedades
+                p(class="text-gray-600 mt-1") Administra las propiedades del sistema
+
+            //- Barra de Acciones
+            div(class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6")
+                //- Filtros
+                div(class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto")
+                    select(class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent")
+                        option(value="") Todas las categorías
+                        option(value="casa") Casas
+                        option(value="departamento") Departamentos
+                        option(value="bodega") Bodegas
+                        option(value="terreno") Terrenos
+                    
+                    select(class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent")
+                        option(value="") Todos los precios
+                        option(value="0-100000") $0 - $100,000
+                        option(value="100000-300000") $100,000 - $300,000
+                        option(value="300000-500000") $300,000 - $500,000
+                        option(value="500000+") $500,000+
+
+                //- Botón Nueva Propiedad
+                button(class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center gap-2")
+                    i(class="fas fa-plus")
+                    span Nueva Propiedad
+
+            //- Grid de Propiedades
+            div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
+                //- Propiedad 1
+
+                each propiedad in propiedades
+                    div(class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200")
+                        img(src=`/uploads/${propiedad.imagen}` alt="Casa de Lujo" class="w-full h-48 object-cover")
+                        div(class="p-4")
+                            div(class="flex justify-between items-start mb-2")
+                                h3(class="text-lg font-semibold text-gray-900")= propiedad.titulo
+                                span(class="px-2 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800")= propiedad.publicado ? 'activo' : 'desactivado'
+                            p(class="text-gray-600 text-sm mb-2")= propiedad.calle
+                            div(class="flex items-center gap-4 text-sm text-gray-500 mb-4")
+                                span(class="flex items-center gap-1")
+                                    i(class="fas fa-bed")
+                                    | #{propiedad.habitaciones} Hab
+                                span(class="flex items-center gap-1")
+                                    i(class="fas fa-bath")
+                                    | #{propiedad.wc} Baños
+                                span(class="flex items-center gap-1")
+                                    
+                                    | #{propiedad.habitaciones} habitaciones
+                                
+                            div(class="flex justify-between items-center")
+                                p(class="text-xl font-bold text-blue-600") $#{propiedad.precio}
+                                div(class="flex gap-2")
+                                    button(class="text-blue-600 hover:text-blue-800 transition-colors")
+                                        i(class="fas fa-edit")
+                                    button(class="text-red-600 hover:text-red-800 transition-colors")
+                                        i(class="fas fa-trash-alt")
+
+            //- Paginación
+            div(class="mt-8 flex justify-center")
+                nav(class="flex items-center gap-2")
+                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50" disabled)
+                        i(class="fas fa-chevron-left")
+                    button(class="px-3 py-1 rounded-lg bg-blue-600 text-white") 1
+                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50") 2
+                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50") 3
+                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50")
+                        i(class="fas fa-chevron-right")
+
+block scripts

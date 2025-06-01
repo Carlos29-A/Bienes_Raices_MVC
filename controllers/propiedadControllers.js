@@ -374,11 +374,18 @@ const buscarPropiedades = async (req, res) => {
 
         ]
     })
+    // Recuperamos los favoritos del usuario
+    const favoritos = await Favorito.findAll({
+        where: {
+            usuarioId: req.usuario.id
+        }
+    })
 
     res.render('propiedades/buscarPropiedades', {
         propiedades,
         csrfToken: req.csrfToken(),
-        usuario
+        usuario,
+        favoritos
     })
 
 

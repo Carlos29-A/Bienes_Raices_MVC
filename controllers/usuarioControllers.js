@@ -3,6 +3,7 @@ import { Usuario, Propiedad, Categoria, Favorito, Mensaje } from "../models/inde
 import { generarId, generarJWT } from "../helpers/token.js"
 import { emailRegistro, emailOlvidePassword } from "../helpers/email.js"
 import bcrypt from "bcrypt"
+import { Op } from "sequelize"
 import cookieParser from "cookie-parser"
 const registro = (req, res) => {
     res.render('usuario/registro', {
@@ -251,6 +252,12 @@ const iniciarSesion = async (req, res) => {
             httpOnly: true,
         }).redirect('/auth/comprador/panel')
     }
+    else if (usuario.tipo.toString() === '3') {
+        //Almacenamos en el cookie el token
+        return res.cookie('_token', token, {
+            httpOnly: true,
+        }).redirect('/auth/administrador/panel')
+    }
 }
 
 const cerrarSesion = (req, res) => {
@@ -448,6 +455,121 @@ const buscarPropiedades = async (req, res) => {
         favoritos
     })
 }
+
+
+// Panel de administrador
+const panelAdministrador = async (req, res) => {
+
+    const {id} = req.usuario
+
+    const administrador = await Usuario.findOne({ where: { id } })
+
+    if(!administrador){
+        return res.redirect('/auth/login')
+    }
+    
+    // Propiedades
+    const [propiedades, propiedadesActivas] = await Promise.all([
+        Propiedad.findAll(
+            {
+                include:[
+                {
+                    model: Categoria,
+                    as: 'categoriaRelacion'
+                },
+                {
+                    model: Usuario,
+                    as: 'usuarioRelacion'
+                }
+            ]
+        }
+    ),
+    Propiedad.count({ where: { publicado: true } })
+    ])
+    // Usuarios
+    const usuarios = await Usuario.findAll()
+    // Compradores
+    const compradores = await Usuario.findAll({ where: { tipo: 2 } })
+    // Vendedores
+    const vendedores = await Usuario.findAll({ where: { tipo: 1 } })
+    // Mensajes
+    const mensajes = await Mensaje.findAll()
+
+    res.render('usuario/panel-administrador', {
+        titulo: 'Panel de Administrador',
+        usuario: req.usuario,
+        propiedades,
+        usuarios,
+        compradores,
+        vendedores,
+        mensajes,
+        propiedadesActivas
+    })
+}
+
+const panelAdministradorUsuarios = async (req, res) => {
+    const usuarios = await Usuario.findAll({ where: { tipo: { [Op.or]: [1, 2] } } })
+    const propiedades = await Propiedad.findAll()
+    const mensajes = await Mensaje.findAll()
+    
+
+    
+    res.render('usuario/Administrador-Usuarios', {
+        titulo: 'Panel de Administrador de Usuarios',
+        usuario: req.usuario,
+        usuarios,
+        csrfToken: req.csrfToken(),
+        propiedades,
+        mensajes
+    })
+}
+const panelAdministradorPropiedades = async (req, res) => {
+    
+    const propiedades = await Propiedad.findAll()
+    const mensajes = await Mensaje.findAll()
+    const usuarios = await Usuario.findAll({where: {tipo: { [Op.or]: [1, 2] }}})
+
+    res.render('usuario/Administrador-Propiedades', {
+        titulo: 'Panel de Administrador de Propiedades',
+        usuario: req.usuario,
+        csrfToken: req.csrfToken(),
+        propiedades,
+        mensajes,
+        usuarios
+    })
+}
+const panelAdministradorMensajes = async (req, res) => {
+
+    const mensajes = await Mensaje.findAll()
+    const usuarios = await Usuario.findAll({where: {tipo: { [Op.or]: [1, 2] }}})
+    const propiedades = await Propiedad.findAll()
+
+    res.render('usuario/Administrador-Mensajes', {
+        titulo: 'Panel de Administrador de Mensajes',
+        usuario: req.usuario,
+        csrfToken: req.csrfToken(),
+        mensajes,
+        usuarios,
+        propiedades
+    })
+}
+const panelAdministradorPerfil = async (req, res) => {
+
+    const mensajes = await Mensaje.findAll()
+    const usuarios = await Usuario.findAll({where: {tipo: { [Op.or]: [1, 2] }}})
+    const propiedades = await Propiedad.findAll()
+    
+    res.render('usuario/Administrador-Perfil', {
+        titulo: 'Panel de Administrador de Perfil',
+        usuario: req.usuario,
+        csrfToken: req.csrfToken(),
+        mensajes,
+        usuarios,
+        propiedades
+    })
+}
+
+
 export {
     registro,
     crearUsuario,
@@ -463,5 +585,10 @@ export {
     panelComprador,
     editarPerfil,
     actualizarPerfil,
-    buscarPropiedades
+    buscarPropiedades,
+    panelAdministrador,
+    panelAdministradorUsuarios,
+    panelAdministradorPropiedades,
+    panelAdministradorMensajes,
+    panelAdministradorPerfil
 }

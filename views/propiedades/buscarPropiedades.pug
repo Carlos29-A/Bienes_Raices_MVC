@@ -127,13 +127,6 @@ block contenido
                                             src=`/uploads/${propiedad.imagen}`
                                             alt=propiedad.titulo
                                         )
-                                        //- Botón de Favoritos
-                                        button(
-                                            class="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors agregar-favorito"
-                                            data-propiedad-id=propiedad.id
-                                        )
-                                            i(class="fas fa-heart")
-                                    
                                     //- Detalles de la Propiedad
                                     div(class="p-4")
                                         h3(class="text-lg font-semibold text-gray-900 mb-2")= propiedad.titulo

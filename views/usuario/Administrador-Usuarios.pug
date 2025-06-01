@@ -1,0 +1,55 @@
+extends ../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-50 flex")
+        include ./Administrador-Sidebar/administradorSidebar.pug
+
+        //- Contenido Principal
+        main(class="flex-1 p-6")
+            //- Encabezado Simple
+            div(class="mb-8")
+                h1(class="text-2xl font-semibold text-gray-800") Usuarios
+                p(class="text-gray-600 mt-1") Administra los usuarios del sistema
+
+            //- Barra de Acciones
+            div(class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6")
+                //- Búsqueda Simple
+                div(class="relative w-full sm:w-96")
+                    input(
+                        type="text"
+                        placeholder="Buscar usuario..."
+                        class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    )
+                    i(class="fas fa-search absolute left-3 top-3 text-gray-400")
+
+                //- Botón Nuevo Usuario
+                button(
+                    class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center gap-2"
+                )
+                    i(class="fas fa-user-plus")
+                    span Nuevo Usuario
+            
+            //- Lista de Usuarios
+            div(class="grid gap-4")
+                
+                //- Usuario 1
+                each usuario in usuarios
+                    div(class="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow duration-200")
+                        div(class="flex items-center justify-between")
+                            div(class="flex items-center gap-4")
+                                img(
+                                    src="/img/usuarios/usuario1.jpg"
+                                    alt="Juan Pérez"
+                                    class="w-12 h-12 rounded-full object-cover border-2 border-blue-100"
+                                )
+                                div
+                                    h3(class="font-medium text-gray-900")= usuario.nombre
+                                    p(class="text-sm text-gray-500")= usuario.email
+                            div(class="flex items-center gap-3")
+                                span(class="px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800")= usuario.tipo? usuario.tipo.toString() === '1' ? 'Vendedor' : 'Comprador' : 'Usuario'
+                                div(class="flex gap-2")
+                                    button(class="text-blue-600 hover:text-blue-800 transition-colors")
+                                        i(class="fas fa-edit")
+                                    button(class="text-red-600 hover:text-red-800 transition-colors")
+                                        i(class="fas fa-trash-alt")
+block scripts

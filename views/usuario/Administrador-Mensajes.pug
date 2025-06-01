@@ -1,0 +1,148 @@
+extends ../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-50 flex")
+        include ./Administrador-Sidebar/administradorSidebar.pug
+
+        //- Contenido Principal
+        main(class="flex-1 p-6")
+            //- Encabezado
+            div(class="mb-8")
+                h1(class="text-2xl font-semibold text-gray-800") Gestión de Mensajes
+                p(class="text-gray-600 mt-1") Administra las conversaciones entre usuarios
+
+            //- Barra de Acciones
+            div(class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6")
+                //- Filtros
+                div(class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto")
+                    select(class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent")
+                        option(value="") Todas las conversaciones
+                        option(value="activas") Conversaciones activas
+                        option(value="finalizadas") Conversaciones finalizadas
+                    
+                    select(class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent")
+                        option(value="") Todas las propiedades
+                        option(value="casas") Casas
+                        option(value="departamentos") Departamentos
+                        option(value="terrenos") Terrenos
+
+            //- Lista de Conversaciones
+            div(class="space-y-4")
+                //- Conversación 1
+                div(class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200")
+                    //- Encabezado de la Conversación
+                    div(class="p-4 border-b border-gray-100")
+                        div(class="flex justify-between items-center")
+                            h3(class="text-lg font-semibold text-gray-900") Casa Moderna en Las Palmas
+                            span(class="px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800") Activa
+                    
+                    //- Detalles de la Conversación
+                    div(class="p-4")
+                        //- Información de la Propiedad
+                        div(class="flex items-center gap-4 mb-4 p-3 bg-gray-50 rounded-lg")
+                            img(src="/img/propiedades/casa1.jpg" alt="Casa" class="w-16 h-16 object-cover rounded-lg")
+                            div
+                                p(class="font-medium text-gray-900") Casa de 3 recámaras
+                                p(class="text-sm text-gray-600") $850,000 - Colonia Las Palmas
+                        
+                        //- Participantes
+                        div(class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4")
+                            //- Remitente
+                            div(class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg")
+                                div(class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center")
+                                    i(class="fas fa-user text-blue-600")
+                                div
+                                    p(class="font-medium text-gray-900") Juan Pérez
+                                    p(class="text-sm text-gray-600") Vendedor
+                            
+                            //- Destinatario
+                            div(class="flex items-center gap-3 p-3 bg-purple-50 rounded-lg")
+                                div(class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center")
+                                    i(class="fas fa-user text-purple-600")
+                                div
+                                    p(class="font-medium text-gray-900") María García
+                                    p(class="text-sm text-gray-600") Compradora
+                        
+                        //- Último Mensaje
+                        div(class="p-3 bg-gray-50 rounded-lg")
+                            p(class="text-sm text-gray-600 mb-2") Último mensaje de María García:</p>
+                            p(class="text-gray-700") "Me interesa la propiedad, ¿podría agendar una visita para el fin de semana?"
+                            p(class="text-xs text-gray-500 mt-2") Hace 2 horas
+                        
+                        //- Acciones
+                        div(class="flex justify-end gap-2 mt-4")
+                            button(class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors")
+                                i(class="fas fa-eye mr-2")
+                                | Ver Conversación
+                            button(class="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-800 transition-colors")
+                                i(class="fas fa-trash-alt mr-2")
+                                | Eliminar
+
+                //- Conversación 2
+                div(class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200")
+                    //- Encabezado de la Conversación
+                    div(class="p-4 border-b border-gray-100")
+                        div(class="flex justify-between items-center")
+                            h3(class="text-lg font-semibold text-gray-900") Departamento en Condominio Los Pinos
+                            span(class="px-3 py-1 text-sm font-medium rounded-full bg-yellow-100 text-yellow-800") Pendiente
+                    
+                    //- Detalles de la Conversación
+                    div(class="p-4")
+                        //- Información de la Propiedad
+                        div(class="flex items-center gap-4 mb-4 p-3 bg-gray-50 rounded-lg")
+                            img(src="/img/propiedades/departamento1.jpg" alt="Departamento" class="w-16 h-16 object-cover rounded-lg")
+                            div
+                                p(class="font-medium text-gray-900") Departamento de 2 recámaras
+                                p(class="text-sm text-gray-600") $450,000 - Condominio Los Pinos
+                        
+                        //- Participantes
+                        div(class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4")
+                            //- Remitente
+                            div(class="flex items-center gap-3 p-3 bg-green-50 rounded-lg")
+                                div(class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center")
+                                    i(class="fas fa-user text-green-600")
+                                div
+                                    p(class="font-medium text-gray-900") Carlos López
+                                    p(class="text-sm text-gray-600") Vendedor
+                            
+                            //- Destinatario
+                            div(class="flex items-center gap-3 p-3 bg-yellow-50 rounded-lg")
+                                div(class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center")
+                                    i(class="fas fa-user text-yellow-600")
+                                div
+                                    p(class="font-medium text-gray-900") Ana Martínez
+                                    p(class="text-sm text-gray-600") Compradora
+                        
+                        //- Último Mensaje
+                        div(class="p-3 bg-gray-50 rounded-lg")
+                            p(class="text-sm text-gray-600 mb-2") Último mensaje de Ana Martínez:</p>
+                            p(class="text-gray-700") "¿La propiedad incluye estacionamiento? También me gustaría saber si aceptan mascotas."
+                            p(class="text-xs text-gray-500 mt-2") Hace 5 horas
+                        
+                        //- Acciones
+                        div(class="flex justify-end gap-2 mt-4")
+                            button(class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors")
+                                i(class="fas fa-eye mr-2")
+                                | Ver Conversación
+                            button(class="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-800 transition-colors")
+                                i(class="fas fa-trash-alt mr-2")
+                                | Eliminar
+
+            //- Paginación
+            div(class="mt-8 flex justify-center")
+                nav(class="flex items-center gap-2")
+                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50" disabled)
+                        i(class="fas fa-chevron-left")
+                    button(class="px-3 py-1 rounded-lg bg-blue-600 text-white") 1
+                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50") 2
+                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50") 3
+                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50")
+                        i(class="fas fa-chevron-right")
+
+block scripts
+    script.
+        function eliminarConversacion(id) {
+            if(confirm('¿Estás seguro de que deseas eliminar esta conversación?')) {
+                console.log('Eliminar conversación:', id);
+            }
+        }

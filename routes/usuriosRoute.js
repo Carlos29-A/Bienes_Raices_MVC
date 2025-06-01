@@ -1,5 +1,5 @@
 import express from 'express'
-import { registro, login, olvideContraseña, crearUsuario, confirmar, resetearPassword, reestablecerPassword, nuevaContraseña, iniciarSesion, panelVendedor, panelComprador, editarPerfil, actualizarPerfil, cerrarSesion, buscarPropiedades } from '../controllers/usuarioControllers.js'
+import { registro, login, olvideContraseña, crearUsuario, confirmar, resetearPassword, reestablecerPassword, nuevaContraseña, iniciarSesion, panelVendedor, panelComprador, editarPerfil, actualizarPerfil, cerrarSesion, buscarPropiedades, panelAdministrador, panelAdministradorUsuarios, panelAdministradorPropiedades, panelAdministradorMensajes, panelAdministradorPerfil } from '../controllers/usuarioControllers.js'
 import protegerRuta from '../middlewares/protegerRuta.js'
 
 const router = express.Router()
@@ -35,5 +35,15 @@ router.post('/editar-perfil', protegerRuta, actualizarPerfil)
 
 // Cerrar sesión
 router.get('/cerrar-sesion', protegerRuta, cerrarSesion)
+
+
+// Administrador
+router.get('/administrador/panel', protegerRuta, panelAdministrador)
+router.get('/administrador/usuarios', protegerRuta, panelAdministradorUsuarios)
+router.get('/administrador/propiedades', protegerRuta, panelAdministradorPropiedades)
+router.get('/administrador/mensajes', protegerRuta, panelAdministradorMensajes)
+router.get('/administrador/perfil', protegerRuta, panelAdministradorPerfil)
+
+
 
 export default router
