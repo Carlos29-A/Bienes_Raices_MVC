@@ -5,17 +5,10 @@ block contenido
         div(class="py-3 sm:max-w-md sm:mx-auto w-full px-4 sm:px-0")
             div(class="px-4 py-8 bg-white shadow-sm sm:rounded-lg sm:p-12 w-full")
                 div(class="max-w-sm mx-auto")
-                    div(class="flex items-center space-x-4 justify-center mb-12")
-                        i(class="fas fa-user-circle text-4xl text-blue-500")
+                    div(class="flex items-center  justify-center mb-12")
+                        img(src="/img/usuarios.png", alt="logo", class="w-20 h-20")
                         h1(class="text-2xl font-semibold text-gray-900") Iniciar Sesión
-                    if errores && errores.length > 0
-                        div(class="md:w-80 px-4 py-8 bg-red-50 shadow-sm sm:rounded-lg sm:p-8 border-l-4 border-red-500")
-                            div(class="flex items-center space-x-3 mb-6")
-                                i(class="fas fa-exclamation-circle text-2xl text-red-500")
-                                h2(class="text-lg font-semibold text-red-700") Errores
-                            ul(class="list-disc list-inside text-red-700")
-                                each error in errores
-                                    li= error.msg  
+                    
                     form(action="" method="POST" class="space-y-8")
                         input(type="hidden" name="_csrf" value=csrfToken)
                         div(class="space-y-6")
@@ -29,25 +22,53 @@ block contenido
                                 label(for="password" class="block text-sm font-medium text-gray-600 mb-2") Password
                                 div(class="relative")
                                     i(class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400")
-                                    input#password(type="password" name="password" placeholder="Tu Password" class="w-full pl-10 pr-10 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200")
+                                    input#password(type="password" name="password" placeholder="Tu Contraseña" class="w-full pl-10 pr-10 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200")
                                     button(type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePassword('password')")
                                         i(class="fas fa-eye")
-                            
+
                             div(class="flex items-center justify-between")
                                 div(class="flex items-center")
                                     input(type="checkbox" id="remember" name="remember" class="h-4 w-4 text-blue-500 focus:ring-blue-500 border-gray-300 rounded")
                                     label(for="remember" class="ml-2 block text-sm text-gray-600") Recordarme
-                                a(href="/auth/olvide-password" class="text-sm text-blue-500 hover:text-blue-600") ¿Olvidaste tu contraseña?
+                                a(href="/auth/olvide-password" class="text-sm text-[#F99E00] hover:text-[#F97101]") ¿Olvidaste tu contraseña?
 
                             div(class="pt-6")
-                                input(type="submit" value="Iniciar Sesión" class="w-full py-3 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 cursor-pointer")
-                            
+                                input(type="submit" value="Iniciar Sesión" class="w-full py-3 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-[#F99E00] hover:bg-[#F97101] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 cursor-pointer")
+
                             div(class="mt-6 text-center")
                                 p(class="text-sm text-gray-600") ¿No tienes una cuenta? 
-                                    a(href="/auth/registro" class="font-medium text-blue-500 hover:text-blue-600") Regístrate aquí
+                                    a(href="/auth/registro" class="font-medium text-[#F99E00] hover:text-[#F97101]") Regístrate aquí
 
-                 
-                        
+                //- Modal de Errores
+                if errores && errores.length > 0
+                    div(id="modal-errores" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50")
+                        div(class="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4")
+                            //- Encabezado del Modal
+                            div(class="flex items-center justify-between p-4 border-b border-gray-200")
+                                div(class="flex items-center space-x-3")
+                                    i(class="fas fa-exclamation-circle text-2xl text-red-500")
+                                    h2(class="text-lg font-semibold text-red-700") Errores de Validación
+                                button(
+                                    onclick="cerrarModal()"
+                                    class="text-gray-400 hover:text-gray-500 focus:outline-none"
+                                )
+                                    i(class="fas fa-times text-xl")
+                            
+                            //- Contenido del Modal
+                            div(class="p-6")
+                                ul(class="space-y-3")
+                                    each error in errores
+                                        li(class="flex items-start space-x-2 text-sm text-red-600")
+                                            i(class="fas fa-times-circle mt-1")
+                                            span= error.msg
+                            
+                            //- Pie del Modal
+                            div(class="flex justify-end p-4 border-t border-gray-200")
+                                button(
+                                    onclick="cerrarModal()"
+                                    class="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                                )
+                                    | Entendido
 
 block scripts
     script.
@@ -65,3 +86,26 @@ block scripts
                 icon.classList.add('fa-eye');
             }
         }
+
+        // Función para cerrar el modal
+        function cerrarModal() {
+            const modal = document.getElementById('modal-errores');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // Cerrar modal al hacer clic fuera de él
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal-errores');
+            if (event.target === modal) {
+                cerrarModal();
+            }
+        }
+
+        // Cerrar modal con la tecla Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                cerrarModal();
+            }
+        });

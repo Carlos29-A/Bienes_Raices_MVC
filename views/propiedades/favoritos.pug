@@ -9,7 +9,7 @@ block contenido
             //- Encabezado
             header(class="bg-white shadow")
                 div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8")
-                    h1(class="text-3xl font-bold text-gray-900") Mis Favoritos
+                    h1(class="text-3xl font-bold text-gradient-to-r from-[#FF641A] to-[#FF9F00] bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Mis Favoritos
                     p(class="mt-2 text-sm text-gray-600") Propiedades que te han gustado
 
             //- Contenido de Favoritos
@@ -18,11 +18,11 @@ block contenido
                     //- Grid de Propiedades Favoritas
                     div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
                         each propiedad in favoritos
-                            div(class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden")
+                            div(class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col h-[28rem]")
                                 //- Imagen
-                                div(class="relative")
+                                div(class="relative h-48")
                                     img(
-                                        class="w-full h-48 object-cover"
+                                        class="w-full h-full object-cover"
                                         src=`/uploads/${propiedad.propiedadRelacion.imagen}`
                                         alt=propiedad.propiedadRelacion.titulo
                                     )
@@ -31,47 +31,47 @@ block contenido
                                         i(class="fas fa-heart text-red-500")
                                 
                                 //- Detalles de la Propiedad
-                                div(class="p-4")
+                                div(class="p-4 flex flex-col flex-grow")
                                     //- Título y Precio
                                     div(class="flex justify-between items-start mb-2")
-                                        h3(class="text-normal font-semibold text-gray-900")= propiedad.propiedadRelacion.titulo
-                                        p(class="text-blue-600 font-bold") $#{propiedad.propiedadRelacion.precio.toLocaleString()}
+                                        h3(class="text-normal font-semibold text-gray-900 line-clamp-2 h-12")= propiedad.propiedadRelacion.titulo
+                                        p(class="text-gradient-to-r from-[#FF641A] to-[#FF9F00] font-bold ml-2") $#{propiedad.propiedadRelacion.precio.toLocaleString()}
                                     
                                     //- Ubicación y Categoría
                                     div(class="flex items-center space-x-4 text-sm text-gray-600 mb-4")
-                                        p(class="flex items-center")
-                                            i(class="fas fa-map-marker-alt mr-1")
-                                            | #{propiedad.propiedadRelacion.calle}
-                                        p(class="flex items-center")
-                                            i(class="fas fa-building mr-1")
-                                            | #{propiedad.propiedadRelacion.categoriaRelacion.nombre}
+                                        p(class="flex items-center truncate")
+                                            i(class="fas fa-map-marker-alt mr-1 flex-shrink-0")
+                                            span(class="truncate") #{propiedad.propiedadRelacion.calle}
+                                        p(class="flex items-center truncate")
+                                            i(class="fas fa-building mr-1 flex-shrink-0")
+                                            span(class="truncate") #{propiedad.propiedadRelacion.categoriaRelacion.nombre}
                                     
                                     //- Características
                                     div(class="grid grid-cols-3 gap-2 text-sm text-gray-500 mb-4")
                                         div(class="flex items-center")
-                                            i(class="fas fa-bed mr-1")
-                                            | #{propiedad.propiedadRelacion.habitaciones} hab
+                                            i(class="fas fa-bed mr-1 flex-shrink-0")
+                                            span #{propiedad.propiedadRelacion.habitaciones} hab
                                         div(class="flex items-center")
-                                            i(class="fas fa-bath mr-1")
-                                            | #{propiedad.propiedadRelacion.wc} baños
+                                            i(class="fas fa-bath mr-1 flex-shrink-0")
+                                            span #{propiedad.propiedadRelacion.wc} baños
                                         div(class="flex items-center")
-                                            i(class="fas fa-car mr-1")
-                                            | #{propiedad.propiedadRelacion.estacionamiento} est
+                                            i(class="fas fa-car mr-1 flex-shrink-0")
+                                            span #{propiedad.propiedadRelacion.estacionamiento} est
                                     
                                     //- Vendedor
                                     div(class="flex items-center space-x-2 mb-4 p-2 bg-gray-50 rounded-lg")
                                         img(
-                                            class="h-8 w-8 rounded-full"
-                                            src=`https://ui-avatars.com/api/?name=${propiedad.propiedadRelacion.usuarioRelacion.nombre}&background=0D8ABC&color=fff`
+                                            class="h-8 w-8 rounded-full flex-shrink-0"
+                                            src="/img/avatar.png"
                                             alt=propiedad.propiedadRelacion.usuarioRelacion.nombre
                                         )
-                                        p(class="text-sm text-gray-600")= propiedad.propiedadRelacion.usuarioRelacion.nombre
+                                        p(class="text-sm text-gray-600 truncate")= propiedad.propiedadRelacion.usuarioRelacion.nombre
                                     
                                     //- Botón de Acción
-                                    div(class="flex")
+                                    div(class="flex mt-auto")
                                         a(
                                             href=`/propiedades/${propiedad.propiedadRelacion.id}`
-                                            class="w-full bg-blue-600 text-white text-center py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                                            class="w-full bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-white text-center py-2 px-4 rounded-md hover:scale-105  transition-colors duration-200"
                                         )
                                             | Ver Detalles
                 else

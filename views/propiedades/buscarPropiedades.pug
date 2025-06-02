@@ -2,181 +2,189 @@ extends ../layout/index
 
 block styles
     meta(name="csrf-token" content=csrfToken)
+
 block contenido
     div(class="min-h-screen bg-gray-100 flex")
         include ../usuario/comprador-Sidebar/compradorSidebar.pug
-        //- Sección de Búsqueda
-        div(class="bg-white shadow flex w-full")
-            div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex flex-col gap-4 ")
-                h1(class="text-3xl font-bold text-gray-900 mb-6") Buscar Propiedades
-                //- Filtros de Búsqueda
-                form(class="space-y-6" action="/propiedades/buscar" method="GET")
-                    //- Filtros Principales
-                    div(class="grid grid-cols-1 md:grid-cols-4 gap-4")
-                        //- Ubicación
-                        div
-                            label(class="block text-sm font-medium text-gray-700" for="ubicacion") Ubicación
-                            input#ubicacion_comprador(
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                type="text"
-                                name="calle"
-                                placeholder="Ciudad, Zona..."
-                            )
+        
+        //- Contenido Principal
+        div(class="flex-1")
+            //- Header
+            header(class="bg-white shadow-sm sticky top-0 z-10")
+                div(class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8")
+                    h1(class="text-2xl font-bold text-gradient-to-r from-[#FF641A] to-[#FF9F00] bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Buscar Propiedades
 
-                        //- Tipo de Propiedad
-                        div
-                            label(class="block text-sm font-medium text-gray-700" for="categoria") Categoría de Propiedad
-                            select#categoria_comprador(
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                name="categoria"
-                            )
-                                option(value="") Seleccione
-                                each categoria in categorias
-                                    option(value=categoria.id)= categoria.nombre
+            //- Contenido Principal
+            main(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8")
+                //- Sección de Filtros
+                section(class="bg-white rounded-lg shadow-sm mb-8")
+                    div(class="px-6 py-4 border-b border-gray-200")
+                        h2(class="text-lg font-bold text-[#1E2939]") Filtros de Búsqueda
+                    
+                    div(class="p-6")
+                        form(class="space-y-6" action="/propiedades/buscar" method="GET")
+                            //- Filtros Principales
+                            div(class="grid grid-cols-1 md:grid-cols-4 gap-4")
+                                //- Ubicación
+                                div
+                                    label(class="block text-sm font-medium text-[#1E2939]" for="ubicacion") Ubicación
+                                    input#ubicacion_comprador(
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white"
+                                        type="text"
+                                        name="calle"
+                                        placeholder="Ciudad, Zona..."
+                                    )
 
-                        //- Rango de Precio
-                        div
-                            label(class="block text-sm font-medium text-gray-700" for="precio_min") Precio Mínimo
-                            input#precio_min_comprador(
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                type="number"
-                                name="precio_min"
-                                placeholder="$"
-                            )
+                                //- Tipo de Propiedad
+                                div
+                                    label(class="block text-sm font-medium text-[#1E2939]" for="categoria") Categoría
+                                    select#categoria_comprador(
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white"
+                                        name="categoria"
+                                    )
+                                        option(value="") Seleccione
+                                        each categoria in categorias
+                                            option(value=categoria.id)= categoria.nombre
 
-                        div
-                            label(class="block text-sm font-medium text-gray-700" for="precio_max") Precio Máximo
-                            input#precio_max_comprador(
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                type="number"
-                                name="precio_max"
-                                placeholder="$"
-                            )
+                                //- Rango de Precio
+                                div
+                                    label(class="block text-sm font-medium text-[#1E2939]" for="precio_min") Precio Mínimo
+                                    input#precio_min_comprador(
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white"
+                                        type="number"
+                                        name="precio_min"
+                                        placeholder="$"
+                                    )
 
-                    //- Filtros Adicionales
-                    div(class="grid grid-cols-1 md:grid-cols-4 gap-4")
-                        //- Habitaciones
-                        div
-                            label(class="block text-sm font-medium text-gray-700" for="habitaciones") Habitaciones
-                            select#habitaciones_comprador(
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                name="habitaciones"
-                            )
-                                option(value="") Seleccione
-                                option(value="1") 1
-                                option(value="2") 2
-                                option(value="3") 3
-                                option(value="4") 4
-                                option(value="5") 5
+                                div
+                                    label(class="block text-sm font-medium text-[#1E2939]" for="precio_max") Precio Máximo
+                                    input#precio_max_comprador(
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white"
+                                        type="number"
+                                        name="precio_max"
+                                        placeholder="$"
+                                    )
 
-                        //- Baños
-                        div
-                            label(class="block text-sm font-medium text-gray-700" for="wc") Baños
-                            select#wc_comprador(
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                name="wc"
-                            )
-                                option(value="") Seleccione
-                                option(value="1") 1
-                                option(value="2") 2
-                                option(value="3") 3
-                                option(value="4") 4
-                                option(value="5") 5
+                            //- Filtros Adicionales
+                            div(class="grid grid-cols-1 md:grid-cols-4 gap-4")
+                                //- Habitaciones
+                                div
+                                    label(class="block text-sm font-medium text-[#1E2939]" for="habitaciones") Habitaciones
+                                    select#habitaciones_comprador(
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white"
+                                        name="habitaciones"
+                                    )
+                                        option(value="") Seleccione
+                                        - for(let i = 1; i <= 5; i++)
+                                            option(value=i)= i
 
-                        //- Estacionamientos
-                        div
-                            label(class="block text-sm font-medium text-gray-700" for="estacionamiento") Estacionamientos
-                            select#estacionamiento_comprador(
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                name="estacionamiento"
-                            )
-                                option(value="") Seleccione
-                                option(value="1") 1
-                                option(value="2") 2
-                                option(value="3") 3
-                                option(value="4") 4
-                                option(value="5") 5
+                                //- Baños
+                                div
+                                    label(class="block text-sm font-medium text-[#1E2939]" for="wc") Baños
+                                    select#wc_comprador(
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white"
+                                        name="wc"
+                                    )
+                                        option(value="") Seleccione
+                                        - for(let i = 1; i <= 5; i++)
+                                            option(value=i)= i
 
-                        //- Botón de Búsqueda
-                        div(class="flex items-end")
-                            button(
-                                type="submit"
-                                class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors transform hover:scale-105 cursor-pointer"
-                            )
-                                i(class="fas fa-search mr-2")
-                                | Buscar Propiedades
+                                //- Estacionamientos
+                                div
+                                    label(class="block text-sm font-medium text-[#1E2939]" for="estacionamiento") Estacionamientos
+                                    select#estacionamiento_comprador(
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white"
+                                        name="estacionamiento"
+                                    )
+                                        option(value="") Seleccione
+                                        - for(let i = 1; i <= 5; i++)
+                                            option(value=i)= i
 
-      
-                div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8")
-                    //- Contador de Resultados
-                    div(class="mb-6")
-                        p(class="text-gray-600")
-                            | Mostrando 
-                            span(class="font-semibold")= propiedades ? propiedades.length : 0
-                            |  propiedades
+                                //- Botón de Búsqueda
+                                div(class="flex items-end")
+                                    button(
+                                        type="submit"
+                                        class="w-full bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-white px-4 py-2 rounded-md hover:scale-105  transition-colors duration-200 flex items-center justify-center cursor-pointer "
+                                    )
+                                        i(class="fas fa-search mr-2")
+                                        | Buscar Propiedades
 
-                    //- Grid de Propiedades
-                    if propiedades && propiedades.length
-                        div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
-                            each propiedad in propiedades
-                                div(class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden")
-                                    //- Imagen de la Propiedad
-                                    div(class="relative")
-                                        img(
-                                            class="w-full h-48 object-cover hover:scale-105 transition-all duration-300"
-                                            src=`/uploads/${propiedad.imagen}`
-                                            alt=propiedad.titulo
-                                        )
-                                    //- Detalles de la Propiedad
-                                    div(class="p-4")
-                                        h3(class="text-lg font-semibold text-gray-900 mb-2")= propiedad.titulo
-                                        p(class="text-blue-600 font-bold mb-2") $ #{propiedad.precio.toLocaleString()}
-                                        
-                                        //- Características
-                                        div(class="flex items-center space-x-4 text-sm text-gray-600 mb-4")
-                                            p
-                                                i(class="fas fa-map-marker-alt mr-1")
-                                                | #{propiedad.calle}
-                                            p
-                                                i(class="fas fa-building mr-1")
-                                                | #{propiedad.categoriaRelacion.nombre}
-                                        
-                                        //- Características Adicionales
-                                        div(class="flex items-center space-x-4 text-sm text-gray-500 mb-4")
-                                            p
-                                                i(class="fas fa-bed mr-1")
-                                                | #{propiedad.habitaciones} hab
-                                            p
-                                                i(class="fas fa-bath mr-1")
-                                                | #{propiedad.wc} baños
-                                            p
-                                                i(class="fas fa-car mr-1")
-                                                | #{propiedad.estacionamiento} est
-                                        
-                                        //- Botones de Acción
-                                        div(class="flex space-x-2")
-                                            a(
-                                                href=`/propiedades/${propiedad.id}`
-                                                class="flex-1 bg-blue-600 text-white text-center py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm cursor-pointer"
+                //- Sección de Resultados
+                section(class="bg-white rounded-lg shadow-sm")
+                    div(class="px-6 py-4 border-b border-gray-200")
+                        div(class="flex justify-between items-center")
+                            h2(class="text-lg font-medium text-gray-900") Resultados de la Búsqueda
+                            p(class="text-sm text-gray-600")
+                                | Mostrando 
+                                span(class="font-semibold")= propiedades ? propiedades.length : 0
+                                |  propiedades
+
+                    div(class="p-6 bg-gray-50")
+                        if propiedades && propiedades.length
+                            div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
+                                each propiedad in propiedades
+                                    article(class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200 flex flex-col h-[32rem]")
+                                        //- Imagen de la Propiedad
+                                        div(class="relative group h-48")
+                                            img(
+                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                src=`/uploads/${propiedad.imagen}`
+                                                alt=propiedad.titulo
                                             )
-                                                | Ver Detalles
-                                            a(
-                                                class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 transition-colors text-sm cursor-pointer"
-                                                href=`/mensajes/enviar/${propiedad.id}/${propiedad.usuarioRelacion.id}`
-                                            )
-                                                | Contactar
                                             //- Botón de Favoritos
                                             button(
-                                                class=`flex-1 ${favoritos.some(favorito => favorito.propiedadId === propiedad.id) ? 'text-red-500' : 'text-gray-700'}  py-2 px-4 rounded-md transition-colors cursor-pointer agregar-favorito`
+                                                class=`absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors duration-200 agregar-favorito ${favoritos.some(favorito => favorito.propiedadId === propiedad.id) ? 'text-red-500' : 'text-gray-400'}`
                                                 data-propiedad-id=propiedad.id
                                                 data-usuario-id=propiedad.usuarioRelacion.id
                                             )
                                                 i(class="fas fa-heart")
 
-                    else
-                        div(class="text-center py-12")
-                            p(class="text-gray-500 text-lg") No se encontraron propiedades que coincidan con tu búsqueda
-                            p(class="text-gray-400 mt-2") Intenta ajustar los filtros para ver más resultados
+                                        //- Detalles de la Propiedad
+                                        div(class="p-4 flex flex-col flex-grow")
+                                            //- Título y Precio
+                                            div(class="space-y-2 mb-3")
+                                                h3(class="text-lg font-semibold text-gray-900 line-clamp-2 h-14")= propiedad.titulo
+                                                p(class="text-blue-600 font-bold text-xl") $ #{propiedad.precio.toLocaleString()}
+                                            
+                                            //- Ubicación y Categoría
+                                            div(class="flex flex-col space-y-1 text-sm text-gray-600 mb-3")
+                                                div(class="flex items-center")
+                                                    i(class="fas fa-map-marker-alt w-5 text-gray-500")
+                                                    span(class="ml-2 truncate")= propiedad.calle
+                                                div(class="flex items-center")
+                                                    i(class="fas fa-building w-5 text-gray-500")
+                                                    span(class="ml-2 truncate")= propiedad.categoriaRelacion.nombre
+                                            
+                                            //- Características
+                                            div(class="flex flex-col space-y-2 text-sm text-gray-600 border-t border-gray-100 pt-3 mb-4")
+                                                div(class="flex items-center")
+                                                    i(class="fas fa-bed w-5 text-gray-500")
+                                                    span(class="ml-2")= propiedad.habitaciones + ' Habitaciones'
+                                                div(class="flex items-center")
+                                                    i(class="fas fa-bath w-5 text-gray-500")
+                                                    span(class="ml-2")= propiedad.wc + ' Baños'
+                                                div(class="flex items-center")
+                                                    i(class="fas fa-parking w-5 text-gray-500")
+                                                    span(class="ml-2")= propiedad.estacionamiento + ' Estacionamientos'
+                                            
+                                            //- Botones de Acción
+                                            div(class="flex space-x-2 mt-auto")
+                                                a(
+                                                    href=`/propiedades/${propiedad.id}`
+                                                    class="flex-1 bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-white text-center py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm"
+                                                )
+                                                    | Ver Detalles
+                                                a(
+                                                    href=`/mensajes/enviar/${propiedad.id}/${propiedad.usuarioRelacion.id}`
+                                                    class="bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 transition-colors duration-200 text-sm text-center flex-1"
+                                                )
+                                                    | Contactar
+
+                        else
+                            div(class="text-center py-12")
+                                i(class="fas fa-search text-gray-300 text-5xl mb-4")
+                                p(class="text-gray-500 text-lg") No se encontraron propiedades que coincidan con tu búsqueda
+                                p(class="text-gray-400 mt-2") Intenta ajustar los filtros para ver más resultados
 
 block scripts
     script(src="/js/agregarFavorito.js")

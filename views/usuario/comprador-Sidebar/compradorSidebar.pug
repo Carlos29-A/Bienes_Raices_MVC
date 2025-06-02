@@ -2,24 +2,45 @@ div(class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 le
     div(class="flex items-center space-x-2 px-4")
         span(class="text-2xl font-extrabold") InmoElegante
     nav
-        a(class="block py-2.5 px-4 rounded transition duration-200 bg-gray-900 text-white" href="/auth/comprador/panel")
-            i(class="fas fa-home mr-2")
-            | Inicio
-        a(class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white" href="/auth/comprador/buscar-propiedades")
-            i(class="fas fa-search mr-2")
-            | Buscar Propiedades
-        a(class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white" href="/favoritos/propiedades-favoritas")
-            i(class="fas fa-heart mr-2")
-            | Favoritos
-        a(class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white" href="#")
-            i(class="fas fa-history mr-2")
-            | Historial de Visitas
-        a(class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white" href="/mensajes/obtener")
-            i(class="fas fa-envelope mr-2")
-            | Mensajes
-        a(class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white" href="/auth/editar-perfil")
-            i(class="fas fa-user mr-2")
-            | Mi Perfil
-        a(class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white" href="/auth/cerrar-sesion")
-            i(class="fas fa-sign-out-alt mr-2")
-            | Cerrar Sesión
+        a(
+            class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/comprador/panel' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`
+            href="/auth/comprador/panel"
+        )
+            img(src="/img/hogar.png" alt="Inicio" class="w-10 h-10 ml-4")
+            p(class="ml-6") Inicio
+        a(
+            class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/comprador/buscar-propiedades' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`
+            href="/auth/comprador/buscar-propiedades"
+        )
+            img(src="/img/buscarPropiedad.png" alt="Buscar Propiedades" class="w-15 h-15")
+            p(class="ml-6") Buscar Propiedades
+        a(
+            class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/favoritos/propiedades-favoritas' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`
+            href="/favoritos/propiedades-favoritas"
+        )
+            img(src="/img/PropiedadesFavoritas.png" alt="Favoritos" class="w-15 h-15")
+            p(class="ml-6") Favoritos
+        //- a(
+        //-     class=`block py-2.5 px-4 rounded transition duration-200 ${ruta === '/historial-visitas' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`
+        //-     href="#"
+        //- )
+        //-     i(class="fas fa-history mr-2")
+        //-     | Historial de Visitas
+        a(
+            class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/mensajes/obtener' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`
+            href="/mensajes/obtener"
+        )
+            img(src="/img/Mensaje.png" alt="Mensajes" class="w-15 h-15")
+            p(class="ml-6") Mensajes
+        a(
+            class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/editar-perfil' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`
+            href="/auth/editar-perfil"
+        )
+            img(src="/img/usuarios.png" alt="Mi Perfil" class="w-15 h-15")
+            p(class="ml-6") Mi Perfil
+        a(
+            class=`flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white`
+            href="/auth/cerrar-sesion"
+        )
+            img(src="/img/cerrar-sesion.png" alt="Cerrar Sesión" class="w-12 h-12 ml-2")
+            p(class="ml-6") Cerrar Sesión

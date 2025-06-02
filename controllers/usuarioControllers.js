@@ -322,11 +322,18 @@ const panelComprador = async (req, res) => {
             }
         ]
     })
+    const mensajes = await Mensaje.findAll({
+        where : {   
+            remitenteId : id
+        },
+    })
 
     res.render('usuario/panel-comprador', {
         titulo: 'Panel de Comprador',
         usuario,
-        propiedadesFavoritas
+        propiedadesFavoritas,
+        mensajes,
+        ruta: '/auth/comprador/panel'
     })
 }
 
@@ -338,7 +345,8 @@ const editarPerfil = async (req, res) => {
     res.render('usuario/editar-perfil', {
         titulo: 'Editar Perfil',
         usuario,
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        ruta: '/auth/editar-perfil'
     })
 }
 const actualizarPerfil = async (req, res) => {
@@ -358,7 +366,8 @@ const actualizarPerfil = async (req, res) => {
             csrfToken: req.csrfToken(),
             errores: errores.array(),
             oldData: req.body,
-            usuario
+            usuario,
+            ruta: '/auth/editar-perfil'
         })
     }
     // Si quiere cambiar la contraseña
@@ -372,7 +381,8 @@ const actualizarPerfil = async (req, res) => {
             return res.render('usuario/editar-perfil', {
                 csrfToken: req.csrfToken(),
                 erroresPassword: errores.array(),
-                usuario
+                usuario,
+                ruta: '/auth/editar-perfil'
             })
         }
         const passwordCorrecto = await usuario.verificarPassword(req.body.password_actual)
@@ -380,21 +390,24 @@ const actualizarPerfil = async (req, res) => {
             return res.render('usuario/editar-perfil', {
                 csrfToken: req.csrfToken(),
                 erroresPassword: [{ msg: 'La contraseña actual es incorrecta' }],
-                usuario
+                usuario,
+                ruta: '/auth/editar-perfil'
             })
         }
         if (req.body.password_nueva !== req.body.password_confirmar) {
             return res.render('usuario/editar-perfil', {
                 csrfToken: req.csrfToken(),
                 erroresPassword: [{ msg: 'Las contraseñas no coinciden' }],
-                usuario
+                usuario,
+                ruta: '/auth/editar-perfil'
             })
         }
         if (req.body.password_nueva === req.body.password_actual) {
             return res.render('usuario/editar-perfil', {
                 csrfToken: req.csrfToken(),
                 erroresPassword: [{ msg: 'La contraseña nueva no puede ser igual a la contraseña actual' }],
-                usuario
+                usuario,
+                ruta: '/auth/editar-perfil'
             })
         }
         usuario.password = await bcrypt.hash(req.body.password_nueva, 10)
@@ -452,7 +465,8 @@ const buscarPropiedades = async (req, res) => {
         titulo: 'Buscar Propiedades',
         csrfToken: req.csrfToken(),
         propiedades,
-        favoritos
+        favoritos,
+        ruta: '/auth/comprador/buscar-propiedades'
     })
 }
 

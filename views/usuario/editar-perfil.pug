@@ -12,11 +12,11 @@ block contenido
             // Top Navigation
             header(class="bg-white shadow-lg")
                 div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
-                    h1(class="text-3xl font-bold text-gray-900") Mi Perfil
+                    h1(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Mi Perfil
                     div(class="flex items-center space-x-4")
                         div(class="relative")
                             button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
-                                img(class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=Vendedor&background=0D8ABC&color=fff" alt="Vendedor")
+                                img(class="h-10 w-10 rounded-full" src="/img/avatar.png" alt="Vendedor")
                                 span= usuario.nombre
 
             // Contenido del Perfil
@@ -35,25 +35,25 @@ block contenido
                                 div(class="flex-1 text-center md:text-left")
                                     div(class="flex flex-col md:flex-row md:items-center md:justify-between")
                                         div
-                                            h2(class="text-3xl font-bold text-gray-900")= usuario.nombre
-                                            p(class="text-lg text-blue-600 font-medium mt-1")= usuario.tipo.toString() === '1' ? 'Vendedor Inmobiliario' : 'Comprador'
+                                            h2(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text")= usuario.nombre
+                                            p(class="text-lg bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")= usuario.tipo.toString() === '1' ? 'Vendedor Inmobiliario' : 'Comprador'
                                         div(class="mt-4 md:mt-0")
-                                            span(class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800")
+                                            span(class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text")
                                                 i(class="fas fa-calendar-alt mr-2")
                                                 | Miembro desde #{usuario.createdAt.toLocaleDateString()}
                                     
                                     div(class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4")
                                         div(class="bg-white rounded-lg p-4 shadow-sm")
                                             div(class="flex items-center justify-center md:justify-start space-x-2")
-                                                i(class="fas fa-envelope text-blue-500")
+                                                i(class="fas fa-envelope bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
                                                 span(class="text-gray-600")= usuario.email
                                         div(class="bg-white rounded-lg p-4 shadow-sm")
                                             div(class="flex items-center justify-center md:justify-start space-x-2")
-                                                i(class="fas fa-phone text-blue-500")
+                                                i(class="fas fa-phone bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
                                                 span(class="text-gray-600")= usuario.telefono || 'No especificado'
                                         div(class="bg-white rounded-lg p-4 shadow-sm")
                                             div(class="flex items-center justify-center md:justify-start space-x-2")
-                                                i(class="fas fa-user-shield text-blue-500")
+                                                i(class="fas fa-user-shield bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
                                                 span(class="text-gray-600")= usuario.tipo.toString() === '1' ? 'Cuenta Verificada' : 'Cuenta Básica'
 
                         // Formulario de Edición
@@ -63,7 +63,7 @@ block contenido
                             // Información Personal
                             div(class="space-y-6")
                                 div
-                                    h3(class="text-lg leading-6 font-medium text-gray-900") Información Personal
+                                    h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Información Personal
                                     p(class="mt-1 text-sm text-gray-500") Actualiza tu información personal.
                                     if errores
                                         div(class="mt-2")
@@ -99,7 +99,7 @@ block contenido
                             // Cambiar Contraseña
                             div(class="pt-8")
                                 div
-                                    h3(class="text-lg leading-6 font-medium text-gray-900") Cambiar Contraseña
+                                    h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Cambiar Contraseña
                                     p(class="mt-1 text-sm text-gray-500") Actualiza tu contraseña de acceso.
                                     if erroresPassword
                                         div(class="mt-2")
@@ -127,6 +127,6 @@ block contenido
                                     a(href="/auth/vendedor/panel" class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200")
                                         i(class="fas fa-times mr-2")
                                         | Cancelar
-                                    button(type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105")
+                                    button(type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-[#FF641A] to-[#FF9F00] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105")
                                         i(class="fas fa-save mr-2")
                                         | Guardar Cambios

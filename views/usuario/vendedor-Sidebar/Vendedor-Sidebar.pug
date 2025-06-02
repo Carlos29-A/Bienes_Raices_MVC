@@ -4,21 +4,21 @@ div(class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 le
         span(class="text-2xl font-extrabold") InmoElegante
     
     nav
-        a(href="/auth/vendedor/panel" class=`block py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/vendedor/panel' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
-            i(class="fas fa-home mr-2")
-            | Inicio
-        a(href="/propiedades/crearPropiedad" class=`block py-2.5 px-4 rounded transition duration-200 ${ruta === '/propiedades/crearPropiedad' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
-            i(class="fas fa-plus-circle mr-2")
+        a(href="/auth/vendedor/panel" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/vendedor/panel' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
+            img(src="/img/hogar.png", alt="Inicio" class="w-10 h-10 ml-2")
+            p(class="ml-6") Inicio
+        a(href="/propiedades/crearPropiedad" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/propiedades/crearPropiedad' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
+            img(src="/img/agregarPropiedad.png" alt="Publicar Propiedad" class="w-15 h-15 mr-2") 
             | Publicar Propiedad
-        a(href="/propiedades/mis-propiedades" class=`block py-2.5 px-4 rounded transition duration-200 ${ruta === '/propiedades/mis-propiedades' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
-            i(class="fas fa-building mr-2")
+        a(href="/propiedades/mis-propiedades" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/propiedades/mis-propiedades' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
+            img(src="/img/propiedad.png", alt="Mis Propiedades" class="w-15 h-15 mr-2")
             | Mis Propiedades
-        a(href="/mensajes/obtener/vendedor" class=`block py-2.5 px-4 rounded transition duration-200 ${ruta === '/mensajes/obtener/vendedor' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
-            i(class="fas fa-envelope mr-2")
+        a(href="/mensajes/obtener/vendedor" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/mensajes/obtener/vendedor' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
+            img(src="/img/Mensaje.png", alt="Mensajes" class="w-15 h-15 mr-2")
             | Mensajes
-        a(href="/auth/editar-perfil" class=`block py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/editar-perfil' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
-            i(class="fas fa-user mr-2")
+        a(href="/auth/editar-perfil" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/editar-perfil' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
+            img(src="/img/usuarios.png", alt="Mi Perfil" class="w-15 h-15 mr-2")
             | Mi Perfil
-        a(href="/auth/cerrar-sesion" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white")
-            i(class="fas fa-sign-out-alt mr-2")
-            | Cerrar Sesión
+        a(href="/auth/cerrar-sesion" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white")
+            img(src="/img/cerrar-sesion.png", alt="Cerrar Sesión" class="w-12 h-12 ml-2")
+            p(class="ml-3") Cerrar Sesión

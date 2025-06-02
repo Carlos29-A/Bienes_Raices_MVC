@@ -8,7 +8,7 @@ block contenido
                 div(class="flex-1 px-4 py-8 bg-white shadow-sm sm:rounded-lg sm:p-12")
                     div(class="max-w-sm mx-auto")
                         div(class="flex items-center space-x-4 justify-center mb-8")
-                            i(class="fas fa-key text-4xl text-blue-500")
+                            i(class="fas fa-key text-4xl text-[#F99E00]")
                             h1(class="text-2xl font-semibold text-gray-900") Recuperar Contraseña
                         
                         p(class="text-center text-gray-600 mb-8") Ingresa tu correo electrónico y te enviaremos las instrucciones para recuperar tu contraseña
@@ -23,16 +23,16 @@ block contenido
                                         input(type="email" name="email" id="email" placeholder="Ejm: usuario@gmail.com" class="w-full pl-10 pr-3 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200")
                                 
                                 div(class="pt-6")
-                                    input(type="submit" value="Enviar Instrucciones" class="w-full py-3 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 cursor-pointer")
+                                    input(type="submit" value="Enviar Instrucciones" class="w-full py-3 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-[#F99E00] hover:bg-[#F97101] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 cursor-pointer")
                                 
                                 div(class="mt-6 text-center space-y-4")
-                                    a(href="/auth/login" class="block text-sm text-blue-500 hover:text-blue-600")
+                                    a(href="/auth/login" class="block text-sm text-[#F99E00] hover:text-[#F97101]")
                                         i(class="fas fa-arrow-left mr-2")
                                         | Volver al Inicio de Sesión
                                     
                                     div(class="border-t border-gray-200 pt-4")
                                         p(class="text-sm text-gray-600") ¿No tienes una cuenta? 
-                                            a(href="/auth/registro" class="font-medium text-blue-500 hover:text-blue-600") Regístrate aquí
+                                            a(href="/auth/registro" class="font-medium text-[#F99E00] hover:text-[#F97101] font-bold") Regístrate aquí
 
                 // Panel de Errores
                 if errores && errores.length > 0

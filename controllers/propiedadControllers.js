@@ -12,7 +12,8 @@ const registrarPropiedad = async (req, res) => {
         csrfToken: req.csrfToken(),
         usuario,
         oldInfo: {},
-        errores: []
+        errores: [],
+        ruta: '/propiedades/crearPropiedad'
     })
 }
 
@@ -34,7 +35,8 @@ const publicarPropiedad = async (req, res) => {
             csrfToken: req.csrfToken(),
             usuario: req.usuario,
             oldInfo: req.body,
-            errores: errores.array()
+            errores: errores.array(),
+            ruta: '/propiedades/crearPropiedad'
         })
     }
 
@@ -63,7 +65,8 @@ const publicarPropiedad = async (req, res) => {
             csrfToken: req.csrfToken(),
             usuario: req.usuario,
             oldInfo: req.body,
-            errores: [{ msg: 'Hubo un error al publicar la propiedad' }]
+            errores: [{ msg: 'Hubo un error al publicar la propiedad' }],
+            ruta: '/propiedades/crearPropiedad'
         })
     }
 }
@@ -148,7 +151,8 @@ const misPropiedades = async (req, res) => {
         propiedades,
         usuario,
         categorias,
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        ruta: '/propiedades/mis-propiedades'
     })
 }
 

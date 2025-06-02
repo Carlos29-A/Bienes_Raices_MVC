@@ -1,43 +1,95 @@
 extends ../layout/index.pug
 
 block contenido
-    div(class="min-h-screen flex")
+    div(class="min-h-screen flex bg-gray-100")
         include ./comprador-Sidebar/compradorSidebar.pug
 
         //- Main Content
         div(class="flex-1")
             //- Top Navigation
-            header(class="bg-white shadow")
-                div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
-                    h1(class="text-3xl font-bold text-gray-900") Panel de Comprador
-                    div(class="flex items-center space-x-4")
-                        div(class="relative")
-                            button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
-                                img(class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=Comprador&background=0D8ABC&color=fff" alt="Comprador")
-                                span= usuario.nombre
+            header(class="bg-white shadow-sm sticky top-0 z-10")
+                div(class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8")
+                    div(class="flex justify-between items-center")
+                        h1(class="text-2xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Panel de Comprador
 
-                //- Favoritos
-                div(class="bg-white shadow rounded-lg mb-8")
-                    div(class="px-4 py-5 sm:px-6")
-                        h3(class="text-lg leading-6 font-medium text-gray-900") Mis Favoritos
-                    div(class="border-t border-gray-200")
-                        div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6")
-                            //- Propiedades
-                            each propiedad in propiedadesFavoritas
-                                div
-                                    div(class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden")
-                                        img(class="w-full h-48 object-cover hover:scale-105 transition-all duration-300" src=`/uploads/${propiedad.propiedadRelacion.imagen}` alt="Casa")
-                                    div(class="p-4")
-                                        h4(class="text-lg font-semibold text-gray-900")= propiedad.propiedadRelacion.titulo
-                                        p(class="text-gray-600") $ #{propiedad.propiedadRelacion.precio}
-                                        p(class="text-gray-500 text-sm mt-2") #{propiedad.propiedadRelacion.habitaciones} habitaciones • #{propiedad.propiedadRelacion.wc} baños • #{propiedad.propiedadRelacion.estacionamiento} estacionamientos
-                                        div(class="mt-4 flex space-x-2")
-                                            a(href=`/propiedades/${propiedad.propiedadRelacion.id}` class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 hover:scale-105 text-sm cursor-pointer transition-all duration-300 text-center")
-                                                | Ver Detalles
-                                            a(href=`/mensajes/enviar/${propiedad.propiedadRelacion.id}/${propiedad.propiedadRelacion.usuarioId}` class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 hover:scale-105 text-sm cursor-pointer transition-all duration-300 text-center")
-                                                | Contactar
+                        div(class="flex items-center space-x-4")
+                            div(class="relative")
+                                button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900 transition-colors duration-200")
+                                    img(class="h-10 w-10 rounded-full ring-2 ring-blue-500" src="/img/avatar.png" alt="Comprador")
+                                    span(class="font-medium text-gradient-to-r from-[#FF641A] to-[#B08262] bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")= usuario.nombre
 
+            //- Main Content Container
+            main(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8")
+                //- Stats Section
+                div(class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8")
+                    //- Total Favoritos
+                    div(class="bg-white rounded-lg shadow-sm p-6")
+                        div(class="flex items-center")
+                            img(src="/img/Favoritos.png" alt="Favoritos" class="w-15 h-15")
+                            div(class="ml-4")
+                                p(class="text-sm font-bold text-[#1E2939]") Total Favoritos
+                                p(class="text-2xl font-semibold text-gray-900")= propiedadesFavoritas.length
+                    
+                    //- Mensajes Nuevos
+                    div(class="bg-white rounded-lg shadow-sm p-6")
+                        div(class="flex items-center")
+                            img(src="/img/Mensaje.png" alt="Mensajes" class="w-15 h-15")
+                            div(class="ml-4")
+                                p(class="text-sm font-bold text-[#1E2939]") Mensajes Enviados
+                                p(class="text-2xl font-semibold text-gray-900")= mensajes.length
+                    
+                    //- Propiedades Visitadas
+                    div(class="bg-white rounded-lg shadow-sm p-6")
+                        div(class="flex items-center")
+                            div(class="p-3 rounded-full bg-purple-100 text-purple-600")
+                                i(class="fas fa-eye text-xl")
+                            div(class="ml-4")
+                                p(class="text-sm font-bold text-[#1E2939]") Propiedades Visitadas
+                                p(class="text-2xl font-semibold text-gray-900") 0
 
+                //- Favoritos Section
+                section(class="bg-white rounded-lg shadow-sm mb-8")
+                    div(class="px-6 py-4 border-b border-gray-200")
+                        div(class="flex justify-between items-center")
+                            h2(class="text-lg font-bold text-[#1E2939]") Propiedades Publicadas
+                            a(href="/auth/comprador/buscar-propiedades" class="text-sm text-gradient-to-r from-[#FF641A] to-[#FF9F00] bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text hover:text-blue-800 transition-colors duration-200")
+                                | Ver todas
+                                i(class="fas fa-arrow-right ml-1")
+                    
+                    div(class="p-6 bg-gray-50")
+                        if propiedadesFavoritas && propiedadesFavoritas.length > 0
+                            div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
+                                each propiedad in propiedadesFavoritas
+                                    article(class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200")
+                                        div(class="relative group")
+                                            img(class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" src=`/uploads/${propiedad.propiedadRelacion.imagen}` alt="Casa")
+                                            
+                                        div(class="p-4 space-y-3")
+                                            h3(class="text-lg font-semibold text-gray-900 line-clamp-1")= propiedad.propiedadRelacion.titulo
+                                            p(class="text-blue-600 font-bold text-xl") $ #{propiedad.propiedadRelacion.precio.toLocaleString()}
+                                            div(class="flex flex-col space-y-2 text-gray-600 text-sm border-t border-gray-100 pt-3")
+                                                div(class="flex items-center")
+                                                    i(class="fas fa-bed w-5 text-gray-500")
+                                                    span(class="ml-2")= propiedad.propiedadRelacion.habitaciones + ' Habitaciones'
+                                                div(class="flex items-center")
+                                                    i(class="fas fa-bath w-5 text-gray-500")
+                                                    span(class="ml-2")= propiedad.propiedadRelacion.wc + ' Baños'
+                                                div(class="flex items-center")
+                                                    i(class="fas fa-parking w-5 text-gray-500")
+                                                    span(class="ml-2")= propiedad.propiedadRelacion.estacionamiento + ' Estacionamientos'
+                                            div(class="flex space-x-2 pt-2")
+                                                a(href=`/propiedades/${propiedad.propiedadRelacion.id}` class="flex-1 bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm text-center")
+                                                    | Ver Detalles
+                                                a(href=`/mensajes/enviar/${propiedad.propiedadRelacion.id}/${propiedad.propiedadRelacion.usuarioId}` class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 transition-colors duration-200 text-sm text-center")
+                                                    | Contactar
+                        else
+                            div(class="text-center py-12")
+                                i(class="fas fa-heart text-gray-300 text-5xl mb-4")
+                                p(class="text-gray-500 text-lg") No tienes propiedades favoritas aún
+                                a(href="/propiedades" class="inline-block mt-4 text-blue-600 hover:text-blue-800 transition-colors duration-200")
+                                    | Explorar propiedades
+                                    i(class="fas fa-arrow-right ml-1")
 
 block scripts
+    script(src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous")
 

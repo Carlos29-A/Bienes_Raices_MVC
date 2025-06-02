@@ -71,7 +71,8 @@ const favoritos = async (req, res) => {
     res.render('propiedades/favoritos', {
         usuario,
         csrfToken: req.csrfToken(),
-        favoritos
+        favoritos,
+        ruta: '/favoritos/propiedades-favoritas'
     })
 }
 
