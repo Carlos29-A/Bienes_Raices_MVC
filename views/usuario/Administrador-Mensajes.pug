@@ -1,82 +1,123 @@
 extends ../layout/index.pug
 
 block contenido
-    div(class="min-h-screen bg-gray-50 flex")
+    div(class="min-h-screen bg-gray-100 flex")
         include ./Administrador-Sidebar/administradorSidebar.pug
 
         //- Contenido Principal
-        main(class="flex-1 p-6")
+        div(class="flex-1 flex flex-col")
             //- Encabezado
-            div(class="mb-8")
-                h1(class="text-2xl font-semibold text-gray-800") Gestión de Mensajes
-                p(class="text-gray-600 mt-1") Administra las conversaciones entre usuarios
+            header(class="bg-white border-b border-gray-200 px-8 py-6 shadow-sm")
+                div(class="flex items-center justify-between")
+                    div(class="flex items-center space-x-4")
+                        img(src="/img/Mensaje.png" alt="Mensajes" class="w-12 h-12")
+                        div
+                            h1(class="text-2xl font-bold text-[#FF6F17]") Gestión de Mensajes
+                            p(class="text-gray-600") Administra los mensajes del sistema
 
+            //- Contenedor Principal
+            div(class="flex-1 p-8 bg-gray-100")
+                //- Barra de Acciones
+                div(class="mb-6 flex justify-between items-center")
+                    //- Buscador
+                    div(class="flex-1 max-w-md")
+                        div(class="relative")
+                            input(
+                                type="text"
+                                placeholder="Buscar mensajes..."
+                                class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent"
+                            )
+                            img(src="/img/buscar.png" alt="Buscar" class="absolute left-3 top-2.5 w-5 h-5")
 
-            //- Lista de Conversaciones
-            each mensaje in mensajes
-                div(class="space-y-4")
-                    //- Conversación 1
-                    div(class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200")
-                        //- Encabezado de la Conversación
-                        div(class="p-4 border-b border-gray-100")
-                            div(class="flex justify-between items-center")
-                                h3(class="text-lg font-semibold text-gray-900")= mensaje.propiedadRelacion.titulo
-                                span(class="px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800")= mensaje.propiedadRelacion.publicado ? 'activo' : 'desactivado'
-                        
-                        //- Detalles de la Conversación
-                        div(class="p-4")
-                            //- Información de la Propiedad
-                            div(class="flex items-center gap-4 mb-4 p-3 bg-gray-50 rounded-lg")
-                                img(src=`/uploads/${mensaje.propiedadRelacion.imagen}` alt="Casa" class="w-16 h-16 object-cover rounded-lg")
-                                div
-                                    p(class="font-medium text-gray-900")= mensaje.propiedadRelacion.titulo
-                                    p(class="text-sm text-gray-600") $#{mensaje.propiedadRelacion.precio} - #{mensaje.propiedadRelacion.calle}
-                            
-                            //- Participantes
-                            div(class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4")
-                                //- Remitente
-                                div(class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg")
-                                    div(class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center")
-                                        i(class="fas fa-user text-blue-600")
+                    //- Filtros
+                    div(class="flex gap-4")
+                        select(class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
+                            option(value="") Todos los estados
+                            option(value="leido") Leídos
+                            option(value="no-leido") No leídos
+                        select(class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
+                            option(value="") Todos los tipos
+                            option(value="vendedor") Vendedores
+                            option(value="comprador") Compradores
+
+                //- Lista de Mensajes
+                div(class="grid gap-6")
+                    each mensaje in mensajes
+                        div(class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow duration-200")
+                            //- Encabezado del Mensaje
+                            div(class="p-6 border-b border-gray-100")
+                                div(class="flex items-start justify-between")
+                                    //- Información del Remitente
+                                    div(class="flex items-start space-x-4")
+                                        img(
+                                            src="/img/avatar.png"
+                                            alt=mensaje.remitenteRelacion.nombre
+                                            class="w-12 h-12 rounded-full object-cover border-2 border-orange-100"
+                                        )
+                                        div
+                                            h3(class="text-lg font-semibold text-gray-900")= mensaje.remitenteRelacion.nombre
+                                            p(class="text-sm text-gray-600")= mensaje.remitenteRelacion.email
+                                            span(class=`inline-block mt-1 px-3 py-1 rounded-full text-sm font-medium ${
+                                                mensaje.remitenteRelacion.tipo.toString() === '1' 
+                                                    ? 'bg-orange-100 text-[#FF6F17]' 
+                                                    : 'bg-blue-100 text-blue-800'
+                                            }`)
+                                                = mensaje.remitenteRelacion.tipo.toString() === '1' ? 'Vendedor' : 'Comprador'
+
+                                    //- Estado del Mensaje
+                                    div(class="flex items-center space-x-2")
+                                        if mensaje.leido
+                                            span(class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800")
+                                                img(src="/img/leido.png" alt="Leído" class="w-4 h-4 inline-block mr-1")
+                                                | Leído
+                                        else
+                                            span(class="px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800")
+                                                img(src="/img/no-leido.png" alt="No Leído" class="w-4 h-4 inline-block mr-1")
+                                                | No Leído
+
+                            //- Contenido del Mensaje
+                            div(class="p-6")
+                                //- Información de la Propiedad
+                                div(class="flex items-center gap-4 mb-4 p-3 bg-gray-50 rounded-lg")
+                                    img(
+                                        src=`/uploads/${mensaje.propiedadRelacion.imagen}`
+                                        alt=mensaje.propiedadRelacion.titulo
+                                        class="w-16 h-16 object-cover rounded-lg"
+                                    )
                                     div
-                                        p(class="font-medium text-gray-900")= mensaje.remitenteRelacion.nombre
-                                        p(class="text-sm text-gray-600")= (mensaje.remitenteRelacion.tipo.toString() === '1' ? 'Vendedor' : 'Comprador')
+                                        p(class="font-medium text-gray-900")= mensaje.propiedadRelacion.titulo
+                                        p(class="text-sm text-[#FF6F17] font-bold")= `$ ${mensaje.propiedadRelacion.precio.toLocaleString()}`
+                                        div(class="flex items-center text-sm text-gray-600 mt-1")
+                                            img(src="/img/ubicacion.png" alt="Ubicación" class="w-4 h-4 mr-1")
+                                            = mensaje.propiedadRelacion.calle
 
-                                
-                                //- Destinatario
-                                div(class="flex items-center gap-3 p-3 bg-purple-50 rounded-lg")
-                                    div(class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center")
-                                        i(class="fas fa-user text-purple-600")
-                                    div
-                                        p(class="font-medium text-gray-900")= mensaje.destinatarioRelacion.nombre
-                                        p(class="text-sm text-gray-600")= (mensaje.destinatarioRelacion.tipo.toString() === '1' ? 'Vendedor' : 'Comprador')
-                            
-                            //- Último Mensaje
-                            div(class="p-3 bg-gray-50 rounded-lg")
-                                p(class="text-sm text-gray-600 mb-2") Mensaje de #{mensaje.remitenteRelacion.nombre} para #{mensaje.destinatarioRelacion.nombre}:
-                                p(class="text-gray-700")= mensaje.mensaje
-                                p(class="text-xs text-gray-500 mt-2") Hace 2 horas
-                            
-                            //- Acciones
-                            div(class="flex justify-end gap-2 mt-4")
-                                button(class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors")
-                                    i(class="fas fa-eye mr-2")
-                                    | Ver Conversación
-                                button(class="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-800 transition-colors")
-                                    i(class="fas fa-trash-alt mr-2")
-                                    | Eliminar
+                                //- Mensaje
+                                div(class="p-4 bg-gray-50 rounded-lg mb-4")
+                                    p(class="text-gray-700")= mensaje.mensaje
+                                    p(class="text-xs text-gray-500 mt-2")
+                                        img(src="/img/reloj.png" alt="Fecha" class="w-4 h-4 inline-block mr-1")
+                                        = mensaje.createdAt.toLocaleString()
 
-        
-
-            //- Paginación
-            div(class="mt-8 flex justify-center")
-                nav(class="flex items-center gap-2")
-                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50" disabled)
-                        i(class="fas fa-chevron-left")
-                    button(class="px-3 py-1 rounded-lg bg-blue-600 text-white") 1
-                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50") 2
-                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50") 3
-                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50")
-                        i(class="fas fa-chevron-right")
+                                //- Acciones
+                                div(class="flex justify-end space-x-3")
+                                    a(
+                                        href=`/mensajes/ver/${mensaje.id}`
+                                        class="inline-flex items-center px-4 py-2 bg-[#FF6F17] text-white text-sm font-medium rounded-md hover:bg-[#FF8F17] transition-colors duration-200"
+                                    )
+                                        img(src="/img/ver.png" alt="Ver" class="w-5 h-5 mr-2")
+                                        | Ver Mensaje
+                                    button(
+                                        onclick=`eliminarMensaje(${mensaje.id})`
+                                        class="inline-flex items-center px-4 py-2 bg-white border border-red-600 text-red-600 text-sm font-medium rounded-md hover:bg-red-50 transition-colors duration-200"
+                                    )
+                                        img(src="/img/eliminar.png" alt="Eliminar" class="w-5 h-5 mr-2")
+                                        | Eliminar
 
 block scripts
+    script.
+        function eliminarMensaje(id) {
+            if(confirm('¿Estás seguro de que deseas eliminar este mensaje?')) {
+                // Aquí iría la lógica para eliminar el mensaje
+                console.log('Eliminando mensaje:', id);
+            }
+        }

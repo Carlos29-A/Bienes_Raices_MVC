@@ -1,56 +1,110 @@
 extends ../layout/index.pug
 
 block contenido
-    div(class="min-h-screen bg-gray-50 flex")
+    div(class="min-h-screen bg-gray-100 flex")
         include ./Administrador-Sidebar/administradorSidebar.pug
 
         //- Contenido Principal
-        main(class="flex-1 p-6")
-            //- Encabezado Simple
-            div(class="mb-8")
-                h1(class="text-2xl font-semibold text-gray-800") Usuarios
-                p(class="text-gray-600 mt-1") Administra los usuarios del sistema
+        div(class="flex-1 flex flex-col")
+            //- Encabezado
+            header(class="bg-white border-b border-gray-200 px-8 py-6 shadow-sm")
+                div(class="flex items-center justify-between")
+                    div(class="flex items-center space-x-4")
+                        img(src="/img/usuarios.png" alt="Usuarios" class="w-12 h-12")
+                        div
+                            h1(class="text-2xl font-bold text-[#FF6F17]") Gestión de Usuarios
+                            p(class="text-gray-600") Administra los usuarios de la plataforma
 
-            //- Barra de Acciones
-            div(class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6")
-                //- Búsqueda Simple
-                div(class="relative w-full sm:w-96")
-                    input(
-                        type="text"
-                        placeholder="Buscar usuario..."
-                        class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            //- Contenedor Principal
+            div(class="flex-1 p-8 bg-gray-100")
+                //- Barra de Acciones
+                div(class="mb-6 flex justify-between items-center")
+                    //- Buscador
+                    div(class="flex-1 max-w-md")
+                        div(class="relative")
+                            input(
+                                type="text"
+                                placeholder="Buscar usuarios..."
+                                class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent"
+                            )
+                            img(src="/img/buscar.png" alt="Buscar" class="absolute left-3 top-2.5 w-5 h-5")
+
+                    //- Botón Nuevo Usuario
+                    a(
+                        href="/auth/administrador/usuarios/crear"
+                        class="inline-flex items-center px-4 py-2 bg-[#FF6F17] text-white rounded-lg hover:bg-[#FF8F17] transition-colors duration-200"
                     )
-                    i(class="fas fa-search absolute left-3 top-3 text-gray-400")
+                        img(src="/img/agregar.png" alt="Agregar" class="w-5 h-5 mr-2")
+                        | Nuevo Usuario
 
-                //- Botón Nuevo Usuario
-                a(
-                    class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center gap-2"
-                    href="/auth/administrador/usuarios/crear"
-                )
-                    i(class="fas fa-user-plus")
-                    span Nuevo Usuario
-            
-            //- Lista de Usuarios
-            div(class="grid gap-4")
-                
-                //- Usuario 1
-                each usuario in usuarios
-                    div(class="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow duration-200")
-                        div(class="flex items-center justify-between")
-                            div(class="flex items-center gap-4")
-                                img(
-                                    src="/img/usuarios/usuario1.jpg"
-                                    alt="Juan Pérez"
-                                    class="w-12 h-12 rounded-full object-cover border-2 border-blue-100"
-                                )
-                                div
-                                    h3(class="font-medium text-gray-900")= usuario.nombre
-                                    p(class="text-sm text-gray-500")= usuario.email
-                            div(class="flex items-center gap-3")
-                                span(class="px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800")= usuario.tipo? usuario.tipo.toString() === '1' ? 'Vendedor' : 'Comprador' : 'Usuario'
-                                div(class="flex gap-2")
-                                    button(class="text-blue-600 hover:text-blue-800 transition-colors")
-                                        i(class="fas fa-edit")
-                                    button(class="text-red-600 hover:text-red-800 transition-colors")
-                                        i(class="fas fa-trash-alt")
+                //- Lista de Usuarios
+                div(class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden")
+                    //- Encabezados de la tabla
+                    div(class="grid grid-cols-12 gap-4 p-4 bg-gray-50 border-b border-gray-100")
+                        div(class="col-span-4")
+                            p(class="font-medium text-gray-900") Usuario
+                        div(class="col-span-3")
+                            p(class="font-medium text-gray-900") Email
+                        div(class="col-span-2")
+                            p(class="font-medium text-gray-900") Tipo
+                        div(class="col-span-3 text-right")
+                            p(class="font-medium text-gray-900") Acciones
+
+                    //- Lista de usuarios
+                    div(class="divide-y divide-gray-100")
+                        each usuario in usuarios
+                            div(class="grid grid-cols-12 gap-4 p-4 hover:bg-gray-50 transition-colors duration-200")
+                                //- Información del usuario
+                                div(class="col-span-4 flex items-center space-x-3")
+                                    img(
+                                        src="/img/avatar.png"
+                                        alt=usuario.nombre
+                                        class="w-10 h-10 rounded-full object-cover border-2 border-orange-100"
+                                    )
+                                    div
+                                        p(class="font-medium text-gray-900")= usuario.nombre
+                                        p(class="text-sm text-gray-500")= usuario.telefono || 'Sin teléfono'
+
+                                //- Email
+                                div(class="col-span-3 flex items-center")
+                                    p(class="text-gray-600")= usuario.email
+
+                                //- Tipo de usuario
+                                div(class="col-span-2 flex items-center")
+                                    span(class=`px-3 py-1 rounded-full text-sm font-medium ${
+                                        usuario.tipo.toString() === '1' 
+                                            ? 'bg-orange-100 text-[#FF6F17]' 
+                                            : 'bg-blue-100 text-blue-800'
+                                    }`)
+                                        = usuario.tipo.toString() === '1' ? 'Vendedor' : 'Comprador'
+
+                                //- Acciones
+                                div(class="col-span-3 flex items-center justify-end space-x-2")
+                                    div(class="relative group")
+                                        a(
+                                            href=`/auth/administrador/usuarios/editar/${usuario.id}`
+                                            class="p-2 text-[#FF6F17] hover:bg-orange-50 rounded-lg transition-colors duration-200"
+                                            title="Editar Usuario"
+                                        )
+                                            i(class="fas fa-edit")
+                                        div(class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap")
+                                            | Editar información del usuario
+
+                                    div(class="relative group")
+                                        button(
+                                            onclick=`eliminarUsuario(${usuario.id})`
+                                            class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                                            title="Eliminar Usuario"
+                                        )
+                                            i(class="fas fa-trash-alt")
+                                        div(class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap")
+                                            | Eliminar usuario del sistema
+
 block scripts
+    script.
+        function eliminarUsuario(id) {
+            if(confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+                // Aquí iría la lógica para eliminar el usuario
+                console.log('Eliminando usuario:', id);
+            }
+        }

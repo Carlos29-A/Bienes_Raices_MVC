@@ -322,6 +322,12 @@ const panelComprador = async (req, res) => {
             }
         ]
     })
+
+    const propiedades = await Propiedad.findAll({
+        where : {
+            publicado : true
+        }
+    })
     const mensajes = await Mensaje.findAll({
         where : {   
             remitenteId : id
@@ -331,6 +337,7 @@ const panelComprador = async (req, res) => {
     res.render('usuario/panel-comprador', {
         titulo: 'Panel de Comprador',
         usuario,
+        propiedades,
         propiedadesFavoritas,
         mensajes,
         ruta: '/auth/comprador/panel'
@@ -539,11 +546,22 @@ const panelAdministradorUsuarios = async (req, res) => {
 }
 const panelAdministradorPropiedades = async (req, res) => {
     
-    const propiedades = await Propiedad.findAll()
+    const propiedades = await Propiedad.findAll({
+        include: [
+            {
+                model: Categoria,
+                as: 'categoriaRelacion',
+                attributes: ['nombre']
+            },
+            {
+                model: Usuario,
+                as: 'usuarioRelacion',
+                attributes: ['nombre', 'email']
+            }
+        ]
+    })
     const mensajes = await Mensaje.findAll()
     const usuarios = await Usuario.findAll({where: {tipo: { [Op.or]: [1, 2] }}})
-
-    
     
     res.render('usuario/Administrador-Propiedades', {
         titulo: 'Panel de Administrador de Propiedades',

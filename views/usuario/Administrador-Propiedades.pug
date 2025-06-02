@@ -1,79 +1,128 @@
 extends ../layout/index.pug
 
 block contenido
-    div(class="min-h-screen bg-gray-50 flex")
+    div(class="min-h-screen bg-gray-100 flex")
         include ./Administrador-Sidebar/administradorSidebar.pug
 
         //- Contenido Principal
-        main(class="flex-1 p-6")
+        div(class="flex-1 flex flex-col")
             //- Encabezado
-            div(class="mb-8")
-                h1(class="text-2xl font-semibold text-gray-800") Propiedades
-                p(class="text-gray-600 mt-1") Administra las propiedades del sistema
+            header(class="bg-white border-b border-gray-200 px-8 py-6 shadow-sm")
+                div(class="flex items-center justify-between")
+                    div(class="flex items-center space-x-4")
+                        img(src="/img/propiedad.png" alt="Propiedades" class="w-12 h-12")
+                        div
+                            h1(class="text-2xl font-bold text-[#FF6F17]") Gestión de Propiedades
+                            p(class="text-gray-600") Administra las propiedades del sistema
 
-            //- Barra de Acciones
-            div(class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6")
-                //- Filtros
-                div(class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto")
-                    select(class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent")
-                        option(value="") Todas las categorías
-                        option(value="casa") Casas
-                        option(value="departamento") Departamentos
-                        option(value="bodega") Bodegas
-                        option(value="terreno") Terrenos
-                    
-                    select(class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent")
-                        option(value="") Todos los precios
-                        option(value="0-100000") $0 - $100,000
-                        option(value="100000-300000") $100,000 - $300,000
-                        option(value="300000-500000") $300,000 - $500,000
-                        option(value="500000+") $500,000+
+            //- Contenedor Principal
+            div(class="flex-1 p-8 bg-gray-100")
+                //- Barra de Acciones
+                div(class="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4")
+                    //- Filtros
+                    div(class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto")
+                        //- Filtro de Categorías
+                        div(class="relative flex-1 sm:flex-none")
+                            select(class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
+                                option(value="") Todas las categorías
+                                option(value="casa") Casas
+                                option(value="departamento") Departamentos
+                                option(value="bodega") Bodegas
+                                option(value="terreno") Terrenos
+                            i(class="fas fa-chevron-down absolute right-3 top-2.5 text-gray-400")
+                        
+                        //- Filtro de Precios
+                        div(class="relative flex-1 sm:flex-none")
+                            
+                            select(class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
+                                option(value="") Todos los precios
+                                option(value="0-100000") $0 - $100,000
+                                option(value="100000-300000") $100,000 - $300,000
+                                option(value="300000-500000") $300,000 - $500,000
+                                option(value="500000+") $500,000+
+                            i(class="fas fa-chevron-down absolute right-3 top-2.5 text-gray-400")
 
-                //- Botón Nueva Propiedad
-                a( href="/auth/administrador/propiedades/crear" class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center gap-2")
-                    i(class="fas fa-plus")
-                    span Nueva Propiedad
+                    //- Botón Nueva Propiedad
+                    a(
+                        href="/auth/administrador/propiedades/crear"
+                        class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-[#FF6F17] text-white rounded-lg hover:bg-[#FF8F17] transition-colors duration-200"
+                    )
+                        img(src="/img/agregarPropiedad.png" alt="Agregar" class="w-10 h-10 mr-2")
+                        p(class="text-white font-bold text-xl") Nueva Propiedad
 
-            //- Grid de Propiedades
-            div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
-                //- Propiedad 1
+                //- Lista de Propiedades
+                div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
+                    each propiedad in propiedades
+                        div(class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow duration-200")
+                            //- Imagen de la propiedad
+                            div(class="relative h-48")
+                                img(
+                                    src=`/uploads/${propiedad.imagen}`
+                                    alt=propiedad.titulo
+                                    class="w-full h-full object-cover"
+                                )
+                                //- Badge de estado
+                                div(class="absolute top-4 right-4")
+                                    span(class=`px-3 py-1 rounded-full text-sm font-medium ${
+                                        propiedad.publicado 
+                                            ? 'bg-green-100 text-green-800' 
+                                            : 'bg-red-100 text-red-800'
+                                    }`)
+                                        = propiedad.publicado ? 'Publicada' : 'No Publicada'
 
-                each propiedad in propiedades
-                    div(class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200")
-                        img(src=`/uploads/${propiedad.imagen}` alt="Casa de Lujo" class="w-full h-48 object-cover")
-                        div(class="p-4")
-                            div(class="flex justify-between items-start mb-2")
-                                h3(class="text-lg font-semibold text-gray-900")= propiedad.titulo
-                                span(class="px-2 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800")= propiedad.publicado ? 'activo' : 'desactivado'
-                            p(class="text-gray-600 text-sm mb-2")= propiedad.calle
-                            div(class="flex items-center gap-4 text-sm text-gray-500 mb-4")
-                                span(class="flex items-center gap-1")
-                                    i(class="fas fa-bed")
-                                    | #{propiedad.habitaciones} Hab
-                                span(class="flex items-center gap-1")
-                                    i(class="fas fa-bath")
-                                    | #{propiedad.wc} Baños
-                                span(class="flex items-center gap-1")
-                                    
-                                    | #{propiedad.habitaciones} habitaciones
-                                
-                            div(class="flex justify-between items-center")
-                                p(class="text-xl font-bold text-blue-600") $#{propiedad.precio}
-                                div(class="flex gap-2")
-                                    button(class="text-blue-600 hover:text-blue-800 transition-colors")
-                                        i(class="fas fa-edit")
-                                    button(class="text-red-600 hover:text-red-800 transition-colors")
-                                        i(class="fas fa-trash-alt")
+                            //- Contenido
+                            div(class="p-4")
+                                //- Título y Categoría
+                                div(class="mb-3")
+                                    h3(class="text-lg font-semibold text-gray-900 line-clamp-2")= propiedad.titulo
+                                    p(class="text-sm text-[#FF6F17] font-medium")= propiedad.categoriaRelacion.nombre
 
-            //- Paginación
-            div(class="mt-8 flex justify-center")
-                nav(class="flex items-center gap-2")
-                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50" disabled)
-                        i(class="fas fa-chevron-left")
-                    button(class="px-3 py-1 rounded-lg bg-blue-600 text-white") 1
-                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50") 2
-                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50") 3
-                    button(class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50")
-                        i(class="fas fa-chevron-right")
+                                //- Precio
+                                p(class="text-xl font-bold text-[#FF6F17] mb-3")= `$ ${propiedad.precio.toLocaleString()}`
+
+                                //- Características
+                                div(class="grid grid-cols-3 gap-2 mb-4")
+                                    div(class="flex items-center text-sm text-gray-600")
+                                        i(class="fas fa-bed mr-1")
+                                        = `${propiedad.habitaciones} hab`
+                                    div(class="flex items-center text-sm text-gray-600")
+                                        i(class="fas fa-bath mr-1")
+                                        = `${propiedad.wc} baños`
+                                    div(class="flex items-center text-sm text-gray-600")
+                                        i(class="fas fa-car mr-1")
+                                        = `${propiedad.estacionamiento} est`
+
+                                //- Ubicación
+                                div(class="flex items-center text-sm text-gray-600 mb-4")
+                                    i(class="fas fa-map-marker-alt mr-1")
+                                    span(class="truncate")= propiedad.calle
+
+                                //- Vendedor
+                                div(class="flex items-center justify-between border-t border-gray-100 pt-4")
+                                    div(class="flex items-center space-x-2")
+                                        img(src="/img/avatar.png" alt=propiedad.usuarioRelacion.nombre class="w-8 h-8 rounded-full")
+                                        p(class="text-sm text-gray-600")= propiedad.usuarioRelacion.nombre
+
+                                    //- Acciones
+                                    div(class="flex space-x-2")
+                                        a(
+                                            href=`/propiedades/editar/${propiedad.id}`
+                                            class="p-2 text-[#FF6F17] hover:bg-orange-50 rounded-lg transition-colors duration-200"
+                                        )
+                                            i(class="fas fa-edit")
+                                            | Editar
+                                        button(
+                                            onclick=`eliminarPropiedad(${propiedad.id})`
+                                            class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                                        )
+                                            i(class="fas fa-trash-alt")
+                                            | Eliminar
 
 block scripts
+    script.
+        function eliminarPropiedad(id) {
+            if(confirm('¿Estás seguro de que deseas eliminar esta propiedad?')) {
+                // Aquí iría la lógica para eliminar la propiedad
+                console.log('Eliminando propiedad:', id);
+            }
+        }

@@ -131,6 +131,7 @@ const obtenerMensajes = async (req, res) => {
     })
 
     res.render('mensajes/mensajes', {
+        titulo: 'Mensajes',
         mensajes,
         remitente,
         csrfToken: req.csrfToken(),
@@ -299,45 +300,87 @@ const eliminarMensaje = async (req, res) => {
 
     const mensaje = await Mensaje.findByPk(req.params.id)
 
-    const mensajes = await Mensaje.findAll({
-        where : {
-            remitenteId : id
-        },
-        include : [
-            {
-                model : Usuario,
-                as : "destinatarioRelacion",
-                attributes : ['nombre', 'email']
-            },
-            {
-                model : Propiedad,
-                as : "propiedadRelacion",
-                include : [
-                    {
-                        model : Usuario,
-                        as : "usuarioRelacion",
-                        attributes : ['nombre', 'email']
-                    }
-                ]
-            }
-        ]
-
-    
-    })
-
     if(!mensaje){
+        return res.redirect('/auth/login')
+    }
+
+    // Verificar si el usuario tiene permiso para eliminar el mensaje
+    if(mensaje.remitenteId !== id){
         return res.redirect('/auth/login')
     }
 
     await mensaje.destroy()
 
-    res.render('mensajes/mensajes', {
-        mensajes,
-        remitente,
-        csrfToken: req.csrfToken()
-    })
+    // Redirigir a la página de mensajes según el tipo de usuario
+    if(remitente.tipo.toString() === '1') {
+        res.redirect('/mensajes/obtener/vendedor')
+    } else {
+        res.redirect('/mensajes/obtener')
+    }
 }
 
+const verMensaje = async (req, res) => {
+    const { id } = req.usuario
+    const { id: mensajeId } = req.params
+
+    // Verificar si el usuario existe
+    const usuario = await Usuario.findByPk(id)
+    if(!usuario) {
+        return res.redirect('/auth/login')
+    }
+
+    // Obtener el mensaje con sus relaciones
+    const mensaje = await Mensaje.findByPk(mensajeId, {
+        include: [
+            {
+                model: Usuario,
+                as: "remitenteRelacion",
+                attributes: ['nombre', 'email', 'tipo']
+            },
+            {
+                model: Usuario,
+                as: "destinatarioRelacion",
+                attributes: ['nombre', 'email', 'tipo']
+            },
+            {
+                model: Propiedad,
+                as: "propiedadRelacion",
+                include: [
+                    {
+                        model: Categoria,
+                        as: "categoriaRelacion"
+                    }
+                ]
+            }
+        ]
+    })
+
+    // Verificar si el mensaje existe
+    if(!mensaje) {
+        return res.redirect('/auth/login')
+    }
+
+    // Verificar si el usuario tiene permiso para ver el mensaje
+    if(mensaje.remitenteId !== id && mensaje.destinatarioId !== id) {
+        return res.redirect('/auth/login')
+    }
+
+    // Marcar el mensaje como leído si el usuario es el destinatario
+    if(mensaje.destinatarioId === id && !mensaje.leido) {
+        mensaje.leido = true
+        await mensaje.save()
+    }
+
+    // Determinar la ruta para el sidebar
+    const ruta = usuario.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener'
+
+    res.render('mensajes/verMensaje', {
+        mensaje,
+        usuario,
+        csrfToken: req.csrfToken(),
+        ruta
+    })
+}
 
 export {
     enviarMensaje,
@@ -346,5 +389,6 @@ export {
     enviarMensajePost,
     editarMensaje,
     editarMensajePost,
-    obtenerMensajesVendedor
+    obtenerMensajesVendedor,
+    verMensaje
 }

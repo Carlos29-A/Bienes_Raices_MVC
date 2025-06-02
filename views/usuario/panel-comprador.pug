@@ -57,30 +57,30 @@ block contenido
                                 i(class="fas fa-arrow-right ml-1")
                     
                     div(class="p-6 bg-gray-50")
-                        if propiedadesFavoritas && propiedadesFavoritas.length > 0
+                        if propiedades && propiedades.length > 0
                             div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
-                                each propiedad in propiedadesFavoritas
+                                //Limitar a 3 propiedades
+                                each propiedad in propiedades.slice(0, 3)   
                                     article(class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200")
                                         div(class="relative group")
-                                            img(class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" src=`/uploads/${propiedad.propiedadRelacion.imagen}` alt="Casa")
-                                            
+                                            img(class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" src=`/uploads/${propiedad.imagen}` alt="Casa")
                                         div(class="p-4 space-y-3")
-                                            h3(class="text-lg font-semibold text-gray-900 line-clamp-1")= propiedad.propiedadRelacion.titulo
-                                            p(class="text-blue-600 font-bold text-xl") $ #{propiedad.propiedadRelacion.precio.toLocaleString()}
+                                            h3(class="text-lg font-semibold text-gray-900 line-clamp-1")= propiedad.titulo
+                                            p(class="text-blue-600 font-bold text-xl") $ #{propiedad.precio.toLocaleString()}
                                             div(class="flex flex-col space-y-2 text-gray-600 text-sm border-t border-gray-100 pt-3")
                                                 div(class="flex items-center")
                                                     i(class="fas fa-bed w-5 text-gray-500")
-                                                    span(class="ml-2")= propiedad.propiedadRelacion.habitaciones + ' Habitaciones'
+                                                    span(class="ml-2")= propiedad.habitaciones + ' Habitaciones'
                                                 div(class="flex items-center")
                                                     i(class="fas fa-bath w-5 text-gray-500")
-                                                    span(class="ml-2")= propiedad.propiedadRelacion.wc + ' Baños'
+                                                    span(class="ml-2")= propiedad.wc + ' Baños'
                                                 div(class="flex items-center")
                                                     i(class="fas fa-parking w-5 text-gray-500")
-                                                    span(class="ml-2")= propiedad.propiedadRelacion.estacionamiento + ' Estacionamientos'
+                                                    span(class="ml-2")= propiedad.estacionamiento + ' Estacionamientos'
                                             div(class="flex space-x-2 pt-2")
-                                                a(href=`/propiedades/${propiedad.propiedadRelacion.id}` class="flex-1 bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm text-center")
+                                                a(href=`/propiedades/${propiedad.id}` class="flex-1 bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm text-center")
                                                     | Ver Detalles
-                                                a(href=`/mensajes/enviar/${propiedad.propiedadRelacion.id}/${propiedad.propiedadRelacion.usuarioId}` class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 transition-colors duration-200 text-sm text-center")
+                                                a(href=`/mensajes/enviar/${propiedad.id}/${propiedad.usuarioId}` class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 transition-colors duration-200 text-sm text-center")
                                                     | Contactar
                         else
                             div(class="text-center py-12")

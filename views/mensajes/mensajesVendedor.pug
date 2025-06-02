@@ -5,68 +5,126 @@ block contenido
         include ../usuario/vendedor-Sidebar/Vendedor-Sidebar.pug
 
         //- Contenido Principal
-        div(class="flex-1 flex flex-col shadow-lg")
+        div(class="flex-1 flex flex-col")
             //- Encabezado
-            header(class="bg-white border-b border-gray-200 px-8 py-6 shadow-lg")
+            header(class="bg-white border-b border-gray-200 px-8 py-6 shadow-sm")
                 div(class="flex items-center justify-between")
                     div(class="flex items-center space-x-4")
-                        img(src="/img/Mensaje.png" alt="Mensaje" class="w-15 h-15")
+                        img(src="/img/Mensaje.png" alt="Mensaje" class="w-12 h-12")
                         div
-                            h1(class="text-2xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Mensajes de #{destinatario.nombre}
+                            h1(class="text-2xl font-bold text-[#FF6F17]") Mensajes Recibidos
+                            p(class="text-gray-600") Gestiona tus mensajes de propiedades
 
             //- Contenedor de Mensajes
-            div(class="flex-1 p-8 bg-gray-50")
+            div(class="flex-1 p-8 bg-gray-100")
+                //- Estadísticas
+                div(class="max-w-7xl mx-auto mb-8 grid grid-cols-1 md:grid-cols-3 gap-6")
+                    //- Total de Mensajes
+                    div(class="bg-white rounded-xl shadow-sm p-6 border border-gray-100")
+                        div(class="flex items-center")
+                            div(class="p-3 rounded-lg bg-orange-100")
+                                i(class="fas fa-envelope text-[#FF6F17] text-xl")
+                            div(class="ml-4")
+                                p(class="text-sm font-medium text-gray-600") Total de Mensajes
+                                p(class="text-2xl font-semibold text-gray-900")= mensajes.length
+
+                    //- Mensajes Leídos
+                    div(class="bg-white rounded-xl shadow-sm p-6 border border-gray-100")
+                        div(class="flex items-center")
+                            div(class="p-3 rounded-lg bg-blue-100")
+                                i(class="fas fa-envelope-open text-blue-600 text-xl")
+                            div(class="ml-4")
+                                p(class="text-sm font-medium text-gray-600") Mensajes Leídos
+                                p(class="text-2xl font-semibold text-gray-900")= mensajes.filter(m => m.leido).length
+
+                    //- Propiedades con Mensajes
+                    div(class="bg-white rounded-xl shadow-sm p-6 border border-gray-100")
+                        div(class="flex items-center")
+                            div(class="p-3 rounded-lg bg-green-100")
+                                i(class="fas fa-home text-green-600 text-xl")
+                            div(class="ml-4")
+                                p(class="text-sm font-medium text-gray-600") Propiedades con Mensajes
+                                p(class="text-2xl font-semibold text-gray-900")= [...new Set(mensajes.map(m => m.propiedadRelacion.id))].length
+
                 //- Lista de Mensajes
-                div(class="max-w-4xl mx-auto space-y-6")
-                    each mensaje in mensajes
-                        //- Contenedor individual de mensaje
-                        div(class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300")
-                            //- Encabezado del mensaje
-                            div(class="p-6")
-                                div(class="flex items-start justify-between")
-                                    //- Información del remitente y propiedad
-                                    div(class="flex items-start space-x-4")
-                                        img(
-                                            src="/img/avatar.png"
-                                            class="w-12 h-12 rounded-full object-cover border-2 border-blue-100"
-                                            alt=mensaje.remitenteRelacion.nombre
-                                        )
-                                        div(class="space-y-2")
-                                            //- Datos del comprador
-                                            div
-                                                h3(class="text-lg font-semibold text-gray-900")= mensaje.remitenteRelacion.nombre
-                                                p(class="text-sm text-gray-600")= mensaje.remitenteRelacion.email
-                                            //- Datos de la propiedad
-                                            div
-                                                h4(class="text-sm font-semibold text-gray-900")= mensaje.propiedadRelacion.titulo
-                                                p(class="text-sm bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text font-bold")= `$ ${mensaje.propiedadRelacion.precio.toLocaleString()}`
-                                    
+                div(class="max-w-7xl mx-auto space-y-6")
+                    if mensajes.length
+                        each mensaje in mensajes
+                            //- Contenedor individual de mensaje
+                            div(class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 border border-gray-100")
+                                //- Encabezado del mensaje
+                                div(class="p-6")
+                                    div(class="flex items-start justify-between")
+                                        //- Información del remitente y propiedad
+                                        div(class="flex items-start space-x-4")
+                                            img(
+                                                src="/img/avatar.png"
+                                                class="w-12 h-12 rounded-full object-cover border-2 border-orange-100"
+                                                alt=mensaje.remitenteRelacion.nombre
+                                            )
+                                            div(class="space-y-2")
+                                                //- Datos del comprador
+                                                div
+                                                    h3(class="text-lg font-semibold text-gray-900")= mensaje.remitenteRelacion.nombre
+                                                    p(class="text-sm text-gray-600")= mensaje.remitenteRelacion.email
+                                                //- Datos de la propiedad
+                                                div(class="bg-gray-50 p-3 rounded-lg")
+                                                    h4(class="text-sm font-semibold text-gray-900 truncate")= mensaje.propiedadRelacion.titulo
+                                                    p(class="text-sm text-[#FF6F17] font-bold")= `$ ${mensaje.propiedadRelacion.precio.toLocaleString()}`
+                                                    p(class="text-xs text-gray-500 mt-1")
+                                                        i(class="fas fa-map-marker-alt mr-1")
+                                                        = mensaje.propiedadRelacion.calle
 
-                            //- Vista previa del mensaje
-                            div(class="px-6 py-4 bg-gray-50 border-t border-gray-100")
-                                p(class="text-gray-700 line-clamp-1")= mensaje.mensaje + '...'
+                                //- Vista previa del mensaje
+                                div(class="px-6 py-4 bg-gray-50 border-t border-gray-100")
+                                    - const primeraLinea = mensaje.mensaje.split('\n')[0]
+                                    - const mensajeCortado = primeraLinea.length > 100 ? primeraLinea.substring(0, 100) + '...' : primeraLinea
+                                    p(class="text-gray-700")= mensajeCortado
 
-                            //- Botones de acción
-                            div(class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end space-x-3")
-                                a(href=`/mensajes/ver/${mensaje.id}` class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#FF641A] to-[#B08262] text-white text-sm font-medium rounded-md hover:bg-blue-700 hover:scale-105 transition-all duration-300")
-                                    i(class="fas fa-eye mr-2")
-                                    | Ver Mensaje
-                                a(href=`/mensajes/responder/${mensaje.id}` class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 hover:scale-105 transition-all duration-300")
-                                    i(class="fas fa-reply mr-2")
-                                    | Responder
+                                //- Botones de acción
+                                div(class="px-6 py-4 bg-white border-t border-gray-100 flex justify-end space-x-3")
+                                    a(
+                                        href=`/mensajes/ver/${mensaje.id}`
+                                        class="inline-flex items-center px-4 py-2 bg-[#FF6F17] text-white text-sm font-medium rounded-md hover:bg-[#FF8F17] transition-colors duration-200"
+                                    )
+                                        i(class="fas fa-eye mr-2")
+                                        | Ver Mensaje
+                                    a(
+                                        href=`/mensajes/responder/${mensaje.id}`
+                                        class="inline-flex items-center px-4 py-2 bg-white border border-[#FF6F17] text-[#FF6F17] text-sm font-medium rounded-md hover:bg-orange-50 transition-colors duration-200"
+                                    )
+                                        i(class="fas fa-reply mr-2")
+                                        | Responder
+                    else
+                        //- Estado vacío
+                        div(class="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100")
+                            img(src="/img/empty-messages.svg" alt="Sin mensajes" class="w-32 h-32 mx-auto mb-4")
+                            h3(class="text-lg font-semibold text-gray-900 mb-2") No tienes mensajes
+                            p(class="text-gray-600 mb-6") Cuando recibas mensajes sobre tus propiedades, aparecerán aquí
+                            a(
+                                href="/auth/vendedor/panel"
+                                class="inline-flex items-center px-4 py-2 bg-[#FF6F17] text-white text-sm font-medium rounded-md hover:bg-[#FF8F17] transition-colors duration-200"
+                            )
+                                i(class="fas fa-arrow-left mr-2")
+                                | Volver al Panel
 
                 //- Mensaje Informativo
-                div(class="max-w-4xl mx-auto mt-8 bg-blue-50 rounded-lg p-6")
+                div(class="max-w-7xl mx-auto mt-8 bg-orange-50 rounded-xl p-6 border border-orange-100")
                     div(class="flex items-start space-x-4")
                         div(class="flex-shrink-0")
-                            i(class="fas fa-info-circle text-2xl text-blue-600")
+                            i(class="fas fa-lightbulb text-2xl text-[#FF6F17]")
                         div
-                            h4(class="text-lg font-semibold text-blue-900 mb-2") Información Importante
-                            p(class="text-blue-700")
-                                | Para mantener una comunicación efectiva, te recomendamos:
-                            ul(class="list-disc list-inside mt-2 space-y-1 text-blue-700")
-                                li Ser claro y conciso en tus respuestas
-                                li Mantener un tono profesional y cordial
+                            h4(class="text-lg font-semibold text-[#FF6F17] mb-2") Consejos para una Buena Comunicación
+                            ul(class="list-disc list-inside mt-2 space-y-2 text-gray-700")
+                                li Responde a los mensajes de manera oportuna y profesional
+                                li Proporciona información clara sobre la propiedad
+                                li Mantén un tono cordial y servicial
+                                li Aclara cualquier duda sobre precios o características
 
 block scripts
-    
+    script.
+        // Función para marcar mensajes como leídos
+        function marcarComoLeido(mensajeId) {
+            // Aquí iría la lógica para marcar el mensaje como leído
+            console.log('Marcando mensaje como leído:', mensajeId);
+        } 
