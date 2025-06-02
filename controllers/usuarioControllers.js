@@ -529,6 +529,8 @@ const panelAdministradorPropiedades = async (req, res) => {
     const mensajes = await Mensaje.findAll()
     const usuarios = await Usuario.findAll({where: {tipo: { [Op.or]: [1, 2] }}})
 
+    
+    
     res.render('usuario/Administrador-Propiedades', {
         titulo: 'Panel de Administrador de Propiedades',
         usuario: req.usuario,
@@ -540,7 +542,25 @@ const panelAdministradorPropiedades = async (req, res) => {
 }
 const panelAdministradorMensajes = async (req, res) => {
 
-    const mensajes = await Mensaje.findAll()
+    const mensajes = await Mensaje.findAll(
+        {
+            include: [
+                {
+                    model: Usuario,
+                    as: 'remitenteRelacion'
+                },
+                {
+                    model: Usuario,
+                    as: 'destinatarioRelacion'
+                },
+                {
+                    model: Propiedad,
+                    as: 'propiedadRelacion'
+                }
+            ]
+        }
+
+    )
     const usuarios = await Usuario.findAll({where: {tipo: { [Op.or]: [1, 2] }}})
     const propiedades = await Propiedad.findAll()
 
@@ -555,20 +575,111 @@ const panelAdministradorMensajes = async (req, res) => {
 }
 const panelAdministradorPerfil = async (req, res) => {
 
+    const {id} = req.usuario
+
+    const administrador = await Usuario.findOne({ where: { id } })
+
     const mensajes = await Mensaje.findAll()
     const usuarios = await Usuario.findAll({where: {tipo: { [Op.or]: [1, 2] }}})
     const propiedades = await Propiedad.findAll()
     
+
+
     res.render('usuario/Administrador-Perfil', {
         titulo: 'Panel de Administrador de Perfil',
         usuario: req.usuario,
         csrfToken: req.csrfToken(),
         mensajes,
         usuarios,
-        propiedades
+        propiedades,
+        administrador
     })
 }
 
+const crearUsuarioAdministrador = async (req, res) => {
+    const usuarios = await Usuario.findAll({ where: { tipo: { [Op.or]: [1, 2] } } })
+    const propiedades = await Propiedad.findAll()
+    const mensajes = await Mensaje.findAll()
+
+    res.render('usuario/Administrador-Usuarios-Crear', {
+        titulo: 'Crear Usuario Administrador',
+        usuario: req.usuario,
+        csrfToken: req.csrfToken(),
+        usuarios,
+        propiedades,
+        mensajes,
+        oldData : req.body
+    })
+}
+
+const crearUsuarioAdministradorPost = async (req, res) => {
+
+    const usuario = await Usuario.findOne({ where: { id: req.usuario.id } })
+
+    const usuarios = await Usuario.findAll({ where: { tipo: { [Op.or]: [1, 2] } } })
+    const propiedades = await Propiedad.findAll()
+    const mensajes = await Mensaje.findAll()
+
+
+    await check('nombre').notEmpty().withMessage('El nombre es requerido').run(req)
+    await check('apellido').notEmpty().withMessage('El apellido es requerido').run(req)
+    await check('email').notEmpty().withMessage('El email es requerido').run(req)
+    await check('telefono').notEmpty().withMessage('El telefono es requerido').run(req)
+    await check('edad').notEmpty().withMessage('La edad es requerida').run(req)
+    await check('password').notEmpty().withMessage('La contraseña es requerida').run(req)
+    await check('tipo').notEmpty().withMessage('El tipo es requerido').run(req)
+    await check('confirmado').notEmpty().withMessage('La confirmación es requerida').run(req)
+
+    const errores = validationResult(req)
+    if (!errores.isEmpty()) {
+        return res.render('usuario/Administrador-Usuarios-Crear', {
+            csrfToken: req.csrfToken(),
+            errores: errores.array(),
+            usuarios,
+            propiedades,
+            mensajes,
+            usuario,
+            oldData : req.body
+            
+        })
+    }
+    const {nombre, apellido, email, telefono, password, tipo, edad, confirmado} = req.body
+    const usuarioCreado = await Usuario.create({nombre, apellido, email, telefono, password, tipo, edad, confirmado})
+    res.render('plantillas/mensajeAdministrador', {
+        titulo: 'El administrador creó un usuario nuevo',
+        mensaje: 'El administrador ha creado un usuario nuevo correctamente',
+        tipo: 'exito',
+        usuarios,
+        propiedades,
+        mensajes,
+    })
+}
+
+const crearPropiedadAdministrador = async (req, res) => {
+
+    const usuario = await Usuario.findOne({ where: { id: req.usuario.id } })
+
+    if(!usuario){
+        return res.redirect('/auth/login')
+    }
+
+    const usuarios = await Usuario.findAll({ where: { tipo: { [Op.or]: [1, 2] } } })
+    const propiedades = await Propiedad.findAll()
+    const mensajes = await Mensaje.findAll()
+
+    res.render('propiedades/crearPropiedad-Admin', {
+        titulo: 'Crear Propiedad',
+        usuario,
+        csrfToken: req.csrfToken(),
+        usuarios,
+        propiedades,
+        mensajes,
+        oldInfo : []
+    })
+}
+const crearPropiedadAdministradorPost = async (req, res) => {
+
+}
 
 export {
     registro,
@@ -590,5 +701,9 @@ export {
     panelAdministradorUsuarios,
     panelAdministradorPropiedades,
     panelAdministradorMensajes,
-    panelAdministradorPerfil
+    panelAdministradorPerfil,
+    crearUsuarioAdministrador,
+    crearUsuarioAdministradorPost,
+    crearPropiedadAdministrador,
+    crearPropiedadAdministradorPost
 }
