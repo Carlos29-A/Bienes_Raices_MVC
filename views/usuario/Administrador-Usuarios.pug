@@ -27,14 +27,14 @@ block contenido
                                 placeholder="Buscar usuarios..."
                                 class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent"
                             )
-                            img(src="/img/buscar.png" alt="Buscar" class="absolute left-3 top-2.5 w-5 h-5")
+                            i(class="fas fa-search absolute left-3 top-2.5 text-gray-400")
 
                     //- Botón Nuevo Usuario
                     a(
                         href="/auth/administrador/usuarios/crear"
                         class="inline-flex items-center px-4 py-2 bg-[#FF6F17] text-white rounded-lg hover:bg-[#FF8F17] transition-colors duration-200"
                     )
-                        img(src="/img/agregar.png" alt="Agregar" class="w-5 h-5 mr-2")
+                        i(class="fas fa-user-plus mr-2")
                         | Nuevo Usuario
 
                 //- Lista de Usuarios

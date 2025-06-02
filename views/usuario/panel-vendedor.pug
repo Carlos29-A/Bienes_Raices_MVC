@@ -100,7 +100,7 @@ block contenido
                                                 p(class="text-sm font-medium text-gray-900")= mensaje.remitenteRelacion.nombre + ' ' + mensaje.remitenteRelacion.apellido
                                                 p(class="text-sm text-gray-500 truncate")= mensaje.mensaje
                                             div(class="text-sm text-white")
-                                                a(href=`/auth/vendedor/mensajes/${mensaje.id}` class="bg-[#FF9707] px-5 py-1 rounded-md  hover:bg-[#FF6D18] transition-all duration-300") Ver
+                                                a(href=`/mensajes/ver/${mensaje.id}` class="bg-[#FF9707] px-5 py-1 rounded-md  hover:bg-[#FF6D18] transition-all duration-300") Ver
                         else
                             p(class="text-gray-500 text-center") No hay mensajes recientes
                             

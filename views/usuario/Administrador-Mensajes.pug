@@ -27,7 +27,7 @@ block contenido
                                 placeholder="Buscar mensajes..."
                                 class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent"
                             )
-                            img(src="/img/buscar.png" alt="Buscar" class="absolute left-3 top-2.5 w-5 h-5")
+                            i(class="fas fa-search absolute left-3 top-2.5 text-gray-400")
 
                     //- Filtros
                     div(class="flex gap-4")
@@ -36,7 +36,7 @@ block contenido
                             option(value="leido") Leídos
                             option(value="no-leido") No leídos
                         select(class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
-                            option(value="") Todos los tipos
+                            option(value="") Todos los tipos 
                             option(value="vendedor") Vendedores
                             option(value="comprador") Compradores
 
@@ -68,12 +68,12 @@ block contenido
                                     div(class="flex items-center space-x-2")
                                         if mensaje.leido
                                             span(class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800")
-                                                img(src="/img/leido.png" alt="Leído" class="w-4 h-4 inline-block mr-1")
                                                 | Leído
+                                                
                                         else
                                             span(class="px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800")
-                                                img(src="/img/no-leido.png" alt="No Leído" class="w-4 h-4 inline-block mr-1")
                                                 | No Leído
+                                               
 
                             //- Contenido del Mensaje
                             div(class="p-6")
@@ -95,7 +95,7 @@ block contenido
                                 div(class="p-4 bg-gray-50 rounded-lg mb-4")
                                     p(class="text-gray-700")= mensaje.mensaje
                                     p(class="text-xs text-gray-500 mt-2")
-                                        img(src="/img/reloj.png" alt="Fecha" class="w-4 h-4 inline-block mr-1")
+                                        i(class="fas fa-clock mr-2")
                                         = mensaje.createdAt.toLocaleString()
 
                                 //- Acciones
@@ -104,13 +104,13 @@ block contenido
                                         href=`/mensajes/ver/${mensaje.id}`
                                         class="inline-flex items-center px-4 py-2 bg-[#FF6F17] text-white text-sm font-medium rounded-md hover:bg-[#FF8F17] transition-colors duration-200"
                                     )
-                                        img(src="/img/ver.png" alt="Ver" class="w-5 h-5 mr-2")
+                                        i(class="fas fa-eye mr-2")
                                         | Ver Mensaje
                                     button(
                                         onclick=`eliminarMensaje(${mensaje.id})`
                                         class="inline-flex items-center px-4 py-2 bg-white border border-red-600 text-red-600 text-sm font-medium rounded-md hover:bg-red-50 transition-colors duration-200"
                                     )
-                                        img(src="/img/eliminar.png" alt="Eliminar" class="w-5 h-5 mr-2")
+                                        i(class="fas fa-trash-alt mr-2")
                                         | Eliminar
 
 block scripts
