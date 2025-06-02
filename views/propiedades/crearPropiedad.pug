@@ -7,7 +7,7 @@ block contenido
         include ../usuario/vendedor-Sidebar/Vendedor-Sidebar.pug
 
         // Main Content
-        div(class="flex-1")
+        div(class="flex-1 pl-60")
             // Top Navigation
             header(class="bg-white shadow-lg")
                 div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
@@ -47,7 +47,7 @@ block contenido
                                             input(type="text" name="titulo" id="titulo" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.titulo? oldInfo.titulo : '')
 
                                     div(class="sm:col-span-3")
-                                        label(for="precio" class="block text-sm font-medium text-gray-700") Precio
+                                        label(for="precio" class="block text-sm font-medium text-gray-700") Precio $
                                         div(class="mt-1")
                                             input(type="number" name="precio" id="precio" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.precio? oldInfo.precio : '')
 
@@ -110,7 +110,7 @@ block contenido
                             // Descripción
                             div(class="pt-8")
                                 div
-                                    h3(class="text-lg leading-6 font-medium text-gray-900") Descripción
+                                    h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Descripción
                                     p(class="mt-1 text-sm text-gray-500") Describe los detalles y características de la propiedad.
 
                                 div(class="mt-6")
@@ -125,7 +125,7 @@ block contenido
                                         | Cancelar
                                     button(type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-[#FF641A] to-[#FF9F00] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105 cursor-pointer")
                                         i(class="fas fa-arrow-right mr-2")
-                                        | Siguiente
+                                        | Siguiente 
 block scripts
     link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
     link(rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.13/dist/esri-leaflet-geocoder.css")

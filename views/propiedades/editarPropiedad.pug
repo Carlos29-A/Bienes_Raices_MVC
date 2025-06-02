@@ -7,7 +7,7 @@ block contenido
         include ../usuario/vendedor-Sidebar/Vendedor-Sidebar.pug
 
         // Main Content
-        div(class="flex-1")
+        div(class="flex-1 pl-60")
             // Top Navigation
             header(class="bg-white shadow")
                 div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
@@ -15,7 +15,7 @@ block contenido
                     div(class="flex items-center space-x-4")
                         div(class="relative")
                             button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
-                                img(class="h-8 w-8 rounded-full" src=`https://ui-avatars.com/api/?name=${usuario.nombre}&background=0D8ABC&color=fff` alt=usuario.nombre)
+                                img(class="h-8 w-8 rounded-full" src="/img/avatar.png" alt=usuario.nombre)
                                 span= usuario.nombre
 
             // Agregar meta tag CSRF en el head
