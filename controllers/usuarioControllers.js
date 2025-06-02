@@ -266,7 +266,6 @@ const cerrarSesion = (req, res) => {
 }
 
 const panelVendedor = async (req, res) => {
-
     const usuario = await Usuario.findOne({ where: { id: req.usuario.id } })
     
     if(!usuario){
@@ -288,14 +287,15 @@ const panelVendedor = async (req, res) => {
                 attributes : ['nombre', 'apellido']
             },
         ]
-
     })
+
     res.render('usuario/panel-vendedor', {
         titulo: 'Panel de Vendedor',
         propiedades,
         usuario,
         propiedadesPublicadas,
-        mensajes
+        mensajes,
+        ruta: '/auth/vendedor/panel'
     })
 }
 
@@ -681,6 +681,32 @@ const crearPropiedadAdministradorPost = async (req, res) => {
 
 }
 
+const misPropiedades = async (req, res) => {
+    const usuario = await Usuario.findOne({ where: { id: req.usuario.id } })
+    const categorias = await Categoria.findAll()
+
+    const propiedades = await Propiedad.findAll({
+        where: {
+            usuarioId: req.usuario.id
+        },
+        include: [
+            {
+                model: Categoria,
+                as: 'categoriaRelacion',
+                attributes: ['nombre']
+            }
+        ]
+    })
+
+    res.render('propiedades/misPropiedades', {
+        propiedades,
+        usuario,
+        categorias,
+        csrfToken: req.csrfToken(),
+        ruta: '/propiedades/mis-propiedades'
+    })
+}
+
 export {
     registro,
     crearUsuario,
@@ -705,5 +731,6 @@ export {
     crearUsuarioAdministrador,
     crearUsuarioAdministradorPost,
     crearPropiedadAdministrador,
-    crearPropiedadAdministradorPost
+    crearPropiedadAdministradorPost,
+    misPropiedades
 }

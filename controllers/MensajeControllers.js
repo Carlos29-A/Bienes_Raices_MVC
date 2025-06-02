@@ -128,16 +128,14 @@ const obtenerMensajes = async (req, res) => {
                 as : "propiedadRelacion",
             }
         ]
-        
     })
 
     res.render('mensajes/mensajes', {
         mensajes,
         remitente,
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        ruta: '/mensajes/obtener'
     })
-
-
 }
 
 const obtenerMensajesVendedor = async (req, res) => {
@@ -173,7 +171,8 @@ const obtenerMensajesVendedor = async (req, res) => {
     res.render('mensajes/mensajesVendedor', {
         mensajes,
         destinatario,
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        ruta: '/mensajes/obtener/vendedor'
     })
 }
 const editarMensaje = async (req, res) => {

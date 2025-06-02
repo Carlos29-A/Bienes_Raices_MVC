@@ -96,7 +96,6 @@ const agregarImagen = async (req, res) => {
 }
 
 const almacenarImagen = async (req, res, next) => {
-
     const { id } = req.params
     console.log('Subiendo imagen...')
     const propiedad = await Propiedad.findByPk(id)
@@ -105,27 +104,27 @@ const almacenarImagen = async (req, res, next) => {
         return res.redirect('/auth/vendedor/panel')
     }
 
-    if (propiedad.publicado === false) {
-        return res.redirect('/auth/vendedor/panel')
-    }
-
+    // Validar que la propiedad pertenece al usuario
     if (propiedad.usuarioId.toString() !== req.usuario.id.toString()) {
         return res.redirect('/auth/vendedor/panel')
     }
 
     try {
+        // Verificar que se subió un archivo
+        if (!req.file) {
+            console.log('No se subió ningún archivo')
+            return res.redirect(`/propiedades/agregar-imagen/${id}`)
+        }
 
         // Almacenar la imagen en la base de datos
         propiedad.imagen = req.file.filename
-        propiedad.publicado = false
         await propiedad.save()
 
         next()
     } catch (error) {
-        console.log(error)
+        console.log('Error al guardar la imagen:', error)
+        return res.redirect(`/propiedades/agregar-imagen/${id}`)
     }
-
-
 }
 
 const misPropiedades = async (req, res) => {

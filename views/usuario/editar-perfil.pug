@@ -1,7 +1,7 @@
 extends ../layout/index.pug
 
 block contenido
-    div(class="min-h-screen flex")
+    div(class="min-h-screen flex bg-gray-100")
         if usuario.tipo.toString() === '1'
             include ./vendedor-Sidebar/Vendedor-Sidebar.pug
         else
@@ -10,7 +10,7 @@ block contenido
         // Contenido Principal
         div(class="flex-1")
             // Top Navigation
-            header(class="bg-white shadow")
+            header(class="bg-white shadow-lg")
                 div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
                     h1(class="text-3xl font-bold text-gray-900") Mi Perfil
                     div(class="flex items-center space-x-4")
@@ -21,7 +21,7 @@ block contenido
 
             // Contenido del Perfil
             main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
-                div(class="px-4 py-6 sm:px-0")
+                div(class="px-4 py-6 sm:px-0 ")
                     div(class="bg-white shadow rounded-lg")
                         // Información del Perfil
                         div(class="px-4 py-5 sm:p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg")

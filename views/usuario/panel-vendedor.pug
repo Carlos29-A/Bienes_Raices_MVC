@@ -1,12 +1,12 @@
 extends ../layout/index.pug
 
 block contenido
-    div(class="min-h-screen flex")
+    div(class="min-h-screen flex bg-gray-100")
         include ./vendedor-Sidebar/Vendedor-Sidebar.pug
         // Main Content
         div(class="flex-1")
             // Top Navigation
-            header(class="bg-white shadow")
+            header(class="bg-white shadow-lg")
                 div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
                     h1(class="text-3xl font-bold text-gray-900") Panel de Vendedor
                     div(class="flex items-center space-x-4")
@@ -16,11 +16,11 @@ block contenido
                                 span= usuario.nombre
 
             // Dashboard Content
-            main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
+            main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 ")
                 // Stats Cards
                 div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8")
                     // Propiedades Activas
-                    div(class="bg-white overflow-hidden shadow rounded-lg")
+                    div(class="bg-white overflow-hidden  rounded-lg shadow-lg")
                         div(class="p-5")
                             div(class="flex items-center")
                                 div(class="flex-shrink-0 bg-blue-500 rounded-md p-3")
@@ -31,7 +31,7 @@ block contenido
                                         dd(class="text-lg font-semibold text-gray-900")= propiedadesPublicadas.length
 
                     // Vistas Totales
-                    div(class="bg-white overflow-hidden shadow rounded-lg")
+                    div(class="bg-white overflow-hidden  rounded-lg shadow-lg")
                         div(class="p-5")
                             div(class="flex items-center")
                                 div(class="flex-shrink-0 bg-green-500 rounded-md p-3")
@@ -42,7 +42,7 @@ block contenido
                                         dd(class="text-lg font-semibold text-gray-900") 1,234
 
                     // Mensajes Nuevos
-                    div(class="bg-white overflow-hidden shadow rounded-lg")
+                    div(class="bg-white overflow-hidden  rounded-lg shadow-lg")
                         div(class="p-5")
                             div(class="flex items-center")
                                 div(class="flex-shrink-0 bg-yellow-500 rounded-md p-3")
@@ -50,11 +50,11 @@ block contenido
                                 div(class="ml-5 w-0 flex-1")
                                     dl
                                         dt(class="text-sm font-medium text-gray-500 truncate") Mensajes Nuevos
-                                        dd(class="text-lg font-semibold text-gray-900") 5
+                                        dd(class="text-lg font-semibold text-gray-900")= mensajes.length
 
 
                 // Mis Propiedades
-                div(class="bg-white shadow rounded-lg mb-8")
+                div(class="bg-white shadow rounded-lg mb-8 shadow-lg")
                     div(class="px-4 py-5 sm:px-6 flex justify-between items-center")
                         h3(class="text-lg leading-6 font-medium text-gray-900") Mis Propiedades
                     
@@ -62,26 +62,32 @@ block contenido
                         div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6")
                             
                             each propiedad in propiedades
-                                div(class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden")
-                                    img(src=`/uploads/${propiedad.imagen}` alt="Casa" class="w-full h-48 object-cover")
-                                    div(class="p-4")
-                                        div(class="flex justify-between items-start")
-                                            div
-                                                h4(class="text-lg font-semibold text-gray-900")= propiedad.titulo
-                                                p(class="text-blue-600 font-bold mb-2") $ #{propiedad.precio.toLocaleString()}
-                                            span(class=`${propiedad.publicado? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} text-xs font-semibold px-2.5 py-0.5 rounded`)= propiedad.publicado ? 'Activa' : 'Inactiva'
+                                div(class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col h-[400px]")
+                                    // Imagen con altura fija
+                                    div(class="relative h-48")
+                                        img(src=`/uploads/${propiedad.imagen}` alt="Casa" class="w-full h-full object-cover")
+                                        span(class=`absolute top-2 right-2 ${propiedad.publicado? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} text-xs font-semibold px-2.5 py-0.5 rounded`)= propiedad.publicado ? 'Activa' : 'Inactiva'
+                                    
+                                    // Contenido con flex-grow para empujar los botones hacia abajo
+                                    div(class="p-4 flex flex-col flex-grow")
+                                        // Título con altura máxima y ellipsis
+                                        h4(class="text-lg font-semibold text-gray-900 line-clamp-2 min-h-[3rem]")= propiedad.titulo
+                                        p(class="text-blue-600 font-bold my-2") $ #{propiedad.precio.toLocaleString()}
                                         
-                                        p(class="text-gray-500 text-sm mt-2") #{propiedad.habitaciones} habitaciones • #{propiedad.wc} baños • #{propiedad.estacionamiento} estacionamientos
-                                        div(class="mt-4 flex space-x-2")
+                                        // Características
+                                        p(class="text-gray-500 text-sm") #{propiedad.habitaciones} habitaciones • #{propiedad.wc} baños • #{propiedad.estacionamiento} estacionamientos
+                                        
+                                        // Botones fijos en la parte inferior
+                                        div(class="mt-auto pt-4 flex space-x-2")
                                             a(href=`/propiedades/editar/${propiedad.id}` class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 text-sm text-center transition-all duration-300 cursor-pointer") Editar
                                             button(class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 text-sm cursor-pointer transition-all duration-300") Desactivar
 
                             
 
                 // Mensajes Recientes
-                div(class="bg-white shadow rounded-lg")
+                div(class="bg-white shadow rounded-lg shadow-lg")
                     div(class="px-4 py-5 sm:px-6")
-                        h3(class="text-lg leading-6 font-medium text-gray-900") Mensajes Recientes
+                        h3(class="text-lg leading-6 font-medium text-gray-900") Tus Mensajes recibidos
                     
                     div(class="border-t border-gray-200")
                         if mensajes.length
@@ -94,7 +100,8 @@ block contenido
                                             div(class="flex-1 min-w-0")
                                                 p(class="text-sm font-medium text-gray-900")= mensaje.remitenteRelacion.nombre + ' ' + mensaje.remitenteRelacion.apellido
                                                 p(class="text-sm text-gray-500 truncate")= mensaje.mensaje
-                                            div(class="text-sm text-gray-500") Hace 2 horas
+                                            div(class="text-sm text-gray-500")
+                                                a(href=`/auth/vendedor/mensajes/${mensaje.id}` class="text-blue-600 hover:text-white transition-all duration-300 bg-blue-100 px-2 py-1 rounded-md px-5 hover:bg-blue-500") Ver
                         else
                             p(class="text-gray-500 text-center") No hay mensajes recientes
                             

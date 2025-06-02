@@ -4,13 +4,13 @@ block styles
     meta(name="csrf-token" content=csrfToken)
 
 block contenido
-    div(class="min-h-screen flex")
+    div(class="min-h-screen flex bg-gray-100")
         include ../usuario/vendedor-Sidebar/Vendedor-Sidebar.pug
 
         // Main Content
         div(class="flex-1")
             // Top Navigation
-            header(class="bg-white shadow")
+            header(class="bg-white shadow-lg")
                 div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
                     h1(class="text-3xl font-bold text-gray-900") Mis Propiedades
                     div(class="flex items-center space-x-4")
@@ -21,7 +21,7 @@ block contenido
 
             // Filtros Propiedades
             div(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 ")
-                div(class="flex items-center space-x-4 mt-4 max-w-7xl mx-auto border-2 border-gray-200 p-4 rounded-md")
+                div(class="flex items-center space-x-4 mt-4 max-w-7xl mx-auto border-2 border-gray-200 p-4 rounded-md bg-white ")
                     h1(class="text-normal font-bold text-gray-900") Filtrar propiedades :
                     label(class="block text-sm font-medium text-gray-700") Estado
                     select(class="border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:ring-opacity-50 px-4 py-2" id="estado_select")
