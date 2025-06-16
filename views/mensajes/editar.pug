@@ -8,6 +8,7 @@ block contenido
 
             //- Contenedor Principal
             div(class="max-w-2xl mx-auto")
+               
                 //- Información de la Propiedad
                 div(class="bg-white rounded-lg shadow-lg p-6 mb-6")
                     div(class="flex items-center space-x-4")
@@ -60,7 +61,7 @@ block contenido
 
                 //- Formulario de Mensaje
                 form(
-                    action=`/mensajes/editar/${mensaje.propiedadRelacion.id}`
+                    action=`/mensajes/editar/${mensaje.id}`
                     method="POST"
                     class="bg-white rounded-lg shadow-lg p-6" 
                     novalidate

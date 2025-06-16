@@ -9,6 +9,9 @@ import { Usuario, Propiedad, Categoria, Favorito, Mensaje } from './models/index
 import favoritosRouter from './routes/favoritosRoute.js'
 import mensajeRouter from './routes/mensajeRoute.js'
 import apiRoute from './routes/apiRoute.js'
+import flash from 'connect-flash'
+import session from 'express-session'
+
 
 dotenv.config()
 
@@ -24,12 +27,30 @@ try {
     console.log(error)
 }
 
+// Configuración de Session
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'secret_key_bienes_raices',
+    resave: false,
+    saveUninitialized: false,
+}))
+
+// Configuración de Flash Messages
+app.use(flash())
+
 // Middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use(cookieParser())
 app.use(csrf({ cookie: true }))
+
+// Middleware para variables locales
+app.use((req, res, next) => {
+    // Variables locales para mensajes flash
+    res.locals.mensajesFlash = req.flash('mensajeFlash')
+    res.locals.tipoFlash = req.flash('tipoFlash')
+    next()
+})
 
 // Habilitar Pug
 app.set('view engine', 'pug')

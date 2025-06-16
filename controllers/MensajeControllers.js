@@ -95,11 +95,9 @@ const enviarMensajePost = async (req, res) => {
         propiedadId: propiedad.id
     })
 
-    res.render('plantillas/mensajeComprador', {
-        titulo: 'Mensaje enviado correctamente',
-        mensaje: 'El mensaje se ha enviado correctamente',
-        tipo: 'exito'
-    })
+    req.flash('mensajeFlash', 'Mensaje enviado correctamente')
+    req.flash('tipoFlash', 'exito')
+    res.redirect('/mensajes/obtener')
 }
 
 const obtenerMensajes = async (req, res) => {
@@ -113,7 +111,7 @@ const obtenerMensajes = async (req, res) => {
     }
 
     // Mostrar los mensajes de la base de datos del usuario
-    const mensajes = await Mensaje.findAll({
+    const mensajesEnviados = await Mensaje.findAll({
         where : {
             remitenteId : id
         },
@@ -129,13 +127,36 @@ const obtenerMensajes = async (req, res) => {
             }
         ]
     })
+    // Obtener los mensajes respondidos del comprador
+    const mensajesRespondidos = await Mensaje.findAll({
+        where : {
+            destinatarioId : id,
+        },
+        include : [
+            {
+                model : Usuario,
+                as : "remitenteRelacion",
+                attributes : ['nombre', 'email']
+            },
+            {
+                model : Propiedad,
+                as : "propiedadRelacion",
+            },
+            {
+                model : Usuario,
+                as : "destinatarioRelacion",
+                attributes : ['nombre', 'email']
+            }
+        ]
+    })
 
     res.render('mensajes/mensajes', {
         titulo: 'Mensajes',
-        mensajes,
+        mensajesEnviados,
         remitente,
         csrfToken: req.csrfToken(),
-        ruta: '/mensajes/obtener'
+        ruta: '/mensajes/obtener',
+        mensajesRespondidos
     })
 }
 
@@ -212,7 +233,7 @@ const editarMensaje = async (req, res) => {
     // Verificar si el mensaje existe
     if(!mensaje){
         return res.redirect('/auth/login')
-    }   
+    } 
     res.render('mensajes/editar', {
         mensaje,
         remitente,
@@ -254,6 +275,7 @@ const editarMensajePost = async (req, res) => {
         return res.redirect('/auth/login')
     }
 
+
     // Validar si el editar el mensaje es el remitente
     if(mensaje.remitenteId !== remitente.id){
         return res.redirect('/auth/login')
@@ -280,11 +302,9 @@ const editarMensajePost = async (req, res) => {
 
     await mensaje.save()
 
-    res.render('plantillas/mensajeComprador', {
-        titulo: 'Mensaje editado correctamente',
-        mensaje: 'El mensaje se ha editado correctamente',
-        tipo: 'exito'
-    })
+    req.flash('mensajeFlash', 'Mensaje editado correctamente')
+    req.flash('tipoFlash', 'exito')
+    res.redirect('/mensajes/obtener')
     
 }
 
@@ -515,18 +535,13 @@ const responderMensajePost = async (req, res) => {
         })
         const ruta = remitente.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener'
 
-        res.render('mensajes/mensajesVendedor', {
-            mostrarMensaje: 'Mensaje enviado correctamente',
-            destinatario: req.usuario.id,
-            csrfToken: req.csrfToken(),
-            ruta,
-            mensajes
-        })
+        req.flash('mensajeFlash', 'Mensaje enviado correctamente')
+        req.flash('tipoFlash', 'exito')
+        res.redirect(ruta)
 
     }catch(error){
         console.log(error)
     }
-    
 }
 
 

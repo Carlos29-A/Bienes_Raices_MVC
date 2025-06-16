@@ -1,0 +1,61 @@
+footer(class="bg-gray-900 text-white pt-16 pb-8")
+    div(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8")
+        //- Grid Principal
+        div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12")
+            //- Sección 1: Logo y Descripción
+            div(class="space-y-4")
+                div(class="flex items-center space-x-2")
+                    img(src="/img/logo.png" alt="Logo" class="h-10 w-auto")
+                    span(class="text-2xl font-bold text-[#FF6819]") BienesRaíces
+                p(class="text-gray-400 text-sm leading-relaxed")
+                    | Tu plataforma confiable para encontrar la propiedad perfecta. Conectamos compradores y vendedores de manera segura y eficiente.
+
+            //- Sección 2: Enlaces Rápidos
+            div(class="space-y-4")
+                h3(class="text-lg font-semibold text-white mb-4") Enlaces Rápidos
+                ul(class="space-y-2")
+                    li
+                        a(href="/propiedades" class="text-gray-400 hover:text-[#FF6819] transition-colors duration-300 flex items-center")
+                            i(class="fas fa-chevron-right text-xs mr-2")
+                            | Propiedades
+                    li
+                        a(href="/nosotros" class="text-gray-400 hover:text-[#FF6819] transition-colors duration-300 flex items-center")
+                            i(class="fas fa-chevron-right text-xs mr-2")
+                            | Nosotros
+                    li
+                        a(href="/blog" class="text-gray-400 hover:text-[#FF6819] transition-colors duration-300 flex items-center")
+                            i(class="fas fa-chevron-right text-xs mr-2")
+                            | Blog
+                    li
+                        a(href="/contacto" class="text-gray-400 hover:text-[#FF6819] transition-colors duration-300 flex items-center")
+                            i(class="fas fa-chevron-right text-xs mr-2")
+                            | Contacto
+
+            //- Sección 3: Contacto
+            div(class="space-y-4")
+                h3(class="text-lg font-semibold text-white mb-4") Contacto
+                ul(class="space-y-3")
+                    li(class="flex items-start space-x-3")
+                        i(class="fas fa-map-marker-alt text-[#FF6819] mt-1")
+                        //- Trujillo, Perú
+                        span(class="text-gray-400 text-sm") Av. Arequipa 123, Trujillo, Perú
+                    li(class="flex items-center space-x-3")
+                        i(class="fas fa-phone text-[#FF6819]")
+                        span(class="text-gray-400 text-sm") +51 987 654 321
+                    li(class="flex items-center space-x-3")
+                        i(class="fas fa-envelope text-[#FF6819]")
+                        span(class="text-gray-400 text-sm") contacto@bienesraices.com.pe
+
+
+        //- Línea Divisoria
+        div(class="border-t border-gray-800 pt-8")
+            //- Grid de Información Legal
+            div(class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center")
+                //- Derechos de Autor
+                div(class="text-center md:text-left")
+                    p(class="text-gray-400 text-sm")
+                        | © #{new Date().getFullYear()} BienesRaíces. Todos los derechos reservados.
+                
+                //- Enlaces Legales
+                div(class="flex flex-wrap justify-center md:justify-end space-x-4 text-sm")
+                    

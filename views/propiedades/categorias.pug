@@ -41,7 +41,16 @@ block contenido
                             option(value="1") 1 Estacionamiento
                             option(value="2") 2 Estacionamientos
                             option(value="3") 3 Estacionamientos
-                        
+                    //- Precio minimo
+                    div(class="flex items-center gap-2")
+                        label(for="precioMinimo" class="text-sm font-bold text-gray-700 whitespace-nowrap precio-minimo") Precio minimo:
+                        input(type="number" name="precioMinimo" id="precioMinimo" class="block w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm")
+                    //- Precio maximo
+                    div(class="flex items-center gap-2")
+                        label(for="precioMaximo" class="text-sm font-bold text-gray-700 whitespace-nowrap precio-maximo") Precio maximo:
+                        input(type="number" name="precioMaximo" id="precioMaximo" class="block w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm")
+
+
                 div(class="grid grid-cols-1 md:grid-cols-3 gap-8 propiedades-contenedor")
                         //- Aca se llena el contenedor de propiedades
         else

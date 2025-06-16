@@ -1,5 +1,5 @@
 import express from 'express'
-import { registrarPropiedad, publicarPropiedad, agregarImagen, almacenarImagen, misPropiedades, editarPropiedad, actualizarPropiedad, eliminarPropiedad, cambiarEstado, obtenerPropiedades, buscarPropiedades, verPropiedad, obtenerCategorias } from '../controllers/propiedadControllers.js'
+import { registrarPropiedad, publicarPropiedad, agregarImagen, almacenarImagen, misPropiedades, editarPropiedad, actualizarPropiedad, eliminarPropiedad, cambiarEstado, obtenerPropiedades, buscarPropiedades, verPropiedad, obtenerCategorias, cambiarEstadoDesactivar, cambiarEstadoActivar } from '../controllers/propiedadControllers.js'
 import { obtenerPropiedadesCategoria } from '../controllers/apiControllers.js'
 import protegerRuta from '../middlewares/protegerRuta.js'
 import upload from '../middlewares/subirImagen.js'
@@ -25,8 +25,12 @@ router.post('/actualizar/:id', protegerRuta, actualizarPropiedad)
 // Eliminar propiedad
 router.post('/eliminar/:id', protegerRuta, eliminarPropiedad)
 
-// Cambiar estado
+// Cambiar estado 
+// Desde javascript para evitar que se recargue la pagina
 router.put('/estado/:id', protegerRuta, cambiarEstado)
+// Desde url para que se recargue la pagina
+router.get('/desactivar/:id', protegerRuta, cambiarEstadoDesactivar)
+router.get('/activar/:id', protegerRuta, cambiarEstadoActivar)
 
 // Mis propiedades
 router.get('/mis-propiedades', protegerRuta, misPropiedades)

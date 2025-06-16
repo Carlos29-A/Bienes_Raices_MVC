@@ -14,12 +14,13 @@ block contenido
                         div
                             h1(class="text-2xl font-bold text-[#FF6F17]") Mensajes Recibidos
                             p(class="text-gray-600") Gestiona tus mensajes de propiedades
-            //- Mensajes de Exito
-            if mostrarMensaje
+            //- Mensajes de Exito de req flash
+            if mensajesFlash.length > 0
                 div(class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert")
-                    span(class="block sm:inline")= mostrarMensaje
+                    span(class="block sm:inline")= mensajesFlash[0]
                     span(class="absolute top-0 bottom-0 right-0 px-4 py-3")
                         i(class="fas fa-times")
+
             //- Contenedor de Mensajes
             div(class="flex-1 p-8 bg-gray-100")
                 //- Estadísticas
@@ -80,11 +81,14 @@ block contenido
                                                         i(class="fas fa-map-marker-alt mr-1")
                                                         = mensaje.propiedadRelacion.calle
 
-                                //- Vista previa del mensaje
-                                div(class="px-6 py-4 bg-gray-50 border-t border-gray-100")
-                                    - const primeraLinea = mensaje.mensaje.split('\n')[0]
-                                    - const mensajeCortado = primeraLinea.length > 100 ? primeraLinea.substring(0, 100) + '...' : primeraLinea
-                                    p(class="text-gray-700")= mensajeCortado
+                                //- Vista previa del mensaje y que si es muy largo, se corta y se muestra un boton para ver el mensaje completo
+                                div(class="bg-gray-50 p-3 rounded-lg")
+                                    if mensaje.mensaje.length > 100
+                                        p(class="text-gray-700 line-clamp-2")= mensaje.mensaje
+            
+
+                                    else
+                                        p(class="text-gray-700")= mensaje.mensaje
 
                                 //- Botones de acción
                                 div(class="px-6 py-4 bg-white border-t border-gray-100 flex justify-end space-x-3")

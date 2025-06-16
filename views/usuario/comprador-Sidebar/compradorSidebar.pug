@@ -32,18 +32,6 @@ nav(class="bg-gradient-to-r from-[#1E2939] to-[#101828] shadow-lg")
         //- Categorías de propiedades
         div(class="py-4 border-t border-gray-700")
             div(class="flex flex-wrap justify-center gap-6")
-                a(href="/propiedades/categorias/1" class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
-                    i(class="fas fa-home mr-2")
-                    span Casa
-                a(href="/propiedades/categorias/2" class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
-                    i(class="fas fa-building mr-2")
-                    span Departamento
-                a(href="/propiedades/categorias/4" class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
-                    i(class="fas fa-vector-square mr-2")
-                    span Terreno
-                a(href="/propiedades/categorias/3" class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
-                    i(class="fas fa-warehouse mr-2")
-                    span Bodega
-                a(href="/propiedades/categorias/5" class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
-                    i(class="fas fa-cabin mr-2")
-                    span Cabaña
+                each categoria in categorias
+                    a(href=`/propiedades/categorias/${categoria.id}` class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
+                        span= categoria.nombre

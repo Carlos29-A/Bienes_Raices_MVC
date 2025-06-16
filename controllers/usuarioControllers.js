@@ -5,6 +5,13 @@ import { emailRegistro, emailOlvidePassword } from "../helpers/email.js"
 import bcrypt from "bcrypt"
 import { Op } from "sequelize"
 import cookieParser from "cookie-parser"
+import fs from "fs"
+import path from "path"
+import { fileURLToPath } from "url"
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 const registro = (req, res) => {
     res.render('usuario/registro', {
         csrfToken: req.csrfToken()
@@ -288,6 +295,11 @@ const panelVendedor = async (req, res) => {
             },
         ]
     })
+    const mensajesRespondidos = await Mensaje.findAll({
+        where : {
+            remitenteId : req.usuario.id
+        }
+    })
 
     res.render('usuario/panel-vendedor', {
         titulo: 'Panel de Vendedor',
@@ -295,6 +307,7 @@ const panelVendedor = async (req, res) => {
         usuario,
         propiedadesPublicadas,
         mensajes,
+        mensajesRespondidos,
         ruta: '/auth/vendedor/panel'
     })
 }
@@ -518,7 +531,7 @@ const panelAdministrador = async (req, res) => {
     Propiedad.count({ where: { publicado: true } })
     ])
     // Usuarios
-    const usuarios = await Usuario.findAll()
+    const usuarios = await Usuario.findAll({where: {tipo: { [Op.or]: [1, 2] }}})
     // Compradores
     const compradores = await Usuario.findAll({ limit: 4, order: [['createdAt', 'DESC']], where: { tipo: 2 } })
     // Vendedores
@@ -702,14 +715,55 @@ const crearUsuarioAdministradorPost = async (req, res) => {
     }
     const {nombre, apellido, email, telefono, password, tipo, edad, confirmado} = req.body
     const usuarioCreado = await Usuario.create({nombre, apellido, email, telefono, password, tipo, edad, confirmado})
-    res.render('plantillas/mensajeAdministrador', {
-        titulo: 'El administrador creó un usuario nuevo',
-        mensaje: 'El administrador ha creado un usuario nuevo correctamente',
-        tipo: 'exito',
-        usuarios,
-        propiedades,
-        mensajes,
-    })
+    
+    req.flash('mensajeFlash', 'Usuario creado correctamente')
+    req.flash('tipoFlash', 'exito')
+    res.redirect('/auth/administrador/usuarios')
+}
+
+const eliminarUsuarioAdministrador = async (req, res) => {
+
+    const {id} = req.params
+    const usuario = await Usuario.findByPk(id)
+    
+    if(!usuario){
+        return res.redirect('/auth/administrador/usuarios')
+    }
+    // Eliminar las propiedades del usuario
+    await Propiedad.destroy({ where: { usuarioId: id } })
+    // Eliminar los mensajes del usuario
+    await Mensaje.destroy({ where: { remitenteId: id } })
+    await Mensaje.destroy({ where: { destinatarioId: id } })
+    // Eliminar los favoritos del usuario
+    await Favorito.destroy({ where: { usuarioId: id } })
+    // Eliminar el usuario
+    await usuario.destroy()
+
+    req.flash('mensajeFlash', 'Usuario eliminado correctamente')
+    req.flash('tipoFlash', 'exito')
+    res.redirect('/auth/administrador/usuarios')
+}
+const eliminarPropiedadAdministrador = async (req, res) => {
+
+    const {id} = req.params
+    const propiedad = await Propiedad.findByPk(id)
+    if(!propiedad){
+        return res.redirect('/auth/administrador/propiedades')
+    }
+    // Eliminar las imagenes de la propiedad que se guardan en la carpeta public/uploads
+    const rutaImagen = path.join(__dirname, '../public/uploads', propiedad.imagen)
+    if(fs.existsSync(rutaImagen)){
+        fs.unlinkSync(rutaImagen)
+    }
+    // Eliminar los mensajes de la propiedad
+    await Mensaje.destroy({ where: { propiedadId: id } })
+    // Eliminar los favoritos de la propiedad
+    await Favorito.destroy({ where: { propiedadId: id } })
+    // Eliminar la propiedad
+    await propiedad.destroy()
+    req.flash('mensajeFlash', 'Propiedad eliminada correctamente')
+    req.flash('tipoFlash', 'exito')
+    res.redirect('/auth/administrador/propiedades')
 }
 
 const crearPropiedadAdministrador = async (req, res) => {
@@ -909,18 +963,9 @@ const crearCategoriaAdministradorPost = async (req, res) => {
     try{
 
         const categoria = await Categoria.create({nombre, descripcion})
-        const categorias = await Categoria.findAll()
-        // Enviar un mensaje de exito sin req.flash y redirigir a la pagina de categorias
-        res.render('usuario/Administrador/Administrador-Categorias', {
-            titulo: 'Panel de Administrador de Categorías',
-            usuario: req.usuario,
-            csrfToken: req.csrfToken(),
-            categorias,
-            usuarios,
-            mensaje: 'Categoría creada correctamente',
-            tipo: 'exito',
-            mensajes,
-        })
+        req.flash('mensajeFlash', 'Categoría creada correctamente')
+        req.flash('tipoFlash', 'exito')
+        res.redirect('/auth/administrador/categorias')
 
     }catch(error){
         console.log(error)
@@ -928,8 +973,82 @@ const crearCategoriaAdministradorPost = async (req, res) => {
 
 }
 
+const eliminarCategoriaAdministrador = async (req, res) => {
 
+    const {id} = req.params
+    const categoria = await Categoria.findByPk(id)
+    if(!categoria){
+        return res.redirect('/auth/administrador/categorias')
+    }
+    // Eliminar las propiedades de la categoria
+    await Propiedad.destroy({ where: { categoriaId: id } })
+    // Eliminar la categoria
+    await categoria.destroy()
+    
+    req.flash('mensajeFlash', 'Categoría eliminada correctamente')
+    req.flash('tipoFlash', 'exito')
+    res.redirect('/auth/administrador/categorias')
+}
 
+const editarCategoriaAdministrador = async (req, res) => {
+
+    const {id} = req.params
+    const categoria = await Categoria.findByPk(id)
+    const usuarios = await Usuario.findAll({ where: { tipo: { [Op.or]: [1, 2] } } })
+    const mensajes = await Mensaje.findAll()
+
+    if(!categoria){
+        return res.redirect('/auth/administrador/categorias')
+    }
+
+    res.render('usuario/Administrador/Administrador-Categorias-Editar', {
+        titulo: 'Editar Categoría',
+        descripcion: 'Edita la categoría seleccionada',
+        csrfToken: req.csrfToken(),
+        categoria,
+        usuario: req.usuario,
+        usuarios,
+        mensajes,
+    })
+}
+
+const editarCategoriaAdministradorPost = async (req, res) => {
+
+    const {id} = req.params
+    const categoria = await Categoria.findByPk(id)
+    if(!categoria){
+        return res.redirect('/auth/administrador/categorias')
+    }
+
+    await check('nombre').notEmpty().withMessage('El nombre es requerido').run(req)
+    await check('descripcion').notEmpty().withMessage('La descripción es requerida').run(req)
+
+    const errores = validationResult(req)
+
+    if (!errores.isEmpty()) {
+        return res.render('usuario/Administrador/Administrador-Categorias-Editar', {
+            csrfToken: req.csrfToken(),
+            errores: errores.array(),
+            categoria,
+            usuario: req.usuario,
+            usuarios,
+            mensajes,
+        })
+    }
+
+    const {nombre, descripcion} = req.body
+    try{
+        categoria.nombre = nombre
+        categoria.descripcion = descripcion
+        await categoria.save()
+    }catch(error){
+        console.log(error)
+    }
+
+    req.flash('mensajeFlash', 'Categoría actualizada correctamente')
+    req.flash('tipoFlash', 'exito')
+    res.redirect('/auth/administrador/categorias')
+}
 
 
 
@@ -963,6 +1082,35 @@ const misPropiedades = async (req, res) => {
     })
 }
 
+const perfilUsuario = async (req, res) => {
+
+    const { id } = req.params
+
+    // Buscar al usuario
+    const usuario = await Usuario.findByPk(id)
+
+    // Si no existe el usuario, redirigir a la pagina de inicio
+    if(!usuario){
+        return res.redirect('/auth/login')
+    }
+    // Buscar las propiedades del usuario
+    const propiedades = await Propiedad.findAll({ where: { usuarioId: id },
+        include: [
+            {
+                model: Categoria,
+                as: 'categoriaRelacion',
+                attributes: ['nombre']
+            }
+        ] })
+
+    res.render('usuario/perfil', {
+        usuario,
+        propiedades,
+        csrfToken: req.csrfToken()
+    })
+}
+
+
 export {
     registro,
     crearUsuario,
@@ -986,12 +1134,18 @@ export {
     panelAdministradorPerfil,
     crearUsuarioAdministrador,
     crearUsuarioAdministradorPost,
+    eliminarUsuarioAdministrador,
+    eliminarPropiedadAdministrador,
     crearPropiedadAdministrador,
     crearPropiedadAdministradorPost,
     crearCategoriaAdministrador,
     crearCategoriaAdministradorPost,
     panelAdministradorCategorias,
+    eliminarCategoriaAdministrador,
+    editarCategoriaAdministrador,
+    editarCategoriaAdministradorPost,
     misPropiedades,
     agregarImagenAdministradorPropiedad,
-    subirImagenAdministradorPropiedad
+    subirImagenAdministradorPropiedad,
+    perfilUsuario
 }

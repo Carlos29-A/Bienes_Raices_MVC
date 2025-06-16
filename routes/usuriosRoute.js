@@ -1,5 +1,5 @@
 import express from 'express'
-import { registro, login, olvideContraseña, crearUsuario, confirmar, resetearPassword, reestablecerPassword, nuevaContraseña, iniciarSesion, panelVendedor, panelComprador, editarPerfil, actualizarPerfil, cerrarSesion, buscarPropiedades, panelAdministrador, panelAdministradorUsuarios, panelAdministradorPropiedades, panelAdministradorMensajes, panelAdministradorPerfil, crearUsuarioAdministrador, crearUsuarioAdministradorPost, crearPropiedadAdministrador, crearPropiedadAdministradorPost, agregarImagenAdministradorPropiedad, subirImagenAdministradorPropiedad, crearCategoriaAdministrador, crearCategoriaAdministradorPost, panelAdministradorCategorias } from '../controllers/usuarioControllers.js'
+import { registro, login, olvideContraseña, crearUsuario, confirmar, resetearPassword, reestablecerPassword, nuevaContraseña, iniciarSesion, panelVendedor, panelComprador, editarPerfil, actualizarPerfil, cerrarSesion, buscarPropiedades, panelAdministrador, panelAdministradorUsuarios, panelAdministradorPropiedades, panelAdministradorMensajes, panelAdministradorPerfil, crearUsuarioAdministrador, crearUsuarioAdministradorPost, crearPropiedadAdministrador, crearPropiedadAdministradorPost, agregarImagenAdministradorPropiedad, subirImagenAdministradorPropiedad, crearCategoriaAdministrador, crearCategoriaAdministradorPost, panelAdministradorCategorias, eliminarUsuarioAdministrador, eliminarPropiedadAdministrador, eliminarCategoriaAdministrador, editarCategoriaAdministrador, editarCategoriaAdministradorPost, perfilUsuario } from '../controllers/usuarioControllers.js'
 import protegerRuta from '../middlewares/protegerRuta.js'
 import  upload  from '../middlewares/subirImagen.js'
 
@@ -49,11 +49,24 @@ router.get('/administrador/categorias', protegerRuta, panelAdministradorCategori
 // Funcionalidade del administrador
 router.get('/administrador/usuarios/crear', protegerRuta, crearUsuarioAdministrador)
 router.post('/administrador/usuarios/crear', protegerRuta, crearUsuarioAdministradorPost)
+router.post('/administrador/usuarios/eliminar/:id', protegerRuta, eliminarUsuarioAdministrador)
+
 router.get('/administrador/propiedades/crear', protegerRuta, crearPropiedadAdministrador)
 router.post('/administrador/propiedades/crear', protegerRuta, crearPropiedadAdministradorPost)
 router.get('/administrador/propiedades/agregar-imagen/:id', protegerRuta, agregarImagenAdministradorPropiedad)
 router.post('/administrador/propiedades/agregar-imagen/:id', protegerRuta, upload.single('imagenAdmin'), subirImagenAdministradorPropiedad)
+
+router.post('/administrador/propiedades/eliminar/:id', protegerRuta, eliminarPropiedadAdministrador)
+
 router.get('/administrador/categorias/crear', protegerRuta, crearCategoriaAdministrador)
 router.post('/administrador/categorias/crear', protegerRuta, crearCategoriaAdministradorPost)
+router.post('/administrador/categorias/eliminar/:id', protegerRuta, eliminarCategoriaAdministrador)
+router.get('/administrador/categorias/editar/:id', protegerRuta, editarCategoriaAdministrador)
+router.post('/administrador/categorias/editar/:id', protegerRuta, editarCategoriaAdministradorPost)
+
+
+// Perfil de un usuario para ver sus propiedades y calificarlo
+router.get('/usuario/perfil/:id', protegerRuta, perfilUsuario)
+
 
 export default router

@@ -73,12 +73,9 @@ block contenido
                         )
                             i(class="fas fa-envelope mr-2")
                             | Contactar Vendedor
-                        button(
-                            onclick=`contactarVendedor(${propiedad.id})`
-                            class="flex-1 bg-gradient-to-r from-[#FF641A] to-[#B08262] text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer hover:scale-105 transition-all duration-300"
-                        )
+                        a(href=`/auth/usuario/perfil/${propiedad.usuarioRelacion.id}` class="flex-1 bg-gradient-to-r from-[#FF641A] to-[#B08262]  text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer hover:scale-105 transition-all duration-300 text-center") 
                             i(class="fas fa-phone mr-2")
-                            | Ver Teléfono
+                            | Ver Perfil Vendedor
 
 block scripts
     script(src="/js/agregarFavorito.js")

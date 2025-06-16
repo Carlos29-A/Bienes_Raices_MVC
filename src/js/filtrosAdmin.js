@@ -4,7 +4,7 @@
     const baños = document.querySelector('#baños')
     const estacionamiento = document.querySelector('#estacionamiento')
     const propiedadesContenedor = document.querySelector('.propiedades-contenedor')
-    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     let propiedades = []
 
     const filtrarPropiedades = {
@@ -144,18 +144,18 @@
                             <div class="flex space-x-2">
                                 <a 
                                     href="/propiedades/editar/${propiedad.id}"
-                                    class="inline-flex items-center px-3 py-1.5 text-sm text-[#FF6819] hover:bg-orange-50 rounded-lg transition-colors duration-200"
+                                    class="inline-flex items-center px-3 py-1.5 text-sm text-[#FF6819] hover:bg-orange-50 rounded-lg transition-colors duration-200 cursor-pointer"
                                 >
                                     <i class="fas fa-edit mr-1.5"></i>
                                     Editar
                                 </a>
-                                <a 
-                                    href="/propiedades/eliminar/${propiedad.id}"
-                                    class="inline-flex items-center px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
-                                >
-                                    <i class="fas fa-trash-alt mr-1.5"></i>
-                                    Eliminar
-                                </a>
+                                <form action="/auth/administrador/propiedades/eliminar/${propiedad.id}" method="POST">
+                                    <input type="hidden" name="_csrf" value="${csrfToken}">
+                                    <button type="submit" class="inline-flex items-center px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 cursor-pointer" onclick="return confirm('¿Estás seguro de que deseas eliminar esta propiedad?')">
+                                        <i class="fas fa-trash-alt mr-1.5"></i>
+                                        Eliminar
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

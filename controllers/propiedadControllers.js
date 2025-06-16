@@ -272,8 +272,35 @@ const cambiarEstado = async (req, res) => {
     res.json({
         resultado: true
     })
-
 }
+
+const cambiarEstadoDesactivar = async (req, res) => {
+    const propiedad = await Propiedad.findByPk(req.params.id)
+    if (!propiedad) {
+        return res.redirect('/auth/vendedor/panel')
+    }
+
+    propiedad.publicado = false
+    await propiedad.save()
+
+    req.flash('mensajeFlash', 'Propiedad desactivada correctamente')
+    req.flash('tipoFlash', 'exito')
+    res.redirect('/auth/vendedor/panel')
+}
+const cambiarEstadoActivar = async (req, res) => {
+    const propiedad = await Propiedad.findByPk(req.params.id)
+    if (!propiedad) {
+        return res.redirect('/auth/vendedor/panel')
+    }
+
+    propiedad.publicado = true
+    await propiedad.save()
+
+    req.flash('mensajeFlash', 'Propiedad activada correctamente')
+    req.flash('tipoFlash', 'exito')
+    res.redirect('/auth/vendedor/panel')
+}
+
 
 // API para obtener todas las propiedades filtradas
 const obtenerPropiedades = async (req, res) => {
@@ -492,6 +519,8 @@ export {
     actualizarPropiedad,
     eliminarPropiedad,
     cambiarEstado,
+    cambiarEstadoDesactivar,
+    cambiarEstadoActivar,
     obtenerPropiedades,
     buscarPropiedades,
     verPropiedad,

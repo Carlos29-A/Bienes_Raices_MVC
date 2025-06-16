@@ -5,13 +5,18 @@
     const estacionamiento = document.querySelector('#estacionamiento')
     const propiedadesContenedor = document.querySelector('.propiedades-contenedor')
     const idUsuario = document.querySelector('.idUsuario')
+    const precioMinimo = document.querySelector('#precioMinimo')
+    const precioMaximo = document.querySelector('#precioMaximo')
+
 
     let propiedades = []
     let favoritos = []
     const filtrarPropiedades = {
         habitaciones: '',
         baños: '',
-        estacionamiento: ''
+        estacionamiento: '',
+        precioMinimo: '',
+        precioMaximo: ''
     }
     // Eventos
     habitaciones.addEventListener('change', (e) => {
@@ -26,9 +31,17 @@
         filtrarPropiedades.estacionamiento = +e.target.value
         filtrarPropiedadesFuncion()
     })
+    precioMinimo.addEventListener('input', (e) => {
+        filtrarPropiedades.precioMinimo = +e.target.value
+        filtrarPropiedadesFuncion()
+    })
+    precioMaximo.addEventListener('input', (e) => {
+        filtrarPropiedades.precioMaximo = +e.target.value
+        filtrarPropiedadesFuncion()
+    })
 
     const filtrarPropiedadesFuncion = () => {
-        const resultado = propiedades.filter(filtrarHabitaciones).filter(filtrarBaños).filter(filtrarEstacionamiento)
+        const resultado = propiedades.filter(filtrarHabitaciones).filter(filtrarBaños).filter(filtrarEstacionamiento).filter(filtrarPrecioMinimo).filter(filtrarPrecioMaximo)
         console.log(resultado)
         mostrarPropiedades(resultado)
     }
@@ -40,6 +53,12 @@
     }
     const filtrarEstacionamiento = (propiedad) => {
         return filtrarPropiedades.estacionamiento ? propiedad.estacionamiento === filtrarPropiedades.estacionamiento : propiedad
+    }
+    const filtrarPrecioMinimo = (propiedad) => {
+        return filtrarPropiedades.precioMinimo ? propiedad.precio >= filtrarPropiedades.precioMinimo : propiedad
+    }
+    const filtrarPrecioMaximo = (propiedad) => {
+        return filtrarPropiedades.precioMaximo ? propiedad.precio <= filtrarPropiedades.precioMaximo : propiedad
     }
 
     // Recogemos las propiedades

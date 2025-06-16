@@ -1,0 +1,222 @@
+extends ../layout/index.pug
+
+block styles
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css")
+
+block contenido
+    div(class="min-h-screen bg-gray-100")
+        include ../usuario/comprador-Sidebar/compradorSidebar.pug
+        
+        //- Contenido Principal
+        main(class="flex-1 p-6 ")
+            //- Mensaje Flash
+            if mensajesFlash.length > 0
+                div(class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert")   
+                    span(class="block sm:inline")= mensajesFlash[0]
+                    span(class="absolute top-0 bottom-0 right-0 px-4 py-3")
+                        svg(class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20")
+                            title("Close")
+                            path(d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z")
+
+            //- Contenedor Principal
+            div(class="max-w-7xl mx-auto")
+                //- Sección de Perfil
+                div(class="bg-white rounded-xl shadow-sm overflow-hidden mb-8")
+                    //- Cabecera del Perfil
+                    div(class="relative h-48 bg-gradient-to-r from-[#FF6819] to-[#FF9F00]")
+                        div(class="absolute -bottom-16 left-8")
+                            img(src="/img/avatar.png" alt="Foto de Perfil" class="w-32 h-32 rounded-full border-4 border-white shadow-lg")
+                    
+                    //- Información del Perfil
+                    div(class="pt-20 pb-8 px-8")
+                        div(class="flex justify-between items-start")
+                            div
+                                h1(class="text-3xl font-bold text-gray-900")= usuario.nombre
+                                p(class="text-gray-600 mt-1")= usuario.email
+                                div(class="flex items-center mt-2 space-x-2")
+                                    span(class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium")= usuario.tipo.toString() === '1' ? 'Vendedor' : 'Comprador'
+                                    span(class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium") Miembro desde #{usuario.createdAt.toLocaleDateString()}
+                            
+                            //- Estadísticas
+                            div(class="grid grid-cols-3 gap-6 text-center")
+                                div
+                                    p(class="text-2xl font-bold text-[#FF6819]")= propiedades.length
+                                    p(class="text-sm text-gray-600") Propiedades
+                                div
+                                    p(class="text-2xl font-bold text-[#FF6819]")= propiedades.length
+                                    p(class="text-sm text-gray-600") Ventas
+
+                        //- Información de Contacto
+                        div(class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8")
+                            div(class="space-y-4")
+                                h3(class="text-lg font-semibold text-gray-900") Información de Contacto
+                                div(class="space-y-3")
+                                    div(class="flex items-center space-x-3")
+                                        i(class="fas fa-phone text-[#FF6819]")
+                                        span(class="text-gray-600")= usuario.telefono
+                                    div(class="flex items-center space-x-3")
+                                        i(class="fas fa-envelope text-[#FF6819]")
+                                        span(class="text-gray-600")= usuario.email
+                                    div(class="flex items-center space-x-3")
+                                        i(class="fas fa-map-marker-alt text-[#FF6819]")
+                                        span(class="text-gray-600") Trujillo, Perú
+                            
+                            //- Horario de Atención
+                            div(class="space-y-4")
+                                h3(class="text-lg font-semibold text-gray-900") Horario de Atención
+                                div(class="space-y-2")
+                                    div(class="flex justify-between")
+                                        span(class="text-gray-600") Lunes - Viernes
+                                        span(class="text-gray-900 font-medium") 9:00 AM - 5:00 PM
+                                    div(class="flex justify-between")
+                                        span(class="text-gray-600") Sábados
+                                        span(class="text-gray-900 font-medium") 9:00 AM - 1:00 PM
+                                    div(class="flex justify-between")
+                                        span(class="text-gray-600") Domingos
+                                        span(class="text-gray-900 font-medium") Cerrado
+
+                //- Sección de Propiedades Destacadas
+                div(class="bg-white rounded-xl shadow-sm p-8 mb-8")
+                    h2(class="text-2xl font-bold text-gray-900 mb-6") Propiedades
+                    div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
+                        each propiedad in propiedades
+                            //- Propiedad 1
+                            div(class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300")
+                                img(src=`/uploads/${propiedad.imagen}` alt="Propiedad" class="w-full h-48 object-cover")
+                                div(class="p-4")
+                                    h3(class="text-lg font-semibold text-gray-900")= propiedad.titulo
+                                    p(class="text-[#FF6819] font-bold mt-1") $ #{propiedad.precio.toLocaleString()}
+                                    div(class="flex items-center justify-between mt-2")
+                                        span(class="text-gray-600 text-sm")= propiedad.habitaciones + ' Hab | ' + propiedad.wc + ' Baños | ' + propiedad.estacionamiento + ' Est'
+                                        a(href=`/propiedades/${propiedad.id}` class="text-[#FF6819] hover:text-[#E55A0F]") Ver Detalles
+
+                //- Sección de Calificaciones y Comentarios
+                div(class="bg-white rounded-xl shadow-sm p-8")
+                    h2(class="text-2xl font-bold text-gray-900 mb-6") Calificaciones y Comentarios
+                    
+                    //- Formulario de Calificación
+                    div(class="bg-gray-50 rounded-lg p-6 mb-8")
+                        h3(class="text-lg font-semibold text-gray-900 mb-4") Deja tu Calificación
+                        form(action="/calificaciones/crear" method="POST")
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            input(type="hidden" name="vendedorId" value=usuario.id)
+                            
+                            //- Estrellas de Calificación
+                            div(class="mb-4")
+                                label(class="block text-sm font-medium text-gray-700 mb-2") Calificación
+                                div(class="flex space-x-2")
+                                    each i in [1,2,3,4,5]
+                                        button(type="button" class="text-2xl text-gray-300 hover:text-[#FF6819] focus:outline-none" data-rating=i)
+                                            i(class="fas fa-star")
+                            
+                            //- Comentario
+                            div(class="mb-4")
+                                label(for="comentario" class="block text-sm font-medium text-gray-700 mb-2") Comentario
+                                textarea(
+                                    id="comentario"
+                                    name="comentario"
+                                    rows="3"
+                                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FF6819] focus:ring-[#FF6819]"
+                                    placeholder="Cuéntanos tu experiencia..."
+                                )
+                            
+                            button(
+                                type="submit"
+                                class="w-full bg-[#FF6819] text-white px-4 py-2 rounded-lg hover:bg-[#E55A0F] transition-colors duration-300"
+                            ) Enviar Calificación
+
+                    //- Lista de Calificaciones
+                    div(class="space-y-6")
+                        //- Calificación 1
+                        div(class="border-b border-gray-200 pb-6")
+                            div(class="flex items-center justify-between mb-2")
+                                div(class="flex items-center space-x-3")
+                                    img(src="/img/avatar2.png" alt="Usuario" class="w-10 h-10 rounded-full")
+                                    div
+                                        h4(class="font-semibold text-gray-900") María González
+                                        p(class="text-sm text-gray-500") Hace 2 días
+                                div(class="flex items-center")
+                                    each i in [1,2,3,4,5]
+                                        i(class="fas fa-star text-[#FF6819]")
+                            p(class="text-gray-600") "Excelente servicio, muy profesional y atento. Me ayudó a encontrar la casa perfecta para mi familia."
+
+                        //- Calificación 2
+                        div(class="border-b border-gray-200 pb-6")
+                            div(class="flex items-center justify-between mb-2")
+                                div(class="flex items-center space-x-3")
+                                    img(src="/img/avatar3.png" alt="Usuario" class="w-10 h-10 rounded-full")
+                                    div
+                                        h4(class="font-semibold text-gray-900") Juan Pérez
+                                        p(class="text-sm text-gray-500") Hace 1 semana
+                                div(class="flex items-center")
+                                    each i in [1,2,3,4]
+                                        i(class="fas fa-star text-[#FF6819]")
+                                    i(class="fas fa-star text-gray-300")
+                            p(class="text-gray-600") "Buen agente, conocedor del mercado. El proceso de compra fue fluido y transparente."
+
+                        //- Calificación 3
+                        div
+                            div(class="flex items-center justify-between mb-2")
+                                div(class="flex items-center space-x-3")
+                                    img(src="/img/avatar4.png" alt="Usuario" class="w-10 h-10 rounded-full")
+                                    div
+                                        h4(class="font-semibold text-gray-900") Ana Martínez
+                                        p(class="text-sm text-gray-500") Hace 2 semanas
+                                div(class="flex items-center")
+                                    each i in [1,2,3,4,5]
+                                        i(class="fas fa-star text-[#FF6819]")
+                            p(class="text-gray-600") "Carlos es un excelente profesional. Su conocimiento del mercado y su trato personalizado hicieron la diferencia."
+
+    include ../layout/footer.pug
+
+block scripts
+    script.
+        // Script para el sistema de calificaciones
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('[data-rating]');
+            let selectedRating = 0;
+
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = this.dataset.rating;
+                    selectedRating = rating;
+                    
+                    // Actualizar visualización de estrellas
+                    stars.forEach(s => {
+                        const starRating = s.dataset.rating;
+                        if (starRating <= rating) {
+                            s.classList.remove('text-gray-300');
+                            s.classList.add('text-[#FF6819]');
+                        } else {
+                            s.classList.remove('text-[#FF6819]');
+                            s.classList.add('text-gray-300');
+                        }
+                    });
+                });
+
+                // Efecto hover
+                star.addEventListener('mouseover', function() {
+                    const rating = this.dataset.rating;
+                    stars.forEach(s => {
+                        const starRating = s.dataset.rating;
+                        if (starRating <= rating) {
+                            s.classList.remove('text-gray-300');
+                            s.classList.add('text-[#FF6819]');
+                        }
+                    });
+                });
+
+                star.addEventListener('mouseout', function() {
+                    stars.forEach(s => {
+                        const starRating = s.dataset.rating;
+                        if (starRating <= selectedRating) {
+                            s.classList.remove('text-gray-300');
+                            s.classList.add('text-[#FF6819]');
+                        } else {
+                            s.classList.remove('text-[#FF6819]');
+                            s.classList.add('text-gray-300');
+                        }
+                    });
+                });
+            });
+        }); 
