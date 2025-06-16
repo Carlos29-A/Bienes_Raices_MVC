@@ -42,6 +42,28 @@ const favoritos = async (req, res) => {
     const { id } = req.usuario
     const usuario = await Usuario.findByPk(id)
 
+    // Filtros
+    const { categoria, habitaciones, baños, estacionamiento } = req.query
+
+    let filtro ={
+    }
+
+    if(categoria){
+        filtro.categoriaId = parseInt(categoria)
+    }
+
+    if(habitaciones){
+        filtro.habitaciones = parseInt(habitaciones)
+    }
+
+    if(baños){
+        filtro.wc = parseInt(baños)
+    }
+
+    if(estacionamiento){
+        filtro.estacionamiento = parseInt(estacionamiento)
+    }
+
     if (!usuario) {
         return res.redirect('/auth/login')
     }
@@ -53,6 +75,7 @@ const favoritos = async (req, res) => {
         include: [
             {
                 model: Propiedad,
+                where: filtro,
                 as: 'propiedadRelacion',
                 include: [
                     {

@@ -1,5 +1,6 @@
 import express from 'express'
-import { registrarPropiedad, publicarPropiedad, agregarImagen, almacenarImagen, misPropiedades, editarPropiedad, actualizarPropiedad, eliminarPropiedad, cambiarEstado, obtenerPropiedades, buscarPropiedades, verPropiedad } from '../controllers/propiedadControllers.js'
+import { registrarPropiedad, publicarPropiedad, agregarImagen, almacenarImagen, misPropiedades, editarPropiedad, actualizarPropiedad, eliminarPropiedad, cambiarEstado, obtenerPropiedades, buscarPropiedades, verPropiedad, obtenerCategorias } from '../controllers/propiedadControllers.js'
+import { obtenerPropiedadesCategoria } from '../controllers/apiControllers.js'
 import protegerRuta from '../middlewares/protegerRuta.js'
 import upload from '../middlewares/subirImagen.js'
 
@@ -12,6 +13,10 @@ router.post('/crearPropiedad', protegerRuta, publicarPropiedad)
 
 router.get('/agregar-imagen/:id', protegerRuta, agregarImagen)
 router.post('/agregar-imagen/:id', protegerRuta, upload.single('imagen'), almacenarImagen)
+
+// Propiedades Categorias
+router.get('/categorias/:id', protegerRuta, obtenerCategorias)
+
 
 // Editar propiedad
 router.get('/editar/:id', protegerRuta, editarPropiedad)

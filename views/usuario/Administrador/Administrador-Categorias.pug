@@ -1,0 +1,84 @@
+extends ../../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-100 flex")
+        include ./Administrador-Sidebar/administradorSidebar.pug
+
+        //- Contenido Principal
+        main(class="flex-1 ml-64")
+            //- Encabezado
+            header(class="bg-white border-b border-gray-200 px-8 py-6 shadow-sm sticky top-0 z-40")
+                div(class="flex items-center justify-between")
+                    div(class="flex items-center space-x-4")
+                        img(src="/img/categoria.png" alt="Categorías" class="w-12 h-12")
+                        div
+                            h1(class="text-2xl font-bold text-[#FF6819]") Gestión de Categorías
+                            p(class="text-gray-600") Administra las categorías de propiedades
+            //- Mensajes de Exito
+            if mensaje
+                div(class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert")
+                    span(class="block sm:inline")= mensaje
+                    span(class="absolute top-0 bottom-0 right-0 px-4 py-3")
+                        i(class="fas fa-times")
+
+            //- Contenedor Principal
+            div(class="p-8 bg-gray-100")
+                //- Barra de Acciones
+                div(class="flex justify-between items-center")
+                    //- Buscador
+                    div(class="flex-1 max-w-md")
+                        div(class="relative")
+                            input(
+                                type="text"
+                                placeholder="Buscar categoría..."
+                                class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6819] focus:border-transparent"
+                            )
+                            i(class="fas fa-search absolute left-3 top-3 text-gray-400")
+                    
+                    //- Botón Nueva Categoría
+                    a(
+                        href="/auth/administrador/categorias/crear"
+                        class="inline-flex items-center justify-center px-6 py-2 bg-[#FF6819] text-white rounded-lg hover:bg-[#E55A0F] transition-colors duration-200 shadow-sm hover:shadow-md cursor-pointer"
+                    )
+                        i(class="fas fa-plus mr-2")
+                        | Nueva Categoría
+
+            //- Tabla de Categorías
+            section(class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden")
+                //- Encabezados de la tabla
+                div(class="grid grid-cols-12 gap-4 p-4 bg-gray-50 border-b border-gray-100 sticky top-0 z-10")
+                    div(class="col-span-1")
+                        p(class="font-medium text-gray-900") ID
+                    div(class="col-span-3")
+                        p(class="font-medium text-gray-900") Categoría
+                    div(class="col-span-4")
+                        p(class="font-medium text-gray-900") Descripción
+                    div(class="col-span-2")
+                        p(class="font-medium text-gray-900") Propiedades
+                    div(class="col-span-2 text-right")
+                        p(class="font-medium text-gray-900") Acciones
+
+                //- Lista de categorías
+                div(class="divide-y divide-gray-100 max-h-[calc(100vh-400px)] overflow-y-auto")
+                    //- Categoría 1
+                    each categoria in categorias 
+                        div(class="grid grid-cols-12 gap-4 p-4 hover:bg-gray-50 transition-colors duration-200 group")
+                            div(class="col-span-1 flex items-center")
+                                span(class="text-gray-600 font-medium")= categoria.id
+                            div(class="col-span-3 flex items-center")
+                                div(class="flex items-center space-x-3")
+                                    div
+                                        p(class="font-medium text-gray-900")= categoria.nombre
+                            div(class="col-span-4 flex items-center")
+                                p(class="text-gray-600")= categoria.descripcion
+                            div(class="col-span-2 flex items-center")
+                                div(class="flex flex-col")
+                                    span(class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium w-fit") #{propiedades.filter(propiedad => propiedad.categoriaId === categoria.id).length} propiedades
+                                    span(class="text-xs text-gray-500 mt-1") #{propiedades.filter(propiedad => propiedad.categoriaId === categoria.id).filter(propiedad => propiedad.publicado === true).length} propiedades  activas
+                            div(class="col-span-2 flex items-center justify-end")
+                                a(
+                                    href="/auth/administrador/categorias/editar/1"
+                                    class="inline-flex items-center px-4 py-2 text-[#FF6819] hover:bg-orange-50 rounded-lg transition-colors duration-200"
+                                )
+                                    i(class="fas fa-edit mr-2")
+                                    | Editar

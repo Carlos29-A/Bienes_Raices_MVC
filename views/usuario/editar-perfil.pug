@@ -1,132 +1,249 @@
 extends ../layout/index.pug
 
 block contenido
-    div(class="min-h-screen flex bg-gray-100")
+    
         if usuario.tipo.toString() === '1'
-            include ./vendedor-Sidebar/Vendedor-Sidebar.pug
-        else
-            include ./comprador-Sidebar/compradorSidebar.pug
+            div(class="min-h-screen flex bg-gray-100")
+                include ./vendedor-Sidebar/Vendedor-Sidebar.pug
+                // Contenido Principal
+                div(class="flex-1 pl-60")
+                    // Top Navigation
+                    header(class="bg-white shadow-lg")
+                        div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
+                            h1(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Mi Perfil
+                            div(class="flex items-center space-x-4")
+                                div(class="relative")
+                                    button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
+                                        img(class="h-10 w-10 rounded-full" src="/img/avatar.png" alt="Vendedor")
+                                        span= usuario.nombre
 
-        // Contenido Principal
-        div(class="flex-1 pl-60")
-            // Top Navigation
-            header(class="bg-white shadow-lg")
-                div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
-                    h1(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Mi Perfil
-                    div(class="flex items-center space-x-4")
-                        div(class="relative")
-                            button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
-                                img(class="h-10 w-10 rounded-full" src="/img/avatar.png" alt="Vendedor")
-                                span= usuario.nombre
+                    // Contenido del Perfil
+                    main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
+                        div(class="px-4 py-6 sm:px-0 ")
+                            div(class="bg-white shadow rounded-lg")
+                                // Información del Perfil
+                                div(class="px-4 py-5 sm:p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg")
+                                    div(class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-8")
+                                        div(class="relative group")
+                                            div(class="relative")
+                                                img(class="h-32 w-32 rounded-full ring-4 ring-white shadow-lg" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Foto de perfil")
+                                                button(class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 shadow-lg transform transition-transform duration-200 hover:scale-110")
+                                                    i(class="fas fa-camera")
+                                        
+                                        div(class="flex-1 text-center md:text-left")
+                                            div(class="flex flex-col md:flex-row md:items-center md:justify-between")
+                                                div
+                                                    h2(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text")= usuario.nombre
+                                                    p(class="text-lg bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")= usuario.tipo.toString() === '1' ? 'Vendedor Inmobiliario' : 'Comprador'
+                                                div(class="mt-4 md:mt-0")
+                                                    span(class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text")
+                                                        i(class="fas fa-calendar-alt mr-2")
+                                                        | Miembro desde #{usuario.createdAt.toLocaleDateString()}
+                                            
+                                            div(class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4")
+                                                div(class="bg-white rounded-lg p-4 shadow-sm")
+                                                    div(class="flex items-center justify-center md:justify-start space-x-2")
+                                                        i(class="fas fa-envelope bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
+                                                        span(class="text-gray-600")= usuario.email
+                                                div(class="bg-white rounded-lg p-4 shadow-sm")
+                                                    div(class="flex items-center justify-center md:justify-start space-x-2")
+                                                        i(class="fas fa-phone bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
+                                                        span(class="text-gray-600")= usuario.telefono || 'No especificado'
+                                                div(class="bg-white rounded-lg p-4 shadow-sm")
+                                                    div(class="flex items-center justify-center md:justify-start space-x-2")
+                                                        i(class="fas fa-user-shield bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
+                                                        span(class="text-gray-600")= usuario.tipo.toString() === '1' ? 'Cuenta Verificada' : 'Cuenta Básica'
 
-            // Contenido del Perfil
-            main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
-                div(class="px-4 py-6 sm:px-0 ")
-                    div(class="bg-white shadow rounded-lg")
-                        // Información del Perfil
-                        div(class="px-4 py-5 sm:p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg")
-                            div(class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-8")
-                                div(class="relative group")
-                                    div(class="relative")
-                                        img(class="h-32 w-32 rounded-full ring-4 ring-white shadow-lg" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Foto de perfil")
-                                        button(class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 shadow-lg transform transition-transform duration-200 hover:scale-110")
-                                            i(class="fas fa-camera")
-                                
-                                div(class="flex-1 text-center md:text-left")
-                                    div(class="flex flex-col md:flex-row md:items-center md:justify-between")
-                                        div
-                                            h2(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text")= usuario.nombre
-                                            p(class="text-lg bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")= usuario.tipo.toString() === '1' ? 'Vendedor Inmobiliario' : 'Comprador'
-                                        div(class="mt-4 md:mt-0")
-                                            span(class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text")
-                                                i(class="fas fa-calendar-alt mr-2")
-                                                | Miembro desde #{usuario.createdAt.toLocaleDateString()}
+                                // Formulario de Edición
+                                form(action="" method="POST" class="px-4 py-5 sm:p-6 space-y-8 divide-y divide-gray-200" novalidate)
+                                    input(type="hidden" name="_csrf" value=csrfToken)
                                     
-                                    div(class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4")
-                                        div(class="bg-white rounded-lg p-4 shadow-sm")
-                                            div(class="flex items-center justify-center md:justify-start space-x-2")
-                                                i(class="fas fa-envelope bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
-                                                span(class="text-gray-600")= usuario.email
-                                        div(class="bg-white rounded-lg p-4 shadow-sm")
-                                            div(class="flex items-center justify-center md:justify-start space-x-2")
-                                                i(class="fas fa-phone bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
-                                                span(class="text-gray-600")= usuario.telefono || 'No especificado'
-                                        div(class="bg-white rounded-lg p-4 shadow-sm")
-                                            div(class="flex items-center justify-center md:justify-start space-x-2")
-                                                i(class="fas fa-user-shield bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
-                                                span(class="text-gray-600")= usuario.tipo.toString() === '1' ? 'Cuenta Verificada' : 'Cuenta Básica'
+                                    // Información Personal
+                                    div(class="space-y-6")
+                                        div
+                                            h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Información Personal
+                                            p(class="mt-1 text-sm text-gray-500") Actualiza tu información personal.
+                                            if errores
+                                                div(class="mt-2")
+                                                    each error in errores
+                                                        p(class="text-red-500 text-sm")= error.msg
 
-                        // Formulario de Edición
-                        form(action="" method="POST" class="px-4 py-5 sm:p-6 space-y-8 divide-y divide-gray-200" novalidate)
-                            input(type="hidden" name="_csrf" value=csrfToken)
-                            
-                            // Información Personal
-                            div(class="space-y-6")
-                                div
-                                    h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Información Personal
-                                    p(class="mt-1 text-sm text-gray-500") Actualiza tu información personal.
-                                    if errores
-                                        div(class="mt-2")
-                                            each error in errores
-                                                p(class="text-red-500 text-sm")= error.msg
+                                        div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
+                                            div(class="sm:col-span-3")
+                                                label(for="nombre" class="block text-sm font-medium text-gray-700") Nombre
+                                                div(class="mt-1")
+                                                    input(type="text" name="nombre" id="nombre" value=usuario.nombre? usuario.nombre : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
 
-                                div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
-                                    div(class="sm:col-span-3")
-                                        label(for="nombre" class="block text-sm font-medium text-gray-700") Nombre
-                                        div(class="mt-1")
-                                            input(type="text" name="nombre" id="nombre" value=usuario.nombre? usuario.nombre : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                            div(class="sm:col-span-3")
+                                                label(for="apellido" class="block text-sm font-medium text-gray-700") Apellido
+                                                div(class="mt-1")
+                                                    input(type="text" name="apellido" id="apellido" value=usuario.apellido? usuario.apellido : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
 
-                                    div(class="sm:col-span-3")
-                                        label(for="apellido" class="block text-sm font-medium text-gray-700") Apellido
-                                        div(class="mt-1")
-                                            input(type="text" name="apellido" id="apellido" value=usuario.apellido? usuario.apellido : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                            div(class="sm:col-span-3")
+                                                label(for="email" class="block text-sm font-medium text-gray-700") Correo Electrónico
+                                                div(class="mt-1")
+                                                    input(type="email" name="email" id="email" value=usuario.email? usuario.email : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
 
-                                    div(class="sm:col-span-3")
-                                        label(for="email" class="block text-sm font-medium text-gray-700") Correo Electrónico
-                                        div(class="mt-1")
-                                            input(type="email" name="email" id="email" value=usuario.email? usuario.email : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                            div(class="sm:col-span-3")
+                                                label(for="telefono" class="block text-sm font-medium text-gray-700") Teléfono
+                                                div(class="mt-1")
+                                                    input(type="tel" name="telefono" id="telefono" value=usuario.telefono? usuario.telefono : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
 
-                                    div(class="sm:col-span-3")
-                                        label(for="telefono" class="block text-sm font-medium text-gray-700") Teléfono
-                                        div(class="mt-1")
-                                            input(type="tel" name="telefono" id="telefono" value=usuario.telefono? usuario.telefono : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                            div(class="sm:col-span-3")
+                                                label(for="edad" class="block text-sm font-medium text-gray-700") Edad
+                                                div(class="mt-1")
+                                                    input(type="number" name="edad" id="edad" value=usuario.edad? usuario.edad : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
 
-                                    div(class="sm:col-span-3")
-                                        label(for="edad" class="block text-sm font-medium text-gray-700") Edad
-                                        div(class="mt-1")
-                                            input(type="number" name="edad" id="edad" value=usuario.edad? usuario.edad : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                    // Cambiar Contraseña
+                                    div(class="pt-8")
+                                        div
+                                            h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Cambiar Contraseña
+                                            p(class="mt-1 text-sm text-gray-500") Actualiza tu contraseña de acceso.
+                                            if erroresPassword
+                                                div(class="mt-2")
+                                                    each error in erroresPassword
+                                                        p(class="text-red-500 text-sm")= error.msg
+                                        div(class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
+                                            div(class="sm:col-span-4")
+                                                label(for="password_actual" class="block text-sm font-medium text-gray-700") Contraseña Actual
+                                                div(class="mt-1")
+                                                    input(type="password" name="password_actual" id="password_actual" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
 
-                            // Cambiar Contraseña
-                            div(class="pt-8")
-                                div
-                                    h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Cambiar Contraseña
-                                    p(class="mt-1 text-sm text-gray-500") Actualiza tu contraseña de acceso.
-                                    if erroresPassword
-                                        div(class="mt-2")
-                                            each error in erroresPassword
-                                                p(class="text-red-500 text-sm")= error.msg
-                                div(class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
-                                    div(class="sm:col-span-4")
-                                        label(for="password_actual" class="block text-sm font-medium text-gray-700") Contraseña Actual
-                                        div(class="mt-1")
-                                            input(type="password" name="password_actual" id="password_actual" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                            div(class="sm:col-span-4")
+                                                label(for="password_nueva" class="block text-sm font-medium text-gray-700") Nueva Contraseña
+                                                div(class="mt-1")
+                                                    input(type="password" name="password_nueva" id="password_nueva" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
 
-                                    div(class="sm:col-span-4")
-                                        label(for="password_nueva" class="block text-sm font-medium text-gray-700") Nueva Contraseña
-                                        div(class="mt-1")
-                                            input(type="password" name="password_nueva" id="password_nueva" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                            div(class="sm:col-span-4")
+                                                label(for="password_confirmar" class="block text-sm font-medium text-gray-700") Confirmar Nueva Contraseña
+                                                div(class="mt-1")
+                                                    input(type="password" name="password_confirmar" id="password_confirmar" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
 
-                                    div(class="sm:col-span-4")
-                                        label(for="password_confirmar" class="block text-sm font-medium text-gray-700") Confirmar Nueva Contraseña
-                                        div(class="mt-1")
-                                            input(type="password" name="password_confirmar" id="password_confirmar" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                    // Botones de Acción
+                                    div(class="pt-8")
+                                        div(class="flex justify-end space-x-4")
+                                            a(href="/auth/vendedor/panel" class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200")
+                                                i(class="fas fa-times mr-2")
+                                                | Cancelar
+                                            button(type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-[#FF641A] to-[#FF9F00] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105")
+                                                i(class="fas fa-save mr-2")
+                                                | Guardar Cambios
 
-                            // Botones de Acción
-                            div(class="pt-8")
-                                div(class="flex justify-end space-x-4")
-                                    a(href="/auth/vendedor/panel" class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200")
-                                        i(class="fas fa-times mr-2")
-                                        | Cancelar
-                                    button(type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-[#FF641A] to-[#FF9F00] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105")
-                                        i(class="fas fa-save mr-2")
-                                        | Guardar Cambios
+        else
+            div(class="min-h-screen flex flex-col bg-gray-100")
+                include ./comprador-Sidebar/compradorSidebar.pug
+                // Contenido Principal
+                div(class="flex-1")
+                    // Contenido del Perfil
+                    main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
+                        div(class="px-4 py-6 sm:px-0 ")
+                            div(class="bg-white shadow rounded-lg")
+                                // Información del Perfil
+                                div(class="px-4 py-5 sm:p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg")
+                                    div(class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-8")
+                                        div(class="relative group")
+                                            div(class="relative")
+                                                img(class="h-32 w-32 rounded-full ring-4 ring-white shadow-lg" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Foto de perfil")
+                                                button(class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 shadow-lg transform transition-transform duration-200 hover:scale-110")
+                                                    i(class="fas fa-camera")
+                                        
+                                        div(class="flex-1 text-center md:text-left")
+                                            div(class="flex flex-col md:flex-row md:items-center md:justify-between")
+                                                div
+                                                    h2(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text")= usuario.nombre
+                                                    p(class="text-lg bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")= usuario.tipo.toString() === '1' ? 'Vendedor Inmobiliario' : 'Comprador'
+                                                div(class="mt-4 md:mt-0")
+                                                    span(class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text")
+                                                        i(class="fas fa-calendar-alt mr-2")
+                                                        | Miembro desde #{usuario.createdAt.toLocaleDateString()}
+                                            
+                                            div(class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4")
+                                                div(class="bg-white rounded-lg p-4 shadow-sm")
+                                                    div(class="flex items-center justify-center md:justify-start space-x-2")
+                                                        i(class="fas fa-envelope bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
+                                                        span(class="text-gray-600")= usuario.email
+                                                div(class="bg-white rounded-lg p-4 shadow-sm")
+                                                    div(class="flex items-center justify-center md:justify-start space-x-2")
+                                                        i(class="fas fa-phone bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
+                                                        span(class="text-gray-600")= usuario.telefono || 'No especificado'
+                                                div(class="bg-white rounded-lg p-4 shadow-sm")
+                                                    div(class="flex items-center justify-center md:justify-start space-x-2")
+                                                        i(class="fas fa-user-shield bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
+                                                        span(class="text-gray-600")= usuario.tipo.toString() === '1' ? 'Cuenta Verificada' : 'Cuenta Básica'
+
+                                // Formulario de Edición
+                                form(action="" method="POST" class="px-4 py-5 sm:p-6 space-y-8 divide-y divide-gray-200" novalidate)
+                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                    
+                                    // Información Personal
+                                    div(class="space-y-6")
+                                        div
+                                            h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Información Personal
+                                            p(class="mt-1 text-sm text-gray-500") Actualiza tu información personal.
+                                            if errores
+                                                div(class="mt-2")
+                                                    each error in errores
+                                                        p(class="text-red-500 text-sm")= error.msg
+
+                                        div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
+                                            div(class="sm:col-span-3")
+                                                label(for="nombre" class="block text-sm font-medium text-gray-700") Nombre
+                                                div(class="mt-1")
+                                                    input(type="text" name="nombre" id="nombre" value=usuario.nombre? usuario.nombre : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+
+                                            div(class="sm:col-span-3")
+                                                label(for="apellido" class="block text-sm font-medium text-gray-700") Apellido
+                                                div(class="mt-1")
+                                                    input(type="text" name="apellido" id="apellido" value=usuario.apellido? usuario.apellido : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+
+                                            div(class="sm:col-span-3")
+                                                label(for="email" class="block text-sm font-medium text-gray-700") Correo Electrónico
+                                                div(class="mt-1")
+                                                    input(type="email" name="email" id="email" value=usuario.email? usuario.email : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+
+                                            div(class="sm:col-span-3")
+                                                label(for="telefono" class="block text-sm font-medium text-gray-700") Teléfono
+                                                div(class="mt-1")
+                                                    input(type="tel" name="telefono" id="telefono" value=usuario.telefono? usuario.telefono : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+
+                                            div(class="sm:col-span-3")
+                                                label(for="edad" class="block text-sm font-medium text-gray-700") Edad
+                                                div(class="mt-1")
+                                                    input(type="number" name="edad" id="edad" value=usuario.edad? usuario.edad : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+
+                                    // Cambiar Contraseña
+                                    div(class="pt-8")
+                                        div
+                                            h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Cambiar Contraseña
+                                            p(class="mt-1 text-sm text-gray-500") Actualiza tu contraseña de acceso.
+                                            if erroresPassword
+                                                div(class="mt-2")
+                                                    each error in erroresPassword
+                                                        p(class="text-red-500 text-sm")= error.msg
+                                        div(class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
+                                            div(class="sm:col-span-4")
+                                                label(for="password_actual" class="block text-sm font-medium text-gray-700") Contraseña Actual
+                                                div(class="mt-1")
+                                                    input(type="password" name="password_actual" id="password_actual" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+
+                                            div(class="sm:col-span-4")
+                                                label(for="password_nueva" class="block text-sm font-medium text-gray-700") Nueva Contraseña
+                                                div(class="mt-1")
+                                                    input(type="password" name="password_nueva" id="password_nueva" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+
+                                            div(class="sm:col-span-4")
+                                                label(for="password_confirmar" class="block text-sm font-medium text-gray-700") Confirmar Nueva Contraseña
+                                                div(class="mt-1")
+                                                    input(type="password" name="password_confirmar" id="password_confirmar" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+
+                                    // Botones de Acción
+                                    div(class="pt-8")
+                                        div(class="flex justify-end space-x-4")
+                                            a(href="/auth/vendedor/panel" class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200")
+                                                i(class="fas fa-times mr-2")
+                                                | Cancelar
+                                            button(type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-[#FF641A] to-[#FF9F00] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105")
+                                                i(class="fas fa-save mr-2")
+                                                | Guardar Cambios
+
+        

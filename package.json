@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon index.js",
+    "server": "concurrently \"nodemon index.js\" \"webpack --watch\" \"npx @tailwindcss/cli -i public/css/tailwind.css -o public/css/app.css --watch\"",
     "build:css": "node build-css.js",
     "js": "webpack --watch",
     "seed": "node seed/seed.js categorias"
@@ -16,6 +16,8 @@
   "dependencies": {
     "@tailwindcss/cli": "^4.1.8",
     "bcrypt": "^6.0.0",
+    "concurrently": "^9.1.2",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.7",
     "csurf": "^1.11.0",
     "dotenv": "^16.5.0",

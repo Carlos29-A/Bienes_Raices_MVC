@@ -382,6 +382,156 @@ const verMensaje = async (req, res) => {
     })
 }
 
+const responderMensaje = async (req, res) => {
+
+    const { id } = req.usuario
+    const { id: mensajeId } = req.params
+    // El id del de la persona que ve el mensaje es el id del id del remitente
+    const remitente = await Usuario.findByPk(id)
+
+    if(!remitente){
+        return res.redirect('/auth/login')
+    }
+
+    const mensaje = await Mensaje.findByPk(mensajeId, 
+        {
+            include : [
+                {
+                    model : Usuario,
+                    as : "remitenteRelacion",
+                    attributes : ['nombre', 'email', 'tipo']
+                },
+                {
+                    model : Propiedad,
+                    as : "propiedadRelacion",
+                },
+                {
+                    model : Usuario,
+                    as : "destinatarioRelacion",
+                    attributes : ['nombre', 'email', 'tipo']
+                }
+            ]
+        }
+    )
+
+    if(!mensaje){
+        return res.redirect('/auth/login')
+    }
+    // Verificar si el usuario tiene permiso para responder el mensaje
+    if(mensaje.destinatarioId !== id){
+        return res.redirect('/auth/login')
+    }
+    // Determinar la ruta para el sidebar
+    const ruta = remitente.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener'
+    res.render('mensajes/responder', {
+        mensaje,
+        remitente,
+        csrfToken: req.csrfToken(),
+        ruta
+    })
+}
+
+const responderMensajePost = async (req, res) => {
+
+
+    const { id } = req.usuario
+    const { id: mensajeId } = req.params
+    // El id del de la persona que ve el mensaje es el id del id del remitente
+    const remitente = await Usuario.findByPk(id)
+    // Obtener todos los mensajes del remitente
+    const mensajes = await Mensaje.findAll({
+        where : {
+            remitenteId : id
+        },
+        include : [
+            {
+                model : Usuario,
+                as : "destinatarioRelacion",
+                attributes : ['nombre', 'email', 'tipo']
+            },
+            {
+                model : Propiedad,
+                as : "propiedadRelacion",
+            },
+            {
+                model : Usuario,
+                as : "remitenteRelacion",
+                attributes : ['nombre', 'email', 'tipo']
+            }
+        ]
+    })
+    if (!remitente) {
+        return res.redirect('/auth/login')
+    }
+
+    const mensaje = await Mensaje.findByPk(mensajeId, {
+        include : [
+            {
+                model : Usuario,
+                as : "remitenteRelacion",
+                attributes : ['nombre', 'email', 'tipo']
+            },
+            {
+                model : Propiedad,
+                as : "propiedadRelacion",
+            },
+            {
+                model : Usuario,
+                as : "destinatarioRelacion",
+                attributes : ['nombre', 'email', 'tipo']
+            }
+        ]
+    })
+
+    if(!mensaje){
+        return res.redirect('/auth/login')
+    }
+    
+    // validar los datos del formulario
+    await check('respuesta')
+        .notEmpty().withMessage('La respuesta es requerida')
+        .isLength({ min: 10 }).withMessage('La respuesta debe tener al menos 10 caracteres')
+        .run(req)
+    
+    const errores = validationResult(req)
+
+    if(!errores.isEmpty()){
+        return res.render('mensajes/responder', {
+            mensaje,
+            remitente,
+            csrfToken: req.csrfToken(),
+            ruta : '/mensajes/obtener/vendedor',
+            errores : errores.array()  
+        })
+    }
+    const { respuesta } = req.body
+
+    try{
+        const mensajeCreado = await Mensaje.create({
+            mensaje : respuesta,
+            remitenteId : remitente.id,
+            destinatarioId : mensaje.remitenteId,
+            propiedadId : mensaje.propiedadId
+        })
+        const ruta = remitente.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener'
+
+        res.render('mensajes/mensajesVendedor', {
+            mostrarMensaje: 'Mensaje enviado correctamente',
+            destinatario: req.usuario.id,
+            csrfToken: req.csrfToken(),
+            ruta,
+            mensajes
+        })
+
+    }catch(error){
+        console.log(error)
+    }
+    
+}
+
+
+
+
 export {
     enviarMensaje,
     obtenerMensajes,
@@ -390,5 +540,7 @@ export {
     editarMensaje,
     editarMensajePost,
     obtenerMensajesVendedor,
-    verMensaje
+    verMensaje,
+    responderMensaje,
+    responderMensajePost
 }

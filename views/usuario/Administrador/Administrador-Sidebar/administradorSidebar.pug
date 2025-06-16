@@ -1,0 +1,87 @@
+// Sidebar
+aside(class="fixed top-0 left-0 h-screen bg-gray-800 text-white w-64 space-y-6 py-7 px-2 z-50")
+    // Logo y Título
+    div(class="flex items-center space-x-2 px-4")
+        div(class="bg-[#FF6819] p-2 rounded-lg shadow-sm")
+            i(class="fas fa-user-shield text-2xl text-white")
+        div
+            span(class="text-2xl font-extrabold") InmoElegante
+            p(class="text-xs text-gray-400") Panel Administrativo
+    
+    // Navegación
+    nav
+        // Panel Principal
+        a(
+            href="/auth/administrador/panel" 
+            class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/administrador/panel' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`
+        )
+            img(src="/img/hogar.png", alt="Inicio" class="w-10 h-10 ml-2")
+            p(class="ml-6") Inicio
+
+        // Gestión de Usuarios
+        a(
+            href="/auth/administrador/usuarios" 
+            class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/administrador/usuarios' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`
+        )
+            img(src="/img/usuarios.png", alt="Usuarios" class="w-15 h-15 mr-2")
+            div(class="flex-1")
+                span Gestión de Usuarios
+                span(class="ml-2 bg-gray-700 text-white text-xs font-medium px-2 py-0.5 rounded-full")= usuarios.length
+
+        // Gestión de Propiedades
+        a(
+            href="/auth/administrador/propiedades" 
+            class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/administrador/propiedades' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`
+        )
+            img(src="/img/propiedad.png", alt="Propiedades" class="w-15 h-15 mr-2")
+            div(class="flex-1")
+                span Gestión de Propiedades
+                span(class="ml-2 bg-gray-700 text-white text-xs font-medium px-2 py-0.5 rounded-full")= propiedades.length
+
+        // Gestión de Categorías
+        a(
+            href="/auth/administrador/categorias" 
+            class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/administrador/categorias' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`
+        )
+            img(src="/img/categorias.png", alt="Categorías" class="w-15 h-15 mr-2")
+            div(class="flex-1")
+                span Gestión de Categorías
+        // Gestión de Mensajes
+        a(
+            href="/auth/administrador/mensajes" 
+            class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/administrador/mensajes' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`
+        )
+            img(src="/img/Mensaje.png", alt="Mensajes" class="w-15 h-15 mr-2")
+            div(class="flex-1")
+                span Gestión de Mensajes
+                span(class="ml-2 bg-gray-700 text-white text-xs font-medium px-2 py-0.5 rounded-full")= mensajes.length
+
+        // Perfil
+        a(
+            href="/auth/editar-perfil" 
+            class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/editar-perfil' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`
+        )
+            img(src="/img/usuarios.png", alt="Mi Perfil" class="w-15 h-15 mr-2")
+            | Mi Perfil
+
+        // Separador
+        div(class="my-4 border-t border-gray-700")
+
+        // Cerrar Sesión
+        a(
+            href="/auth/cerrar-sesion" 
+            class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-red-900 hover:text-white"
+        )
+            img(src="/img/cerrar-sesion.png", alt="Cerrar Sesión" class="w-12 h-12 ml-2")
+            p(class="ml-3") Cerrar Sesión
+
+    // Información del Administrador
+    div(class="w-full p-4 border-t border-gray-700 bg-gray-900 flex flex-col items-center justify-between")
+        div(class="flex justify-center items-center")
+            i(class="fas fa-user-circle text-white text-2xl")
+            div(class="flex flex-col")
+                h1(class="text-white text-center text-normal font-medium ml-2")= usuario.nombre
+                h2(class="text-white text-center text-normal font-medium ml-2")= usuario.email
+        // Versión del Sistema
+        div(class="  w-full p-2 text-center text-xs text-gray-400 bg-gray-900 border-t border-gray-700")
+            p Sistema v1.0.0

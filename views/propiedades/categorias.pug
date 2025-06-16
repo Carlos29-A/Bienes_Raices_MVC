@@ -1,0 +1,55 @@
+extends ../layout/index.pug
+
+block styles
+    meta(name="csrf-token" content=csrfToken)
+
+block contenido
+    div(class="min-h-screen bg-gray-100")
+        //- Navegación Principal
+        include ../usuario/comprador-Sidebar/compradorSidebar.pug
+        if propiedades.length > 0
+            //- Propiedades
+            section(class="p-8")
+                div(class="flex justify-between items-center mb-8")
+                    h2(class="text-2xl font-bold text-[#FF6819]") #{titulo}s Disponibles
+                    div(class="flex items-center space-x-2")
+                        span(class="text-gray-600 text-sm")= `${propiedades.length} propiedades encontradas`
+
+                //- Filtro de propiedades
+                h1(class="hidden categoriaId")= id
+                p(class="hidden idUsuario")= idUsuario
+                div(class="flex justify-start items-center space-x-4 my-4")
+                    div(class="flex items-center space-x-4")
+                        label(for="categoria" class="text-sm font-bold text-gray-700") Habitaciones:
+                        select(name="habitaciones" id="habitaciones" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm")
+                            option(value="" selected) Seleccionar
+                            option(value="1") 1 Habitación
+                            option(value="2") 2 Habitaciones
+                            option(value="3") 3 Habitaciones
+                            option(value="4") 4 Habitaciones
+                    div(class="flex items-center space-x-4")
+                        label(for="baños" class="text-sm font-bold text-gray-700") Baños:
+                        select(name="baños" id="baños" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm")
+                            option(value="" selected) Seleccionar
+                            option(value="1") 1 Baño
+                            option(value="2") 2 Baños
+                            option(value="3") 3 Baños
+                    div(class="flex items-center space-x-4")
+                        label(for="estacionamiento" class="text-sm font-bold text-gray-700") Estacionamiento:
+                        select(name="estacionamiento" id="estacionamiento" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm")
+                            option(value="" selected) Seleccionar
+                            option(value="1") 1 Estacionamiento
+                            option(value="2") 2 Estacionamientos
+                            option(value="3") 3 Estacionamientos
+                        
+                div(class="grid grid-cols-1 md:grid-cols-3 gap-8 propiedades-contenedor")
+                        //- Aca se llena el contenedor de propiedades
+        else
+                div(class="text-center text-gray-600")
+                    p(class="text-2xl font-bold text-[#FF6819]") No hay propiedades disponibles
+            
+            
+
+block scripts
+    script(src="/js/agregarFavorito.js")
+    script(src="/js/filtrar.js")

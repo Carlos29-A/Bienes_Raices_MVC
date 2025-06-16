@@ -1,0 +1,72 @@
+extends ../../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-50 flex")
+        include ./Administrador-Sidebar/administradorSidebar.pug
+
+        //- Contenido Principal
+        main(class="flex-1 p-6 ml-64")
+            //- Encabezado
+            div(class="mb-8")
+                h1(class="text-2xl font-semibold text-[#FF6F17]") Mi Perfil
+                p(class="text-gray-600 mt-1") Administra tu información personal y preferencias
+
+            //- Contenedor Principal
+            div(class="max-w-4xl mx-auto")
+                //- Tarjeta de Perfil
+                div(class="bg-white rounded-lg shadow-sm overflow-hidden mb-6")
+                    //- Encabezado del Perfil
+                    div(class="relative h-32 bg-gradient-to-r from-[#FF6F17] to-[#B08262]")
+                        div(class="absolute -bottom-12 left-8")
+                            div(class="w-24 h-24 rounded-full border-4 border-white bg-white overflow-hidden")
+                                div(class="w-full h-full bg-gray-200 flex items-center justify-center")
+                                    i(class="fas fa-user-shield text-gray-400 text-4xl")
+                    
+                    //- Información Principal
+                    div(class="pt-16 px-8 pb-8")
+                        div(class="flex flex-col md:flex-row md:items-end md:justify-between gap-4")
+                            div
+                                h2(class="text-xl font-semibold text-gray-900")= administrador.nombre
+                                p(class="text-gray-600")= administrador.email
+                            div(class="flex gap-2")
+                                button(class="px-4 py-2 text-sm font-medium text-[#FF6F17] transition-colors")
+                                    i(class="fas fa-edit mr-2")
+                                    | Editar Perfil
+
+                //- Secciones de Información
+                div(class="grid grid-cols-1 md:grid-cols-2 gap-6")
+                    //- Información Personal
+                    div(class="bg-white rounded-lg shadow-sm p-6")
+                        h3(class="text-lg font-semibold text-[#FF6F17] mb-4 flex items-center gap-2")
+                            i(class="fas fa-user-circle text-[#FF6F17]")
+                            | Información Personal
+                        div(class="space-y-4")
+                            div
+                                label(class="block text-sm font-medium text-gray-600") Nombre Completo
+                                p(class="mt-1 text-gray-900")= administrador.nombre
+                            div
+                                label(class="block text-sm font-medium text-gray-600") Correo Electrónico
+                                p(class="mt-1 text-gray-900")= administrador.email
+                            div
+                                label(class="block text-sm font-medium text-gray-600") Teléfono
+                                p(class="mt-1 text-gray-900")= administrador.telefono
+                            div
+                                label(class="block text-sm font-medium text-gray-600") Rol
+                                p(class="mt-1 text-gray-900") Administrador
+
+                    //- Seguridad
+                    div(class="bg-white rounded-lg shadow-sm p-6")
+                        h3(class="text-lg font-semibold text-[#FF6F17] mb-4 flex items-center gap-2")
+                            i(class="fas fa-shield-alt text-[#FF6F17]")
+                            | Seguridad
+                        div(class="space-y-4")
+                            div
+                                label(class="block text-sm font-medium text-gray-600") Estado de la cuenta
+                                p(class="mt-1")
+                                    span(class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800") Activa
+                            button(class="w-full mt-4 px-4 py-2 text-sm font-medium text-white bg-[#FF6F17] rounded-lg hover:bg-[#FF8F17] transition-colors cursor-pointer")
+                                i(class="fas fa-key mr-2")
+                                | Cambiar Contraseña
+
+
+block scripts

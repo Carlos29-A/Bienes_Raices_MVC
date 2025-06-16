@@ -1,0 +1,98 @@
+extends ../../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-100 flex")
+        include ./Administrador-Sidebar/administradorSidebar.pug
+        
+        //- Contenido Principal
+        div(class="flex-1 ml-64") 
+            //- Encabezado
+            header(class="bg-white border-b border-gray-200 px-8 py-6 shadow-sm sticky top-0 z-40")
+                div(class="flex items-center justify-between")
+                    div(class="flex items-center space-x-4")
+                        div
+                            h1(class="text-2xl font-bold text-[#FF6819]") Panel de Administración
+                            p(class="text-gray-600") Gestiona tu plataforma inmobiliaria
+
+            //- Contenedor Principal
+            div(class="p-8 bg-gray-100")
+                //- Tarjetas de Estadísticas
+                div(class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8")
+                    //- Propiedades
+                    div(class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow duration-200")
+                        div(class="flex items-center")
+                            img(src="/img/propiedad.png" alt="Propiedades" class="w-12 h-12")
+                            div(class="ml-4")
+                                p(class="text-sm font-medium text-gray-600") Propiedades
+                                p(class="text-2xl font-semibold text-[#FF6819]")= propiedades.length
+
+                    //- Vendedores
+                    div(class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow duration-200")
+                        div(class="flex items-center")
+                            img(src="/img/vendedor.png" alt="Vendedores" class="w-12 h-12")
+                            div(class="ml-4")
+                                p(class="text-sm font-medium text-gray-600") Vendedores
+                                p(class="text-2xl font-semibold text-[#FF6819]")= vendedores.length
+
+                    //- Compradores
+                    div(class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow duration-200")
+                        div(class="flex items-center")
+                            img(src="/img/comprador.png" alt="Compradores" class="w-12 h-12")
+                            div(class="ml-4")
+                                p(class="text-sm font-medium text-gray-600") Compradores
+                                p(class="text-2xl font-semibold text-[#FF6819]")= compradores.length
+
+                //- Sección de Actividad Reciente
+                div(class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8")
+                    //- Últimos Vendedores Registrados
+                    div(class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow duration-200")
+                        h2(class="text-xl font-bold text-[#FF6819] mb-4 flex items-center")
+                            img(src="/img/vendedor.png" alt="Vendedores" class="w-6 h-6 mr-2")
+                            | Últimos Vendedores
+                        div(class="space-y-4")
+                            each vendedor in vendedores
+                                div(class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200")
+                                    div(class="flex items-center space-x-4")
+                                        img(src="/img/avatar.png" alt=vendedor.nombre class="w-10 h-10 rounded-full")
+                                        div
+                                            p(class="font-medium text-gray-900")= vendedor.nombre
+                                            p(class="text-sm text-gray-500")= vendedor.email
+
+                    //- Últimos Compradores Registrados
+                    div(class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow duration-200")
+                        h2(class="text-xl font-bold text-[#FF6819] mb-4 flex items-center")
+                            img(src="/img/comprador.png" alt="Compradores" class="w-6 h-6 mr-2")
+                            | Últimos Compradores
+                        div(class="space-y-4")
+                            each comprador in compradores
+                                div(class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200")
+                                    div(class="flex items-center space-x-4")
+                                        img(src="/img/avatar.png" alt=comprador.nombre class="w-10 h-10 rounded-full")
+                                        div
+                                            p(class="font-medium text-gray-900")= comprador.nombre
+                                            p(class="text-sm text-gray-500")= comprador.email
+
+                //- Sección de Propiedades Destacadas
+                div(class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow duration-200")
+                    h2(class="text-xl font-bold text-[#FF6819] mb-4 flex items-center")
+                        img(src="/img/propiedad.png" alt="Propiedades" class="w-8 h-8 mr-2")
+                        | Propiedades Destacadas
+                    div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
+                        each propiedad in propiedades
+                            div(class="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200")
+                                img(
+                                    src=`/uploads/${propiedad.imagen}`
+                                    alt=`Propiedad ${propiedad.titulo}`
+                                    class="w-full h-48 object-cover"
+                                )
+                                div(class="p-4")
+                                    h3(class="font-semibold text-gray-900")= propiedad.titulo
+                                    p(class="text-[#FF6819] font-bold") $#{propiedad.precio.toLocaleString()}
+                                    p(class="text-gray-600 text-sm mb-2")= propiedad.categoriaRelacion.nombre
+                                    div(class="flex items-center text-sm text-gray-500")
+                                        img(src="/img/ubicacion.png" alt="Ubicación" class="w-4 h-4 mr-1")
+                                        = propiedad.calle
+
+block scripts
+    script.
+        // Aquí puedes agregar cualquier script necesario

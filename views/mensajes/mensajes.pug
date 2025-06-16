@@ -1,87 +1,156 @@
 extends ../layout/index.pug
 
 block contenido
-    div(class="min-h-screen bg-gray-100 flex")
+    
         if remitente.tipo.toString() === '2'
-            include ../usuario/comprador-Sidebar/compradorSidebar.pug
-        else
-            include ../usuario/vendedor-Sidebar/Vendedor-Sidebar.pug
-
-        //- Contenido Principal
-        div(class="flex-1 flex flex-col bg-gray-100 pl-60")
-            //- Encabezado
-            header(class="bg-white border-b border-gray-200 shadow-sm px-8 py-6 sticky top-0 z-40")
-                div(class="flex items-center justify-between")
-                    div(class="flex items-center space-x-4")
-                        
-                        img(src="/img/Mensaje.png" alt="Mensaje" class="w-15 h-15")
-                        div
-                            h1(class="text-2xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Mensajes de #{remitente.nombre}
-
-            //- Contenedor de Mensajes
-            div(class="flex-1 p-8")
-                //- Lista de Conversaciones
-                div(class="max-w-4xl mx-auto space-y-6")
-                    each mensaje in mensajes
-                        //- Mensaje Individual
-                        div(class="bg-gray-100 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300")
-                            //- Contenido del Mensaje
-                            div(class="p-6 bg-white")
-                                div(class="flex items-center justify-between mb-4")
-                                    //- Información del Usuario
-                                    div(class="flex items-center space-x-4")
-                                        img(
-                                            src="/img/avatar.png"
-                                            class="w-12 h-12 rounded-full object-cover border-2 border-blue-100"
-                                        )
-                                        div(class="flex-1 min-w-0")
-                                            h3(class="text-lg font-semibold text-gray-900 truncate")= mensaje.destinatarioRelacion.nombre
-                                            p(class="text-sm text-gray-600 font-bold truncate")= mensaje.propiedadRelacion.titulo
-                                            p(class="text-sm text-gray-600 truncate")= mensaje.destinatarioRelacion.email
-                                    
-                                    //- Tiempo y Acciones
-                                    div(class="flex flex-col items-end space-y-2 ml-4")
-                                        span(class="text-sm text-gray-500 whitespace-nowrap") 
-                                        div(class="flex space-x-2")
-                                            a(
-                                                href=`/mensajes/ver/${mensaje.id}`
-                                                class="text-sm bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-white px-4 py-2 rounded-md hover:scale-105 transition-all duration-300 cursor-pointer"
-                                            )
-                                                i(class="fas fa-eye mr-2")
-                                                | Ver Mensaje
-                                            
-                                            a(
-                                                href=`/mensajes/editar/${mensaje.id}`
-                                                class="text-sm bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-600 hover:scale-105 transition-all duration-300 cursor-pointer"
-                                            )
-                                                i(class="fas fa-edit mr-2")
-                                                | Editar
-                                            
-                                            form(action=`/mensajes/eliminar/${mensaje.id}` method="POST" class="inline")
-                                                input(type="hidden" name="_csrf" value=csrfToken)
-                                                button(
-                                                    type="submit"
-                                                    class="text-sm bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-300 cursor-pointer"
+            div(class="min-h-screen bg-gray-100 flex flex-col")
+                include ../usuario/comprador-Sidebar/compradorSidebar.pug
+                //- Contenido Principal
+                div(class="flex-1 flex flex-col bg-gray-100")
+                    //- Contenedor de Mensajes
+                    div(class="flex-1 p-8")
+                        //- Lista de Conversaciones
+                        div(class="max-w-4xl mx-auto space-y-6")
+                            each mensaje in mensajes
+                                //- Mensaje Individual
+                                div(class="bg-gray-100 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300")
+                                    //- Contenido del Mensaje
+                                    div(class="p-6 bg-white")
+                                        div(class="flex items-center justify-between mb-4")
+                                            //- Información del Usuario
+                                            div(class="flex items-center space-x-4")
+                                                img(
+                                                    src="/img/avatar.png"
+                                                    class="w-12 h-12 rounded-full object-cover border-2 border-blue-100"
                                                 )
-                                                    i(class="fas fa-trash-alt mr-2")
-                                                    | Eliminar
-                                
-                                //- Vista Previa del Mensaje
-                                div(class="mt-4 bg-white rounded-lg p-4")
-                                    p(class="text-gray-700 line-clamp-1")= mensaje.mensaje
+                                                div(class="flex-1 min-w-0")
+                                                    h3(class="text-lg font-semibold text-gray-900 truncate")= mensaje.destinatarioRelacion.nombre
+                                                    p(class="text-sm text-gray-600 font-bold truncate")= mensaje.propiedadRelacion.titulo
+                                                    p(class="text-sm text-gray-600 truncate")= mensaje.destinatarioRelacion.email
+                                            
+                                            //- Tiempo y Acciones
+                                            div(class="flex flex-col items-end space-y-2 ml-4")
+                                                span(class="text-sm text-gray-500 whitespace-nowrap") 
+                                                div(class="flex space-x-2")
+                                                    a(
+                                                        href=`/mensajes/ver/${mensaje.id}`
+                                                        class="text-sm bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-white px-4 py-2 rounded-md hover:scale-105 transition-all duration-300 cursor-pointer"
+                                                    )
+                                                        i(class="fas fa-eye mr-2")
+                                                        | Ver Mensaje
+                                                    
+                                                    a(
+                                                        href=`/mensajes/editar/${mensaje.id}`
+                                                        class="text-sm bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-600 hover:scale-105 transition-all duration-300 cursor-pointer"
+                                                    )
+                                                        i(class="fas fa-edit mr-2")
+                                                        | Editar
+                                                    
+                                                    form(action=`/mensajes/eliminar/${mensaje.id}` method="POST" class="inline")
+                                                        input(type="hidden" name="_csrf" value=csrfToken)
+                                                        button(
+                                                            type="submit"
+                                                            class="text-sm bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-300 cursor-pointer"
+                                                        )
+                                                            i(class="fas fa-trash-alt mr-2")
+                                                            | Eliminar
+                                        
+                                        //- Vista Previa del Mensaje
+                                        div(class="mt-4 bg-white rounded-lg p-4")
+                                            p(class="text-gray-700 line-clamp-1")= mensaje.mensaje
 
-                //- Mensaje Informativo
-                div(class="max-w-4xl mx-auto mt-8 bg-[#FFF7ED] rounded-lg p-6")
-                    div(class="flex items-start space-x-4")
-                        div(class="flex-shrink-0 ")
-                            i(class="fas fa-info-circle text-2xl text-[#FF6F39]")
-                        div
-                            h4(class="text-lg font-semibold text-[#FF6F39] mb-2") Información Importante
-                            p(class="text-gray-700")
-                                | Para mantener una comunicación efectiva, te recomendamos:
-                            ul(class="list-disc list-inside mt-2 space-y-1 text-gray-700")
-                                li Ser claro y conciso en tus respuestas
-                                li Mantener un tono profesional y cordial
+                        //- Mensaje Informativo
+                        div(class="max-w-4xl mx-auto mt-8 bg-[#FFF7ED] rounded-lg p-6")
+                            div(class="flex items-start space-x-4")
+                                div(class="flex-shrink-0 ")
+                                    i(class="fas fa-info-circle text-2xl text-[#FF6F39]")
+                                div
+                                    h4(class="text-lg font-semibold text-[#FF6F39] mb-2") Información Importante
+                                    p(class="text-gray-700")
+                                        | Para mantener una comunicación efectiva, te recomendamos:
+                                    ul(class="list-disc list-inside mt-2 space-y-1 text-gray-700")
+                                        li Ser claro y conciso en tus respuestas
+                                        li Mantener un tono profesional y cordial
+        else
+            div(class="min-h-screen bg-gray-100 flex")
+                include ../usuario/vendedor-Sidebar/Vendedor-Sidebar.pug
+                //- Contenido Principal
+                div(class="flex-1 flex flex-col bg-gray-100")
+                    //- Encabezado
+                    header(class=" border-gray-200  px-8 py-6 sticky top-0 z-40")
+                        div(class="flex items-center justify-between")
+                            div(class="flex items-center space-x-4")
+                                
+                                img(src="/img/Mensaje.png" alt="Mensaje" class="w-15 h-15")
+                                div
+                                    h1(class="text-2xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Mensajes de #{remitente.nombre}
+
+                    //- Contenedor de Mensajes
+                    div(class="flex-1 p-8")
+                        //- Lista de Conversaciones
+                        div(class="max-w-4xl mx-auto space-y-6")
+                            each mensaje in mensajes
+                                //- Mensaje Individual
+                                div(class="bg-gray-100 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300")
+                                    //- Contenido del Mensaje
+                                    div(class="p-6 bg-white")
+                                        div(class="flex items-center justify-between mb-4")
+                                            //- Información del Usuario
+                                            div(class="flex items-center space-x-4")
+                                                img(
+                                                    src="/img/avatar.png"
+                                                    class="w-12 h-12 rounded-full object-cover border-2 border-blue-100"
+                                                )
+                                                div(class="flex-1 min-w-0")
+                                                    h3(class="text-lg font-semibold text-gray-900 truncate")= mensaje.destinatarioRelacion.nombre
+                                                    p(class="text-sm text-gray-600 font-bold truncate")= mensaje.propiedadRelacion.titulo
+                                                    p(class="text-sm text-gray-600 truncate")= mensaje.destinatarioRelacion.email
+                                            
+                                            //- Tiempo y Acciones
+                                            div(class="flex flex-col items-end space-y-2 ml-4")
+                                                span(class="text-sm text-gray-500 whitespace-nowrap") 
+                                                div(class="flex space-x-2")
+                                                    a(
+                                                        href=`/mensajes/ver/${mensaje.id}`
+                                                        class="text-sm bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-white px-4 py-2 rounded-md hover:scale-105 transition-all duration-300 cursor-pointer"
+                                                    )
+                                                        i(class="fas fa-eye mr-2")
+                                                        | Ver Mensaje
+                                                    
+                                                    a(
+                                                        href=`/mensajes/editar/${mensaje.id}`
+                                                        class="text-sm bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-600 hover:scale-105 transition-all duration-300 cursor-pointer"
+                                                    )
+                                                        i(class="fas fa-edit mr-2")
+                                                        | Editar
+                                                    
+                                                    form(action=`/mensajes/eliminar/${mensaje.id}` method="POST" class="inline")
+                                                        input(type="hidden" name="_csrf" value=csrfToken)
+                                                        button(
+                                                            type="submit"
+                                                            class="text-sm bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-300 cursor-pointer"
+                                                        )
+                                                            i(class="fas fa-trash-alt mr-2")
+                                                            | Eliminar
+                                        
+                                        //- Vista Previa del Mensaje
+                                        div(class="mt-4 bg-white rounded-lg p-4")
+                                            p(class="text-gray-700 line-clamp-1")= mensaje.mensaje
+
+                        //- Mensaje Informativo
+                        div(class="max-w-4xl mx-auto mt-8 bg-[#FFF7ED] rounded-lg p-6")
+                            div(class="flex items-start space-x-4")
+                                div(class="flex-shrink-0 ")
+                                    i(class="fas fa-info-circle text-2xl text-[#FF6F39]")
+                                div
+                                    h4(class="text-lg font-semibold text-[#FF6F39] mb-2") Información Importante
+                                    p(class="text-gray-700")
+                                        | Para mantener una comunicación efectiva, te recomendamos:
+                                    ul(class="list-disc list-inside mt-2 space-y-1 text-gray-700")
+                                        li Ser claro y conciso en tus respuestas
+                                        li Mantener un tono profesional y cordial
+
+        
 
 block scripts
     

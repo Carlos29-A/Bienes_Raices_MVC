@@ -277,7 +277,7 @@ const cambiarEstado = async (req, res) => {
 
 // API para obtener todas las propiedades filtradas
 const obtenerPropiedades = async (req, res) => {
-    const { estado, categoria } = req.query
+    const { estado, categoria, buscar } = req.query
 
     // Construir filtros base
     const filtros = {
@@ -289,6 +289,11 @@ const obtenerPropiedades = async (req, res) => {
         filtros.publicado = false
     } else if (estado === '1') {
         filtros.publicado = true
+    }
+    if (buscar) {
+        filtros.titulo = {
+            [Op.like]: `%${buscar}%`
+        }
     }
 
     // Agregar filtro de categoría si se selecciona
@@ -432,6 +437,50 @@ const verPropiedad = async (req, res) => {
     })
 }
 
+const obtenerCategorias = async (req, res) => {
+    const idUsuario = req.usuario.id
+    const { id } = req.params
+    const propiedades = await Propiedad.findAll({
+        where : {
+            categoriaId : id
+        },
+        include : [
+            {
+                model : Categoria,
+                as : "categoriaRelacion"
+            },
+            {
+                model : Usuario,
+                as : "usuarioRelacion"
+            }
+        ]
+
+    })
+    const favoritos = await Favorito.findAll({
+        where: {
+            usuarioId: req.usuario.id
+        },
+        include: [
+            {
+                model: Propiedad,
+                as: 'propiedadRelacion'
+            }
+        ]
+    })
+    // Obtener el nombre de la categoría
+    const nombreCategoria = await Categoria.findByPk(id)
+    
+    return res.render('propiedades/categorias', {    
+        propiedades,
+        favoritos,
+        csrfToken: req.csrfToken(),
+        idUsuario,
+        id,
+        titulo: nombreCategoria.nombre
+    
+    })
+}
+
 
 export {
     registrarPropiedad,
@@ -445,5 +494,7 @@ export {
     cambiarEstado,
     obtenerPropiedades,
     buscarPropiedades,
-    verPropiedad
+    verPropiedad,
+    obtenerCategorias
+
 }

@@ -4,11 +4,11 @@ block styles
     meta(name="csrf-token" content=csrfToken)
 
 block contenido
-    div(class="min-h-screen bg-gray-100 flex")
+    div(class="min-h-screen bg-gray-100 flex flex-col")
         include ../usuario/comprador-Sidebar/compradorSidebar.pug
         
         //- Contenido Principal
-        div(class="flex-1 pl-60")
+        div(class="flex-1 ")
             //- Header
             header(class="bg-white shadow-sm sticky top-0 z-10")
                 div(class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8")
@@ -144,7 +144,7 @@ block contenido
                                             //- Título y Precio
                                             div(class="space-y-2 mb-3")
                                                 h3(class="text-lg font-semibold text-gray-900 line-clamp-2 h-14")= propiedad.titulo
-                                                p(class="text-blue-600 font-bold text-xl") $ #{propiedad.precio.toLocaleString()}
+                                                p(class="text-[#FF6F17] font-bold text-xl") $ #{propiedad.precio.toLocaleString()}
                                             
                                             //- Ubicación y Categoría
                                             div(class="flex flex-col space-y-1 text-sm text-gray-600 mb-3")

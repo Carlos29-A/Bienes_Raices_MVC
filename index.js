@@ -8,6 +8,7 @@ import propiedadesRouter from './routes/propiedadRoute.js'
 import { Usuario, Propiedad, Categoria, Favorito, Mensaje } from './models/index.js'
 import favoritosRouter from './routes/favoritosRoute.js'
 import mensajeRouter from './routes/mensajeRoute.js'
+import apiRoute from './routes/apiRoute.js'
 
 dotenv.config()
 
@@ -40,8 +41,10 @@ app.use(express.static('./public'))
 // Middleware para pasar las categorias a la vista
 app.use(async (req, res, next) => {
     try {
+        const propiedades = await Propiedad.findAll()
         const categorias = await Categoria.findAll()
         res.locals.categorias = categorias
+        res.locals.propiedades = propiedades
         next()
     } catch (error) {
         next(error)
@@ -53,6 +56,7 @@ app.use('/auth', authRouter)
 app.use('/propiedades', propiedadesRouter)
 app.use('/favoritos', favoritosRouter)
 app.use('/mensajes', mensajeRouter)
+app.use('/api', apiRoute)
 
 // Puerto
 const port = process.env.PORT || 3000

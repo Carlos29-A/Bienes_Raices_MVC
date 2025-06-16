@@ -1,0 +1,37 @@
+extends ../../layout/index.pug
+block styles 
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.css")
+    meta(name="csrf-token" content=csrfToken)
+block contenido
+    div(class="min-h-screen flex")
+        include ./Administrador-Sidebar/administradorSidebar.pug
+
+        // Main Content
+        div(class="flex-1 ml-64")
+            // Top Navigation
+            header(class="bg-white shadow")
+                div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
+                    h1(class="text-3xl font-bold text-gray-900") Agregar Imágenes a la Propiedad
+                    div(class="flex items-center space-x-4")
+                        div(class="relative")
+                            button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
+                                img(class="h-8 w-8 rounded-full" src=`https://ui-avatars.com/api/?name=${usuario.nombre}&background=0D8ABC&color=fff` alt=usuario.nombre)
+                                span= usuario.nombre
+
+            // Contenido Principal
+            main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
+                div(class="px-4 py-6 sm:px-0")
+                    div(class="bg-white shadow rounded-lg p-6")
+                        // Sección de Dropzone
+                        div(class="mb-8")
+                            h2(class="text-lg font-medium text-gray-900 mb-4") Subir Imágenes
+                            p(class="text-sm text-gray-500 mb-4") Arrastra y suelta tus imágenes aquí o haz clic para seleccionarlas.
+                            
+                            div(class="bg-white shadow py-8 px-4 rounded mx-auto max-w-4xl my-10 md:px-10")
+                                form(id="imagenAdmin" class="dropzone border-dashed border-2 w-full min:h-96 h-auto rounded flex-col justify-center items-center" method="POST" action=`/auth/administrador/propiedades/agregar-imagen/${propiedad.id}`)
+                                    input(type="hidden" name="_csrf" value=csrfToken)
+
+                                button(id="publicar" class="mt-5 w-full py-3 bg-[#FF6F17] hover:bg-[#FF8F17] rounded text-white font-bold uppercase cursor-pointer" type="button") Publicar Propiedad
+
+block scripts
+    script(src="/js/agregarImagen.js")
