@@ -10,9 +10,10 @@ import favoritosRouter from './routes/favoritosRoute.js'
 import mensajeRouter from './routes/mensajeRoute.js'
 import apiRoute from './routes/apiRoute.js'
 import comentarioCalificacionRouter from './routes/ComentarioCalificacion.js'
+import administradorRouter from './routes/administradorRoute.js'
 import flash from 'connect-flash'
 import session from 'express-session'
-
+import { Op } from 'sequelize'
 
 dotenv.config()
 
@@ -75,6 +76,22 @@ app.use(async (req, res, next) => {
 
 // Rutas
 app.use('/auth', authRouter)
+app.use(async (req, res, next) => {
+    // Usuarios
+    const usuarios = await Usuario.findAll({ where: { tipo: { [Op.or]: [1, 2] } } })
+    // Propiedades
+    const propiedades = await Propiedad.findAll()
+    // Mensajes
+    const mensajes = await Mensaje.findAll()
+    // Categorias
+    const categorias = await Categoria.findAll()
+    res.locals.usuarios = usuarios
+    res.locals.propiedades = propiedades
+    res.locals.mensajes = mensajes
+    res.locals.categorias = categorias
+    next()
+})
+app.use('/auth/administrador', administradorRouter)
 app.use('/propiedades', propiedadesRouter)
 app.use('/favoritos', favoritosRouter)
 app.use('/mensajes', mensajeRouter)

@@ -5,68 +5,268 @@ block contenido
         include ./Administrador-Sidebar/administradorSidebar.pug
 
         //- Contenido Principal
-        main(class="flex-1 p-6 ml-64")
+        main(class="flex-1 ml-64")
             //- Encabezado
-            div(class="mb-8")
-                h1(class="text-2xl font-semibold text-[#FF6F17]") Mi Perfil
-                p(class="text-gray-600 mt-1") Administra tu información personal y preferencias
+            header(class="bg-white border-b border-gray-200 px-8 py-6 shadow-sm sticky top-0 z-40")
+                div(class="flex items-center justify-between")
+                    div(class="flex items-center space-x-4")
+                        img(src="/img/usuarios.png" alt="Categorías" class="w-12 h-12")
+                        div
+                            h1(class="text-2xl font-bold text-[#FF6819]") Perfil de Administrador
+                            p(class="text-gray-600") Gestiona y organiza tu perfil
+            if mensajesFlash.length > 0
+                //- tener un valor que diga que si hay mensajes
+                div(id="valorMensaje" class="hidden" data-show="true")
+                
+                //- Crear el modal
+                include ../../partials/MensajeModal.pug
 
             //- Contenedor Principal
-            div(class="max-w-4xl mx-auto")
-                //- Tarjeta de Perfil
-                div(class="bg-white rounded-lg shadow-sm overflow-hidden mb-6")
-                    //- Encabezado del Perfil
-                    div(class="relative h-32 bg-gradient-to-r from-[#FF6F17] to-[#B08262]")
-                        div(class="absolute -bottom-12 left-8")
-                            div(class="w-24 h-24 rounded-full border-4 border-white bg-white overflow-hidden")
-                                div(class="w-full h-full bg-gray-200 flex items-center justify-center")
-                                    i(class="fas fa-user-shield text-gray-400 text-4xl")
+            div(class="flex-1")
+                main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
+                    div(class="px-4 py-6 sm:px-0 ")
+                        div(class="bg-white shadow rounded-lg")
+                            // Información del Perfil
+                            div(class="px-4 py-5 sm:p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg")
+                                div(class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-8")
+                                    div(class="relative group")
+                                        div(class="relative")
+                                            img(class="h-32 w-32 rounded-full ring-4 ring-white shadow-lg" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Foto de perfil")
+                                            button(class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 shadow-lg transform transition-transform duration-200 hover:scale-110")
+                                                i(class="fas fa-camera")
+                                    
+                                    div(class="flex-1 text-center md:text-left")
+                                        div(class="flex flex-col md:flex-row md:items-center md:justify-between")
+                                            div
+                                                h2(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text")= usuario.nombre
+                                                p(class="text-lg bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Administrador
+                                            div(class="mt-4 md:mt-0")
+                                                span(class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text")
+                                                    i(class="fas fa-calendar-alt mr-2")
+                                                    | Miembro desde #{usuario.createdAt.toLocaleDateString()}
+                                        
+                                        div(class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4")
+                                            div(class="bg-white rounded-lg p-4 shadow-sm")
+                                                div(class="flex items-center justify-center md:justify-start space-x-2")
+                                                    i(class="fas fa-envelope bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
+                                                    span(class="text-gray-600")= usuario.email
+                                            div(class="bg-white rounded-lg p-4 shadow-sm")
+                                                div(class="flex items-center justify-center md:justify-start space-x-2")
+                                                    i(class="fas fa-phone bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
+                                                    span(class="text-gray-600")= usuario.telefono || 'No especificado'
+                                            div(class="bg-white rounded-lg p-4 shadow-sm")
+                                                div(class="flex items-center justify-center md:justify-start space-x-2")
+                                                    i(class="fas fa-user-shield bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
+                                                    span(class="text-gray-600") Administrador
+
+                            // Formulario de Edición
+                            form(action="" method="POST" class="px-4 py-5 sm:p-6 space-y-8 divide-y divide-gray-200" novalidate)
+                                input(type="hidden" name="_csrf" value=csrfToken)
+                                
+                                // Información Personal
+                                div(class="space-y-6")
+                                    div
+                                        h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Información Personal
+                                        p(class="mt-1 text-sm text-gray-500") Actualiza tu información personal.
+                                    div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
+                                        div(class="sm:col-span-3")
+                                            label(for="nombre" class="block text-sm font-medium text-gray-700") Nombre
+                                            div(class="mt-1")
+                                                input(type="text" name="nombre" id="nombre" value=usuario.nombre? usuario.nombre : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                                if errores
+                                                    each error in errores
+                                                        if error.path === 'nombre'
+                                                            p(class="text-red-500 text-sm")= error.msg
+
+                                        div(class="sm:col-span-3")
+                                            label(for="apellido" class="block text-sm font-medium text-gray-700") Apellido
+                                            div(class="mt-1")
+                                                input(type="text" name="apellido" id="apellido" value=usuario.apellido? usuario.apellido : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                                if errores
+                                                    each error in errores
+                                                        if error.path === 'apellido'
+                                                            p(class="text-red-500 text-sm")= error.msg
+
+                                        div(class="sm:col-span-3")
+                                            label(for="email" class="block text-sm font-medium text-gray-700") Correo Electrónico
+                                            div(class="mt-1")
+                                                input(type="email" name="email" id="email" value=usuario.email? usuario.email : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                                if errores
+                                                    each error in errores
+                                                        if error.path === 'email'
+                                                            p(class="text-red-500 text-sm")= error.msg
+
+                                        div(class="sm:col-span-3")
+                                            label(for="telefono" class="block text-sm font-medium text-gray-700") Teléfono
+                                            div(class="mt-1")
+                                                input(type="tel" name="telefono" id="telefono" value=usuario.telefono? usuario.telefono : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                                if errores
+                                                    each error in errores
+                                                        if error.path === 'telefono'
+                                                            p(class="text-red-500 text-sm")= error.msg
+
+                                        div(class="sm:col-span-3")
+                                            label(for="edad" class="block text-sm font-medium text-gray-700") Edad
+                                            div(class="mt-1")
+                                                input(type="number" name="edad" id="edad" value=usuario.edad? usuario.edad : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                                if errores
+                                                    each error in errores
+                                                        if error.path === 'edad'
+                                                            p(class="text-red-500 text-sm")= error.msg
+
+                                // Cambiar Contraseña
+                                div(class="pt-8")
+                                    div
+                                        h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Cambiar Contraseña
+                                        p(class="mt-1 text-sm text-gray-500") Actualiza tu contraseña de acceso.
+                                    div(class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
+                                        div(class="sm:col-span-4")
+                                            label(for="password_actual" class="block text-sm font-medium text-gray-700") Contraseña Actual
+                                            div(class="mt-1")
+                                                input(type="password" name="password_actual" id="password_actual" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                                if errores
+                                                    each error in errores
+                                                        if error.path === 'password_actual'
+                                                            p(class="text-red-500 text-sm")= error.msg
+
+                                        div(class="sm:col-span-4")
+                                            label(for="password_nueva" class="block text-sm font-medium text-gray-700") Nueva Contraseña
+                                            div(class="mt-1")
+                                                input(type="password" name="password_nueva" id="password_nueva" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                                if errores
+                                                    each error in errores
+                                                        if error.path === 'password_nueva'
+                                                            p(class="text-red-500 text-sm")= error.msg
+
+                                        div(class="sm:col-span-4")
+                                            label(for="password_confirmar" class="block text-sm font-medium text-gray-700") Confirmar Nueva Contraseña
+                                            div(class="mt-1")
+                                                input(type="password" name="password_confirmar" id="password_confirmar" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
+                                                if errores
+                                                    each error in errores
+                                                        if error.path === 'password_confirmar'
+                                                            p(class="text-red-500 text-sm")= error.msg
+
+                                // Botones de Acción
+                                div(class="pt-8")
+                                    div(class="flex justify-end space-x-4")
+                                        a(href="/auth/vendedor/panel" class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200")
+                                            i(class="fas fa-times mr-2")
+                                            | Cancelar
+                                        button(type="button" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-[#FF641A] to-[#FF9F00] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105 cursor-pointer"
+                                        onclick="mostrarModalEditarPerfil()"
+                                        )
+                                            i(class="fas fa-save mr-2")
+                                            | Guardar Cambios
+        //- Modal de Confirmación de Edición
+        div(id="modalEditarPerfil" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden" style="z-index: 99999;")
+            div(class="bg-white rounded-2xl shadow-2xl max-w-sm w-full mx-4 transform transition-all duration-300 scale-95 opacity-0")
+                //- Contenido del Modal
+                div(class="p-8 text-center")
+                    //- Icono
+                    div(class="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6")
+                        i(class="fas fa-edit text-orange-500 text-2xl")
                     
-                    //- Información Principal
-                    div(class="pt-16 px-8 pb-8")
-                        div(class="flex flex-col md:flex-row md:items-end md:justify-between gap-4")
-                            div
-                                h2(class="text-xl font-semibold text-gray-900")= administrador.nombre
-                                p(class="text-gray-600")= administrador.email
-                            div(class="flex gap-2")
-                                button(class="px-4 py-2 text-sm font-medium text-[#FF6F17] transition-colors")
-                                    i(class="fas fa-edit mr-2")
-                                    | Editar Perfil
+                    //- Título y Mensaje
+                    h3(class="text-xl font-semibold text-gray-900 mb-3") Editar Perfil
+                    p(class="text-gray-600 mb-6")
+                        | ¿Estás seguro de que quieres guardar los cambios en este perfil?
 
-                //- Secciones de Información
-                div(class="grid grid-cols-1 md:grid-cols-2 gap-6")
-                    //- Información Personal
-                    div(class="bg-white rounded-lg shadow-sm p-6")
-                        h3(class="text-lg font-semibold text-[#FF6F17] mb-4 flex items-center gap-2")
-                            i(class="fas fa-user-circle text-[#FF6F17]")
-                            | Información Personal
-                        div(class="space-y-4")
-                            div
-                                label(class="block text-sm font-medium text-gray-600") Nombre Completo
-                                p(class="mt-1 text-gray-900")= administrador.nombre
-                            div
-                                label(class="block text-sm font-medium text-gray-600") Correo Electrónico
-                                p(class="mt-1 text-gray-900")= administrador.email
-                            div
-                                label(class="block text-sm font-medium text-gray-600") Teléfono
-                                p(class="mt-1 text-gray-900")= administrador.telefono
-                            div
-                                label(class="block text-sm font-medium text-gray-600") Rol
-                                p(class="mt-1 text-gray-900") Administrador
-
-                    //- Seguridad
-                    div(class="bg-white rounded-lg shadow-sm p-6")
-                        h3(class="text-lg font-semibold text-[#FF6F17] mb-4 flex items-center gap-2")
-                            i(class="fas fa-shield-alt text-[#FF6F17]")
-                            | Seguridad
-                        div(class="space-y-4")
-                            div
-                                label(class="block text-sm font-medium text-gray-600") Estado de la cuenta
-                                p(class="mt-1")
-                                    span(class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800") Activa
-                            button(class="w-full mt-4 px-4 py-2 text-sm font-medium text-white bg-[#FF6F17] rounded-lg hover:bg-[#FF8F17] transition-colors cursor-pointer")
-                                i(class="fas fa-key mr-2")
-                                | Cambiar Contraseña
-
+                //- Botones
+                div(class="flex gap-3 px-8 pb-8")
+                    button(
+                        onclick="cerrarModalEditar()"
+                        class="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors duration-200 font-medium cursor-pointer"
+                    )
+                        | Cancelar
+                    
+                    button(
+                        onclick="enviarFormulario()"
+                        class="flex-1 px-4 py-3 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition-colors duration-200 font-medium cursor-pointer"
+                    )
+                        | Confirmar
 
 block scripts
+    script.
+        // Función para mostrar el modal de edición
+        function mostrarModalEditarPerfil() {
+            const modal = document.getElementById('modalEditarPerfil');
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                modal.querySelector('.bg-white').classList.remove('scale-95', 'opacity-0');
+                modal.querySelector('.bg-white').classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        // Función para cerrar el modal de edición
+        function cerrarModalEditar() {
+            const modal = document.getElementById('modalEditarPerfil');
+            const modalContent = modal.querySelector('.bg-white');
+            
+            // Animación de salida
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Función para enviar el formulario
+        function enviarFormulario() {
+            document.querySelector('form').submit();
+        }
+
+        // Event listeners para cerrar el modal
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('modalEditarPerfil');
+            
+            // Cerrar al hacer clic fuera del modal
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    cerrarModalEditar();
+                }
+            });
+
+            // Cerrar con la tecla Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    cerrarModalEditar();
+                }
+            });
+        });
+        //Modal de mensaje de exito
+    script.
+        const valorMensaje = document.getElementById('valorMensaje');
+        if (valorMensaje.dataset.show === 'true') {
+            //- Mostrar el modal
+            const modalMensaje = document.getElementById('modalMensaje');
+            modalMensaje.classList.remove('hidden');
+
+            //- Animacion de entrada
+            setTimeout(() => {
+                modalMensaje.querySelector('.bg-white').classList.remove('scale-95', 'opacity-0');
+                modalMensaje.querySelector('.bg-white').classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+        //- Cerrar el modal cuando se haga click en el boton de aceptar
+        function cerrarModalMensajeEditar() {
+            //- Encontrar el modal
+            const modal = document.getElementById('modalMensaje');
+            modal.classList.add('hidden');
+
+            //- Animacion de salida
+            setTimeout(() => {
+                modal.querySelector('.bg-white').classList.remove('scale-100', 'opacity-100');
+                modal.querySelector('.bg-white').classList.add('scale-95', 'opacity-0');
+            }, 500);
+        }
+        //- Cerrar cuando se haga click fuera
+        document.getElementById('modalMensaje').addEventListener('click', function(e) {            
+            if (e.target === this) cerrarModalMensajeEditar();
+        })
+        //- Cerrar con Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') cerrarModalMensajeEditar();
+        })

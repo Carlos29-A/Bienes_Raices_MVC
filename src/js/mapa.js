@@ -24,6 +24,7 @@
                     <p><span class="font-semibold">Región:</span> ${address.Region || 'No especificada'}</p>
                     <p><span class="font-semibold">País:</span> ${address.CountryCode || 'No especificado'}</p>
                     <p><span class="font-semibold">Código Postal:</span> ${address.Postal || 'No especificado'}</p>
+                    <p><span class="font-semibold">Calle:</span> ${address.Address || 'No especificado'}</p>
                     <div class="mt-2 pt-2 border-t">
                         <p class="text-xs text-gray-500">Coordenadas: ${address.latlng?.lat.toFixed(6)}, ${address.latlng?.lng.toFixed(6)}</p>
                     </div>

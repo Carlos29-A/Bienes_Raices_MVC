@@ -11,7 +11,10 @@ block contenido
             // Top Navigation
             header(class="bg-white shadow")
                 div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
-                    h1(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Crear Nueva Propiedad
+                    div(class="flex flex-col space-y-2")
+                        h1(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Crear Nueva Propiedad
+                        p(class="text-sm text-gray-500") Crea una nueva propiedad para tu usuario.
+
                     div(class="flex items-center space-x-4")
                         div(class="relative")
                             button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
@@ -30,6 +33,9 @@ block contenido
 
                             // Información Principal
                             div(class="space-y-6")
+                                //- Paso 1 de 2
+                                div(class="flex items-center space-x-4")
+                                    h3(class="text-lg leading-6 font-medium text-[#FF6F17]") Paso 1 de 2
                                 div
                                     h3(class="text-lg leading-6 font-medium text-[#FF6F17]") Información de la Propiedad
                                     p(class="mt-1 text-sm text-gray-500") Ingresa los detalles principales de la propiedad.
@@ -45,7 +51,7 @@ block contenido
                                                         p(class="text-red-500 text-sm")= error.msg
 
                                     div(class="sm:col-span-3")
-                                        label(for="precio" class="block text-sm font-medium text-gray-700") Precio
+                                        label(for="precio" class="block text-sm font-medium text-gray-700") Precio ($)
                                         div(class="mt-1")
                                             input(type="number" name="precio" id="precio" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.precio? oldInfo.precio : '')
                                             if errores
@@ -106,6 +112,8 @@ block contenido
                                 div
                                     h3(class="text-lg leading-6 font-medium text-[#FF6F17]") Ubicación
                                     p(class="mt-1 text-sm text-gray-500") Especifica la ubicación de la propiedad.
+                                div(class="sm:col-span-6")
+                                    div(id="mapa" class="h-96 mt-4 rounded-lg shadow-lg")
                                 div(class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
                                     div(class="sm:col-span-3")
                                         label(for="calle" class="block text-sm font-medium text-gray-700") Calle
@@ -134,8 +142,7 @@ block contenido
                                                     if error.path === 'lng'
                                                         p(class="text-red-500 text-sm")= error.msg
 
-                                    div(class="sm:col-span-6")
-                                        div(id="mapa" class="h-96 mt-4 rounded-lg shadow-lg")
+                                    
 
                             // Descripción
                             div(class="pt-8")
@@ -168,7 +175,7 @@ block contenido
                                     a(href="/auth/vendedor/panel" class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200")
                                         i(class="fas fa-times mr-2")
                                         | Cancelar
-                                    button(type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-[#FF6F17] hover:bg-[#FF8F17] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105")
+                                    button(type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-[#FF6F17] hover:bg-[#FF8F17] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105 cursor-pointer")
                                         i(class="fas fa-arrow-right mr-2")
                                         | Siguiente
 block scripts

@@ -1,0 +1,281 @@
+extends ../../layout/index.pug
+block styles 
+    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
+    link(rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.13/dist/esri-leaflet-geocoder.css")
+    style.
+        #modalEditarPropiedad {
+            z-index: 999999 !important;
+        }
+        #modalEditarPropiedad .bg-white {
+            z-index: 1000000 !important;
+        }
+        /* Asegurar que el modal esté por encima de Leaflet */
+        .leaflet-container {
+            z-index: 1 !important;
+        }
+        .leaflet-control-container {
+            z-index: 2 !important;
+        }
+block contenido
+    div(class="min-h-screen flex")
+        include ./Administrador-Sidebar/administradorSidebar.pug
+
+        // Main Content
+        div(class="flex-1 ml-64")
+            // Top Navigation
+            header(class="bg-white shadow")
+                div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
+                    div(class="flex flex-col space-y-2")
+                        h1(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Editar Propiedad
+                        p(class="text-sm text-gray-500") Edita la propiedad seleccionada.
+
+                    div(class="flex items-center space-x-4")
+                        div(class="relative")
+                            button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
+                                img(class="h-8 w-8 rounded-full" src="/img/avatar.png" alt="logo")
+                                span= usuario.nombre
+
+            // Agregar meta tag CSRF en el head
+            meta(name="csrf-token" content=csrfToken)
+
+            // Formulario de Propiedad
+            main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
+                div(class="px-4 py-6 sm:px-0")
+                    div(class="bg-white shadow rounded-lg")
+                        form(action="" method="POST"  class="px-4 py-5 sm:p-6 space-y-8 divide-y divide-gray-200" novalidate)
+                            input(type="hidden" name="_csrf" value=csrfToken)
+
+                            // Información Principal
+                            div(class="space-y-6")
+                                //- Paso 1 de 2
+                                div(class="flex items-center space-x-4")
+                                    h3(class="text-lg leading-6 font-medium text-[#FF6F17]") Paso 1 de 2
+                                div
+                                    h3(class="text-lg leading-6 font-medium text-[#FF6F17]") Información de la Propiedad
+                                    p(class="mt-1 text-sm text-gray-500") Ingresa los detalles principales de la propiedad.
+
+                                div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
+                                    div(class="sm:col-span-3")
+                                        label(for="titulo" class="block text-sm font-medium text-gray-700") Título
+                                        div(class="mt-1")
+                                            input(type="text" name="titulo" id="titulo" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=propiedad.titulo? propiedad.titulo : '')
+                                            if errores
+                                                each error in errores
+                                                    if error.path === 'titulo'
+                                                        p(class="text-red-500 text-sm")= error.msg
+
+                                    div(class="sm:col-span-3")
+                                        label(for="precio" class="block text-sm font-medium text-gray-700") Precio ($)
+                                        div(class="mt-1")
+                                            input(type="number" name="precio" id="precio" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=propiedad.precio? propiedad.precio : '')
+                                            if errores
+                                                each error in errores
+                                                    if error.path === 'precio'
+                                                        p(class="text-red-500 text-sm")= error.msg
+
+                                    div(class="sm:col-span-3")
+                                        label(for="categoria" class="block text-sm font-medium text-gray-700") Categoría
+                                        div(class="mt-1")
+                                            select(name="categoria" id="categoria" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
+                                                option(value="") -- Seleccione --
+                                                each categoria in categorias
+                                                    option(value=categoria.id selected=propiedad.categoriaRelacion.nombre? propiedad.categoriaRelacion.nombre == categoria.nombre : false)= categoria.nombre
+                                            if errores
+                                                each error in errores
+                                                    if error.path === 'categoria'
+                                                        p(class="text-red-500 text-sm")= error.msg
+
+                                    div(class="sm:col-span-3")
+                                        label(for="habitaciones" class="block text-sm font-medium text-gray-700") Habitaciones
+                                        div(class="mt-1")
+                                            select(name="habitaciones" id="habitaciones" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
+                                                option(value="") -- Seleccione --
+                                                each habitacion in [0,1, 2, 3, 4, 5]
+                                                    option(value=habitacion selected=propiedad.habitaciones >=0 ? propiedad.habitaciones == habitacion : false)= habitacion
+                                            if errores
+                                                each error in errores
+                                                    if error.path === 'habitaciones'
+                                                        p(class="text-red-500 text-sm")= error.msg
+
+                                    div(class="sm:col-span-3")
+                                        label(for="wc" class="block text-sm font-medium text-gray-700") Baños
+                                        div(class="mt-1")
+                                            select(name="wc" id="wc" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
+                                                option(value="") -- Seleccione --
+                                                each wc in [0,1, 2, 3, 4, 5]
+                                                    option(value=wc selected=propiedad.wc >=0 ? propiedad.wc == wc : false)= wc
+                                            if errores
+                                                each error in errores
+                                                    if error.path === 'wc'
+                                                        p(class="text-red-500 text-sm")= error.msg
+
+                                    div(class="sm:col-span-3")
+                                        label(for="estacionamiento" class="block text-sm font-medium text-gray-700") Estacionamientos
+                                        div(class="mt-1")
+                                            select(name="estacionamiento" id="estacionamiento" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
+                                                option(value="") -- Seleccione --
+                                                each estacionamiento in [0,1, 2, 3, 4, 5]
+                                                    option(value=estacionamiento selected=propiedad.estacionamiento >=0 ? propiedad.estacionamiento == estacionamiento : false)= estacionamiento
+                                            if errores
+                                                each error in errores
+                                                    if error.path === 'estacionamiento'
+                                                        p(class="text-red-500 text-sm")= error.msg
+
+                            // Ubicación
+                            div(class="pt-8")
+                                div
+                                    h3(class="text-lg leading-6 font-medium text-[#FF6F17]") Ubicación
+                                    p(class="mt-1 text-sm text-gray-500") Especifica la ubicación de la propiedad.
+                                div(class="sm:col-span-6")
+                                    div(id="mapa" class="h-96 mt-4 rounded-lg shadow-lg")
+                                div(class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
+                                    div(class="sm:col-span-3")
+                                        label(for="calle" class="block text-sm font-medium text-gray-700 hidden") Calle
+                                        div(class="mt-1")
+                                            input(type="text" name="calle" id="calle" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200 hidden" value=propiedad.calle? propiedad.calle : '')
+                                            if errores
+                                                each error in errores
+                                                    if error.path === 'calle'
+                                                        p(class="text-red-500 text-sm")= error.msg
+
+                                    div(class="sm:col-span-3")
+                                        label(for="lat" class="block text-sm font-medium text-gray-700 hidden") Latitud
+                                        div(class="mt-1" )
+                                            input(type="text" name="lat" id="lat" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200 hidden" value=propiedad.lat? propiedad.lat : '')
+                                            if errores
+                                                each error in errores
+                                                    if error.path === 'lat'
+                                                        p(class="text-red-500 text-sm")= error.msg
+
+                                    div(class="sm:col-span-3")
+                                        label(for="lng" class="block text-sm font-medium text-gray-700 hidden") Longitud
+                                        div(class="mt-1")
+                                            input(type="text" name="lng" id="lng" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200 hidden" value=propiedad.lng? propiedad.lng : '')
+                                            if errores
+                                                each error in errores
+                                                    if error.path === 'lng'
+                                                        p(class="text-red-500 text-sm")= error.msg
+
+                                    
+
+                            // Descripción
+                            div(class="pt-8")
+                                div
+                                    h3(class="text-lg leading-6 font-medium text-[#FF6F17]") Descripción
+                                    p(class="mt-1 text-sm text-gray-500") Describe los detalles y características de la propiedad.
+                                    
+                                div(class="mt-6")
+                                    label(for="descripcion" class="block text-sm font-medium text-gray-700") Descripción
+                                    div(class="mt-1")
+                                        textarea(name="descripcion" id="descripcion" rows="4" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")= propiedad.descripcion? propiedad.descripcion : ''
+                                        if errores
+                                            each error in errores
+                                                if error.path === 'descripcion'
+                                                    p(class="text-red-500 text-sm")= error.msg
+                            //- Indicar a que usuario pertenece la propiedad
+                            div(class="pt-8 w-full")
+                                label(for="usuario" class="block text-sm font-medium text-gray-700") Usuario
+                                select(name="usuario" id="usuario" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
+                                    option(value="") -- Seleccione --
+                                    each usuario in usuarios
+                                        option(value=usuario.id selected=propiedad.usuarioRelacion.nombre? propiedad.usuarioRelacion.nombre == usuario.nombre : false)= usuario.nombre
+                                if errores
+                                    each error in errores
+                                        if error.path === 'usuario'
+                                            p(class="text-red-500 text-sm")= error.msg
+                            // Botones de Acción
+                            div(class="pt-8")
+                                div(class="flex justify-end space-x-4")
+                                    a(href="/auth/administrador/propiedades" class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200")
+                                        i(class="fas fa-times mr-2")
+                                        | Cancelar
+                                    button(type="button" onclick="mostrarModalEditar()" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-[#FF6F17] hover:bg-[#FF8F17] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105 cursor-pointer")
+                                        i(class="fas fa-edit mr-2")
+                                        | Editar
+
+        //- Modal de Confirmación de Edición
+        div(id="modalEditarPropiedad" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden" style="z-index: 99999;")
+            div(class="bg-white rounded-2xl shadow-2xl max-w-sm w-full mx-4 transform transition-all duration-300 scale-95 opacity-0")
+                //- Contenido del Modal
+                div(class="p-8 text-center")
+                    //- Icono
+                    div(class="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6")
+                        i(class="fas fa-edit text-orange-500 text-2xl")
+                    
+                    //- Título y Mensaje
+                    h3(class="text-xl font-semibold text-gray-900 mb-3") Editar Propiedad
+                    p(class="text-gray-600 mb-6")
+                        | ¿Estás seguro de que quieres guardar los cambios en esta propiedad?
+
+                //- Botones
+                div(class="flex gap-3 px-8 pb-8")
+                    button(
+                        onclick="cerrarModalEditar()"
+                        class="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors duration-200 font-medium cursor-pointer"
+                    )
+                        | Cancelar
+                    
+                    button(
+                        onclick="enviarFormulario()"
+                        class="flex-1 px-4 py-3 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition-colors duration-200 font-medium cursor-pointer"
+                    )
+                        | Confirmar
+
+block scripts
+    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
+    link(rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.13/dist/esri-leaflet-geocoder.css")
+    script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
+    script(src="https://unpkg.com/esri-leaflet@3.0.8/dist/esri-leaflet.js") 
+    script(src="https://unpkg.com/esri-leaflet-geocoder@2.2.13/dist/esri-leaflet-geocoder.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geosearch/2.7.0/bundle.min.js")
+    script(src="/js/mapa.js")
+    
+    script.
+        // Función para mostrar el modal de edición
+        function mostrarModalEditar() {
+            const modal = document.getElementById('modalEditarPropiedad');
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                modal.querySelector('.bg-white').classList.remove('scale-95', 'opacity-0');
+                modal.querySelector('.bg-white').classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        // Función para cerrar el modal de edición
+        function cerrarModalEditar() {
+            const modal = document.getElementById('modalEditarPropiedad');
+            const modalContent = modal.querySelector('.bg-white');
+            
+            // Animación de salida
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Función para enviar el formulario
+        function enviarFormulario() {
+            document.querySelector('form').submit();
+        }
+
+        // Event listeners para cerrar el modal
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('modalEditarPropiedad');
+            
+            // Cerrar al hacer clic fuera del modal
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    cerrarModalEditar();
+                }
+            });
+
+            // Cerrar con la tecla Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    cerrarModalEditar();
+                }
+            });
+        });

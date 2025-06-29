@@ -11,7 +11,10 @@ block contenido
             // Top Navigation
             header(class="bg-white shadow")
                 div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
-                    h1(class="text-3xl font-bold text-gray-900") Agregar Imágenes a la Propiedad
+                    div(class="flex flex-col space-y-2")
+                        h1(class="text-3xl font-bold text-gray-900") Agregar Imágenes a la Propiedad
+                        p(class="text-sm text-gray-500") Agrega las imágenes de la propiedad.
+
                     div(class="flex items-center space-x-4")
                         div(class="relative")
                             button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
@@ -23,7 +26,10 @@ block contenido
                 div(class="px-4 py-6 sm:px-0")
                     div(class="bg-white shadow rounded-lg p-6")
                         // Sección de Dropzone
-                        div(class="mb-8")
+                        div(class="mb-8 space-y-4")
+                            // Paso 2 de 2
+                            div(class="flex items-center space-x-4")
+                                h3(class="text-lg leading-6 font-medium text-[#FF6F17]") Paso 2 de 2
                             h2(class="text-lg font-medium text-gray-900 mb-4") Subir Imágenes
                             p(class="text-sm text-gray-500 mb-4") Arrastra y suelta tus imágenes aquí o haz clic para seleccionarlas.
                             

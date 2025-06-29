@@ -14,7 +14,6 @@ block contenido
                         div
                             h1(class="text-2xl font-bold text-[#FF6819]") Nueva Categoría
                             p(class="text-gray-600") Registra una nueva categoría de propiedades
-
             //- Contenedor Principal
             div(class="p-8 bg-gray-100")
                 //- Formulario
@@ -62,7 +61,7 @@ block contenido
                                             rows="4"
                                             placeholder="Describe las características principales de esta categoría..."
                                             class="pl-10 w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6819] focus:border-transparent transition-colors duration-200 resize-none"
-                                        )= datos ? datos.descripcion : ''
+                                        )= oldData ? oldData.descripcion : ''
                                         if errores
                                             each error in errores
                                                 if error.path === 'descripcion'

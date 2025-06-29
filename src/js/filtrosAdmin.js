@@ -1,4 +1,4 @@
-(function(){
+(function () {
     const categoriaId = document.querySelector('#categoria')
     const habitaciones = document.querySelector('#habitaciones')
     const baños = document.querySelector('#baños')
@@ -34,7 +34,7 @@
         filtrarPropiedades.estacionamiento = +e.target.value
         filtrarPropiedadesFuncion()
     })
-    
+
     //obtener propiedades
     const obtenerPropiedades = async () => {
         try {
@@ -67,12 +67,51 @@
     }
 
 
+
+    // Función simple para eliminar
+    window.eliminarPropiedad = function (id) {
+
+        //- Actualizar el action del formulario
+        document.getElementById('formEliminarPropiedad').action = `/auth/administrador/propiedades/eliminar/${id}`
+
+        //- Mostrar el modal con animación
+        const modal = document.getElementById('modalEliminarPropiedad')
+        modal.classList.remove('hidden')
+
+        setTimeout(() => {
+            modal.querySelector('.bg-white').classList.remove('scale-95', 'opacity-0')
+            modal.querySelector('.bg-white').classList.add('scale-100', 'opacity-100')
+        }, 10)
+    }
+
+
+    //- Cerrar el modal
+    window.cerrarModalEliminarPropiedad = function () {
+        const modal = document.getElementById('modalEliminarPropiedad')
+        const modalContent = modal.querySelector('.bg-white')
+        // Animacion de salida
+        modalContent.classList.remove('scale-100', 'opacity-100')
+        modalContent.classList.add('scale-95', 'opacity-0')
+
+        //- Esperar a que termine la animación
+        setTimeout(() => {
+            modal.classList.add('hidden')
+        }, 300)
+    }
+
+    //- Cerrar el modal al hacer click fuera del modal
+    document.getElementById('modalEliminarPropiedad').addEventListener('click', (e) => {
+        if (e.target.id === 'modalEliminarPropiedad') {
+            cerrarModalEliminarPropiedad()
+        }
+    })
+
     const mostrarPropiedades = (propiedades) => {
 
         //limpiar el contenedor
         propiedadesContenedor.innerHTML = ''
 
-        if(propiedades.length === 0){
+        if (propiedades.length === 0) {
             propiedadesContenedor.innerHTML = `
                 <p class="text-center text-gray-600 text-2xl font-bold">No hay propiedades disponibles</p>
             `
@@ -89,11 +128,10 @@
                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                         />
                         <div class="absolute top-4 right-4">
-                            <span class="px-3 py-1 rounded-full text-sm font-medium ${
-                                propiedad.publicado 
-                                    ? 'bg-green-100 text-green-800' 
-                                    : 'bg-red-100 text-red-800'
-                            }">
+                            <span class="px-3 py-1 rounded-full text-sm font-medium ${propiedad.publicado
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
+                }">
                                 ${propiedad.publicado ? 'Publicada' : 'No Publicada'}
                             </span>
                         </div>
@@ -143,19 +181,19 @@
 
                             <div class="flex space-x-2">
                                 <a 
-                                    href="/propiedades/editar/${propiedad.id}"
+                                    href="/auth/administrador/propiedades/editar/${propiedad.id}"
                                     class="inline-flex items-center px-3 py-1.5 text-sm text-[#FF6819] hover:bg-orange-50 rounded-lg transition-colors duration-200 cursor-pointer"
                                 >
                                     <i class="fas fa-edit mr-1.5"></i>
                                     Editar
                                 </a>
-                                <form action="/auth/administrador/propiedades/eliminar/${propiedad.id}" method="POST">
-                                    <input type="hidden" name="_csrf" value="${csrfToken}">
-                                    <button type="submit" class="inline-flex items-center px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 cursor-pointer" onclick="return confirm('¿Estás seguro de que deseas eliminar esta propiedad?')">
-                                        <i class="fas fa-trash-alt mr-1.5"></i>
-                                        Eliminar
-                                    </button>
-                                </form>
+                                <button
+                                    class="inline-flex items-center px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 cursor-pointer"
+                                    onclick="eliminarPropiedad('${propiedad.id}')"
+                                >
+                                    <i class="fas fa-trash-alt mr-1.5"></i>
+                                    Eliminar
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -163,5 +201,6 @@
             `
         })
     }
+
     obtenerPropiedades()
 })()
