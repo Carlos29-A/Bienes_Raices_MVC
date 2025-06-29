@@ -20,6 +20,7 @@ const registrarPropiedad = async (req, res) => {
 const publicarPropiedad = async (req, res) => {
     await check('titulo').notEmpty().withMessage('El título es obligatorio').run(req)
     await check('precio').notEmpty().withMessage('El precio es obligatorio').run(req)
+    await check('precio').isInt({min: 50000}).withMessage('El precio debe ser mayor a 50000').run(req)
     await check('descripcion').notEmpty().withMessage('La descripción es obligatoria').run(req)
     await check('categoria').notEmpty().withMessage('La categoría es obligatoria').run(req)
     await check('habitaciones').notEmpty().withMessage('El número de habitaciones es obligatorio').run(req)
@@ -350,6 +351,7 @@ const obtenerPropiedades = async (req, res) => {
 
 const buscarPropiedades = async (req, res) => {
 
+    // Recuperamos a la persona que inicia sesión
     const { id } = req.usuario
     const usuario = await Usuario.findByPk(id)
 
@@ -391,7 +393,7 @@ const buscarPropiedades = async (req, res) => {
         }
     }
 
-
+    // Recuperamos las propiedades con los filtros
     const propiedades = await Propiedad.findAll({
         where: filtros,
         include: [
@@ -420,7 +422,8 @@ const buscarPropiedades = async (req, res) => {
         propiedades,
         csrfToken: req.csrfToken(),
         usuario,
-        favoritos
+        favoritos,
+        ruta: '/propiedades/buscar'
     })
 
 
@@ -503,8 +506,9 @@ const obtenerCategorias = async (req, res) => {
         csrfToken: req.csrfToken(),
         idUsuario,
         id,
-        titulo: nombreCategoria.nombre
-    
+        titulo: nombreCategoria.nombre,
+        ruta: '/propiedades/categorias/' + id
+        
     })
 }
 

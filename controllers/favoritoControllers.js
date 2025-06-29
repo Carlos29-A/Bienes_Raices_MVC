@@ -68,6 +68,9 @@ const favoritos = async (req, res) => {
         return res.redirect('/auth/login')
     }
 
+    // Obtener categorías para los filtros
+    const categorias = await Categoria.findAll()
+
     const favoritos = await Favorito.findAll({
         where: {
             usuarioId: usuario.id
@@ -95,6 +98,7 @@ const favoritos = async (req, res) => {
         usuario,
         csrfToken: req.csrfToken(),
         favoritos,
+        categorias,
         ruta: '/favoritos/propiedades-favoritas'
     })
 }

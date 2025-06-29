@@ -3,7 +3,7 @@ import Propiedad from './Propiedad.js'
 import Categoria from './Categoria.js'
 import Favorito from './Favorito.js'
 import Mensaje from './Mensaje.js'
-
+import ComentarioCalificacion from './ComentarioCalificacion.js'
 
 // Relaciones
 Propiedad.belongsTo(Categoria, { as: 'categoriaRelacion', foreignKey: 'categoriaId' })
@@ -14,10 +14,16 @@ Mensaje.belongsTo(Usuario, { as: 'remitenteRelacion', foreignKey: 'remitenteId' 
 Mensaje.belongsTo(Usuario, { as: 'destinatarioRelacion', foreignKey: 'destinatarioId' })
 Mensaje.belongsTo(Propiedad, { as: 'propiedadRelacion', foreignKey: 'propiedadId' })
 
+// Relaciones de comentarios y calificaciones
+ComentarioCalificacion.belongsTo(Usuario, { as: 'evaluadorRelacion', foreignKey: 'evaluadorId' })
+ComentarioCalificacion.belongsTo(Usuario, { as: 'evaluadoRelacion', foreignKey: 'evaluadoId' })
+
+
 export {
     Usuario,
     Propiedad,
     Categoria,
     Favorito,
-    Mensaje
+    Mensaje,
+    ComentarioCalificacion
 }

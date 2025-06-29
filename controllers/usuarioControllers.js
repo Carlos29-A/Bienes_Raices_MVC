@@ -103,7 +103,7 @@ const resetearPassword = async (req, res) => {
     await check('email').notEmpty().withMessage('El email es requerido').run(req)
 
     const errores = validationResult(req)
-
+    // Si hay errores
     if (!errores.isEmpty()) {
         return res.render('usuario/olvide-contraseña', {
             csrfToken: req.csrfToken(),
@@ -112,7 +112,10 @@ const resetearPassword = async (req, res) => {
         })
     }
     const { email } = req.body
+    // Buscar al usuario por el email
     const usuario = await Usuario.findOne({ where: { email } })
+    
+    // Si el usuario no existe
     if (!usuario) {
         return res.render('usuario/olvide-contraseña', {
             csrfToken: req.csrfToken(),
@@ -120,6 +123,7 @@ const resetearPassword = async (req, res) => {
             oldData: req.body
         })
     }
+    // Si la cuenta no esta confirmada
     if (usuario.confirmado === false) {
         return res.render('usuario/olvide-contraseña', {
             csrfToken: req.csrfToken(),
@@ -318,9 +322,8 @@ const panelComprador = async (req, res) => {
     const usuario = await Usuario.findOne({ where: { id } })
 
     const categorias = await Categoria.findAll()
-    // propiedades favoritas
-    
 
+    // Propiedades favoritas
     const propiedadesFavoritas = await Favorito.findAll({
         where:{
             usuarioId : id
@@ -339,6 +342,7 @@ const panelComprador = async (req, res) => {
         ]
     })
 
+    // Propiedades
     const propiedades = await Propiedad.findAll({
         where : {
             publicado : true
@@ -351,6 +355,7 @@ const panelComprador = async (req, res) => {
         ]        
 
     })
+    // Mensajes
     const mensajes = await Mensaje.findAll({
         where : {   
             remitenteId : id
@@ -364,6 +369,8 @@ const panelComprador = async (req, res) => {
         propiedadesFavoritas,
         mensajes,
         categorias,
+        favoritos: propiedadesFavoritas,
+        csrfToken: req.csrfToken(),
         ruta: '/auth/comprador/panel'
     })
 }

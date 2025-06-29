@@ -10,22 +10,22 @@ nav(class="bg-gradient-to-r from-[#1E2939] to-[#101828] shadow-lg")
             
             //- Menú principal
             div(class="hidden md:flex items-center space-x-8")
-                a(href="/auth/comprador/panel" class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
+                a(href="/auth/comprador/panel" class=`${ruta === "/auth/comprador/panel" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
                     i(class="fas fa-home mr-2")
                     span Inicio
-                a(href="/mensajes/obtener" class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
+                a(href="/mensajes/obtener" class=`${ruta === "/mensajes/obtener" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
                     i(class="fas fa-envelope mr-2")
                     span Mensajes
-                a(href="/auth/editar-perfil" class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
+                a(href="/auth/editar-perfil" class=`${ruta === "/auth/editar-perfil" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
                     i(class="fas fa-user mr-2")
                     span Mi Perfil
-                a(href="/propiedades/buscar" class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
+                a(href="/propiedades/buscar" class=`${ruta === "/propiedades/buscar" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
                     i(class="fas fa-search mr-2")
                     span Buscar Propiedades
-                a(href="/favoritos/propiedades-favoritas" class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
+                a(href="/favoritos/propiedades-favoritas" class=`${ruta === "/favoritos/propiedades-favoritas" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
                     i(class="fas fa-heart mr-2")
                     span Favoritos
-                a(href="/auth/cerrar-sesion" class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
+                a(href="/auth/cerrar-sesion" class="text-white font-medium hover:text-white transition-colors duration-200 flex items-center hover:bg-red-500 p-2 rounded-md")
                     i(class="fas fa-sign-out-alt mr-2")
                     span Cerrar Sesión
 
@@ -33,5 +33,7 @@ nav(class="bg-gradient-to-r from-[#1E2939] to-[#101828] shadow-lg")
         div(class="py-4 border-t border-gray-700")
             div(class="flex flex-wrap justify-center gap-6")
                 each categoria in categorias
-                    a(href=`/propiedades/categorias/${categoria.id}` class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")
-                        span= categoria.nombre
+                    if ruta === '/propiedades/categorias/' + categoria.id
+                        a(href=`/propiedades/categorias/${categoria.id}` class="text-[#FF6819] font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")= categoria.nombre
+                    else
+                        a(href=`/propiedades/categorias/${categoria.id}` class="text-white font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center")= categoria.nombre

@@ -15,7 +15,7 @@ block contenido
                     p(class="mt-2 text-gray-600") Explora propiedades en el mapa y encuentra el lugar perfecto para ti
 
                 //- Filtros
-                div(class="grid grid-cols-1 md:grid-cols-4 gap-4")
+                div(class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white p-4 rounded-lg shadow-md")
                     //- Filtro de Categoría
                     div(class="flex flex-col")
                         label(for="categorias" class="block text-sm font-medium text-gray-700 mb-1") Categoría
@@ -64,53 +64,87 @@ block contenido
                     div(class="flex items-center space-x-2")
                         span(class="text-gray-600 text-sm")= `${propiedades.length} propiedades encontradas`
 
-                div(class="grid grid-cols-1 md:grid-cols-3 gap-6")
+                div(class="grid grid-cols-1 md:grid-cols-3 gap-8")
                     each propiedad in propiedades
-                        article(class="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden")
-                            //- Imagen y categoría
-                            div(class="relative h-56 overflow-hidden")
-                                img(src=`/uploads/${propiedad.imagen}` class="w-full h-full object-cover ")
-                                //- Overlay gradiente
-                                div(class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300")
-                                //- Categoría
+                        article(class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 transform hover:-translate-y-2 h-[500px] flex flex-col")
+                            //- Imagen y Categoría
+                            div(class="relative h-64 overflow-hidden flex-shrink-0")
+                                //- Imagen Principal
+                                img(
+                                    src=`/uploads/${propiedad.imagen}` 
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    alt=propiedad.titulo
+                                )
+                                
+                                //- Overlay Gradiente
+                                div(class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300")
+                                
+                                //- Etiqueta de Categoría
                                 div(class="absolute top-4 left-4")
-                                    span(class="bg-gradient-to-r from-[#FF6819] to-[#FF9F00] text-white px-4 py-1.5 rounded-full text-xs font-medium uppercase shadow-lg")= propiedad.categoriaId ? propiedad.categoriaRelacion.nombre : 'Sin categoría'
+                                    span(class="bg-gradient-to-r from-[#FF6819] to-[#FF9F00] text-white px-4 py-2 rounded-full text-xs font-bold uppercase shadow-lg")
+                                        = propiedad.categoriaId ? propiedad.categoriaRelacion.nombre : 'Sin categoría'
+                                
                                 //- Precio
                                 div(class="absolute bottom-4 right-4")
-                                    p(class="bg-white/90 backdrop-blur-sm text-gray-600 px-4 py-2 rounded-lg font-bold text-lg shadow-lg") $ #{propiedad.precio.toLocaleString()}
-
-                            //- Contenido
-                            div(class="p-5")
-                                //- Título
-                                h3(class="text-lg font-bold  text-gray-800 mb-4 line-clamp-1")= propiedad.titulo
+                                    p(class="bg-white/95 backdrop-blur-sm text-gray-800 px-4 py-2 rounded-xl font-bold text-xl shadow-lg")
+                                        | $ #{propiedad.precio.toLocaleString()}
                                 
+                                //- Botón de Favorito (corazón)
+                                div(class="absolute top-4 right-4")
+                                    button(
+                                        class=`w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-[#FF6819] hover:text-white transition-all duration-200 transform hover:scale-110 agregar-favorito ${favoritos.some(favorito => favorito.propiedadId === propiedad.id) ? 'text-red-500' : 'text-gray-400'}` 
+                                        data-propiedad-id=propiedad.id
+                                    )
+                                        i(class="fas fa-heart")
 
-                                //- Características principales
-                                div(class="grid grid-cols-3 gap-4 py-4 border-y border-gray-100")
-                                    div(class="flex flex-col items-center text-center")
-                                        div(class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-2 ")
-                                            i(class="fas fa-bed text-gray-600")
-                                        span(class="text-sm text-gray-600")= `${propiedad.habitaciones} Hab.`
-                                    div(class="flex flex-col items-center text-center")
-                                        div(class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-2 ")
-                                            i(class="fas fa-bath text-gray-600")
-                                        span(class="text-sm text-gray-600")= `${propiedad.wc} Baños`
-                                    div(class="flex flex-col items-center text-center")
-                                        div(class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-2 ")
-                                            i(class="fas fa-car text-gray-600")
-                                        span(class="text-sm text-gray-600")= `${propiedad.estacionamiento} Est.`
+                            //- Contenido de la Propiedad
+                            div(class="p-6 flex flex-col flex-grow")
+                                //- Título
+                                h3(class="text-xl font-bold text-gray-900 mb-3 line-clamp-1 group-hover:text-[#FF6819] transition-colors duration-200")
+                                    = propiedad.titulo
 
-                                //- Ubicación y botón
-                                div(class="mt-4 flex items-center justify-between")
-                                    div(class="flex items-center text-gray-600")
-                                        i(class="fas fa-map-marker-alt  mr-2")
-                                        span(class="text-sm truncate")= propiedad.calle
-                                    a(href=`/propiedades/${propiedad.id}` class="inline-flex items-center text-[#FF6819] hover:text-[#E55A0F] transition-colors duration-200 group-hover:translate-x-1 transition-transform duration-200")
-                                        span(class="text-sm font-medium mr-2") Ver detalles
+                                //- Características Principales
+                                div(class="grid grid-cols-3 gap-4 py-4 border-y border-gray-100 mb-4")
+                                    //- Habitaciones
+                                    div(class="flex flex-col items-center text-center")
+                                        div(class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mb-2 group-hover:bg-[#FF6819] group-hover:text-white transition-all duration-200")
+                                            i(class="fas fa-bed text-gray-600 group-hover:text-white")
+                                        span(class="text-sm font-medium text-gray-700")
+                                            = `${propiedad.habitaciones} Hab.`
+                                    
+                                    //- Baños
+                                    div(class="flex flex-col items-center text-center")
+                                        div(class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mb-2 group-hover:bg-[#FF6819] group-hover:text-white transition-all duration-200")
+                                            i(class="fas fa-bath text-gray-600 group-hover:text-white")
+                                        span(class="text-sm font-medium text-gray-700")
+                                            = `${propiedad.wc} Baños`
+                                    
+                                    //- Estacionamiento
+                                    div(class="flex flex-col items-center text-center")
+                                        div(class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mb-2 group-hover:bg-[#FF6819] group-hover:text-white transition-all duration-200")
+                                            i(class="fas fa-car text-gray-600 group-hover:text-white")
+                                        span(class="text-sm font-medium text-gray-700")
+                                            = `${propiedad.estacionamiento} Est.`
+
+                                //- Ubicación y Botón de Detalles
+                                div(class="flex items-center justify-between mt-auto")
+                                    //- Ubicación
+                                    div(class="flex items-center text-gray-600 flex-1 mr-4 line-clamp-1")
+                                        i(class="fas fa-map-marker-alt mr-2 text-[#FF6819]")
+                                        span(class="text-sm truncate")
+                                            = propiedad.calle
+                                    
+                                    //- Botón Ver Detalles
+                                    a(
+                                        href=`/propiedades/${propiedad.id}`
+                                        class="inline-flex items-center bg-gradient-to-r from-[#FF6819] to-[#FF8F17] text-white px-4 py-2 rounded-lg font-medium hover:from-[#E55A0F] hover:to-[#FF6819] transition-all duration-200 transform hover:scale-105 shadow-md"
+                                    )
+                                        span(class="text-sm mr-2") Ver detalles
                                         i(class="fas fa-arrow-right")
     include ../layout/footer.pug
 block scripts
     script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
     script(src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous")
     script(src="/js/mapaComprador.js")
+    script(src="/js/agregarFavorito.js")
 

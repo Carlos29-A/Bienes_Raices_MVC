@@ -6,6 +6,11 @@ block contenido
             include ../usuario/comprador-Sidebar/compradorSidebar.pug
             //- Contenido Principal
             div(class="flex-1 flex flex-col bg-gray-100")
+                // Titulo
+                div(class="bg-white p-4 shadow-md")
+                    div(class="max-w-7xl mx-auto")
+                        h1(class="text-3xl font-bold text-[#FF6819]") Mensajes del comprador #{remitente.nombre}
+                        p(class="text-gray-600") Gestiona y organiza los mensajes de los compradores
                 //- Contenedor de Mensajes
                 div(class="flex-1 p-8")
                     //Mensaje de exito
@@ -17,7 +22,7 @@ block contenido
                                     title("Close")
                                     path(d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z")
                     //- Lista de Conversaciones
-                    div(class="max-w-4xl mx-auto space-y-6")
+                    div(class="max-w-7xl mx-auto space-y-6")
                         //- Mensajes Recibidos
                         div(class="bg-white rounded-xl shadow-sm p-6 mb-8")
                             h2(class="text-xl font-semibold text-[#FF6819] mb-4 flex items-center")

@@ -5,10 +5,11 @@ import csrf from 'csurf'
 import db from './config/db.js'
 import authRouter from './routes/usuriosRoute.js'
 import propiedadesRouter from './routes/propiedadRoute.js'
-import { Usuario, Propiedad, Categoria, Favorito, Mensaje } from './models/index.js'
+import { Usuario, Propiedad, Categoria, Favorito, Mensaje, ComentarioCalificacion } from './models/index.js'
 import favoritosRouter from './routes/favoritosRoute.js'
 import mensajeRouter from './routes/mensajeRoute.js'
 import apiRoute from './routes/apiRoute.js'
+import comentarioCalificacionRouter from './routes/ComentarioCalificacion.js'
 import flash from 'connect-flash'
 import session from 'express-session'
 
@@ -48,7 +49,7 @@ app.use(csrf({ cookie: true }))
 app.use((req, res, next) => {
     // Variables locales para mensajes flash
     res.locals.mensajesFlash = req.flash('mensajeFlash')
-    res.locals.tipoFlash = req.flash('tipoFlash')
+    res.locals.tipoFlash = req.flash('tipoFlash')[0]
     next()
 })
 
@@ -78,6 +79,7 @@ app.use('/propiedades', propiedadesRouter)
 app.use('/favoritos', favoritosRouter)
 app.use('/mensajes', mensajeRouter)
 app.use('/api', apiRoute)
+app.use('/comentario-calificacion', comentarioCalificacionRouter)
 
 // Puerto
 const port = process.env.PORT || 3000

@@ -9,11 +9,9 @@ block contenido
             //- Encabezado
             header(class="bg-white border-b border-gray-200 px-8 py-6 shadow-sm")
                 div(class="flex items-center justify-between")
-                    div(class="flex items-center space-x-4")
-                        img(src="/img/Mensaje.png" alt="Mensaje" class="w-12 h-12")
-                        div
-                            h1(class="text-2xl font-bold text-[#FF6F17]") Mensajes Recibidos
-                            p(class="text-gray-600") Gestiona tus mensajes de propiedades
+                    div(class="flex flex-col space-y-2")
+                        h1(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Mensajes Recibidos
+                        p(class="text-gray-600") Gestiona tus mensajes de propiedades
             //- Mensajes de Exito de req flash
             if mensajesFlash.length > 0
                 div(class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert")

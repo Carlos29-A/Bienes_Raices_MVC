@@ -1,0 +1,1 @@
+start cmd.exe /k "cd C:\Users\Carlos\Documents\Cursos-Aprendizaje\Proyectos-Personales\Express\Bienes_Raices_MVC && npm run server"

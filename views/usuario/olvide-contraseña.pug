@@ -21,6 +21,8 @@ block contenido
                                     div(class="relative")
                                         i(class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400")
                                         input(type="email" name="email" id="email" placeholder="Ejm: usuario@gmail.com" class="w-full pl-10 pr-3 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200")
+                                    if errores && errores.length > 0
+                                        p(class="text-red-500 text-sm")= errores[0].msg	
                                 
                                 div(class="pt-6")
                                     input(type="submit" value="Enviar Instrucciones" class="w-full py-3 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-[#F99E00] hover:bg-[#F97101] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 cursor-pointer")
@@ -33,18 +35,4 @@ block contenido
                                     div(class="border-t border-gray-200 pt-4")
                                         p(class="text-sm text-gray-600") ¿No tienes una cuenta? 
                                             a(href="/auth/registro" class="font-medium text-[#F99E00] hover:text-[#F97101] font-bold") Regístrate aquí
-
-                // Panel de Errores
-                if errores && errores.length > 0
-                    div(class="md:w-80 px-4 py-8 bg-red-50 shadow-sm sm:rounded-lg sm:p-8 border-l-4 border-red-500")
-                        div(class="flex items-center space-x-3 mb-6")
-                            i(class="fas fa-exclamation-circle text-2xl text-red-500")
-                            h2(class="text-lg font-semibold text-red-700") Errores
-                        
-                        ul(class="space-y-3")
-                            each error in errores
-                                li(class="flex items-start space-x-2 text-sm text-red-600")
-                                    i(class="fas fa-times-circle mt-1")
-                                    span= error.msg
-
 block scripts

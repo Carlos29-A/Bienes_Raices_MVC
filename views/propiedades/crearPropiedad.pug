@@ -11,7 +11,9 @@ block contenido
             // Top Navigation
             header(class="bg-white shadow-lg")
                 div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
-                    h1(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Publicar Nueva Propiedad
+                    div(class="flex flex-col space-y-2")
+                        h1(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Publicar Nueva Propiedad
+                        p(class="text-gray-600") Publica una nueva propiedad para que los compradores puedan verla
                     div(class="flex items-center space-x-4")
                         div(class="relative")
                             button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
@@ -30,14 +32,9 @@ block contenido
                             
                             // Información Principal
                             div(class="space-y-6")
-                                div
+                                div(class="flex flex-col space-y-2") 
+                                    h1(class="text-2xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Paso 1 de 2
                                     h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Información de la Propiedad
-                                    
-                                    if errores
-                                        div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")                        
-                                            each error in errores
-                                                div(class="sm:col-span-3")
-                                                    p(class="text-red-500 text-sm")= error.msg
                                     p(class="mt-1 text-sm text-gray-500") Ingresa los detalles principales de la propiedad.
 
                                 div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
@@ -45,11 +42,19 @@ block contenido
                                         label(for="titulo" class="block text-sm font-medium text-gray-700") Título
                                         div(class="mt-1")
                                             input(type="text" name="titulo" id="titulo" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.titulo? oldInfo.titulo : '')
+                                        if errores && errores.length>0 
+                                            for error in errores
+                                                if error.path === 'titulo'
+                                                    p(class="text-red-500 text-sm")= error.msg
 
                                     div(class="sm:col-span-3")
                                         label(for="precio" class="block text-sm font-medium text-gray-700") Precio $
                                         div(class="mt-1")
                                             input(type="number" name="precio" id="precio" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.precio? oldInfo.precio : '')
+                                        if errores && errores.length>0 
+                                            for error in errores
+                                                if error.path === 'precio'
+                                                    p(class="text-red-500 text-sm")= error.msg
 
                                     div(class="sm:col-span-3")
                                         label(for="categoria" class="block text-sm font-medium text-gray-700") Categoría
@@ -58,6 +63,10 @@ block contenido
                                                 option(value="") -- Seleccione --
                                                 each categoria in categorias
                                                     option(value=categoria.id selected=oldInfo.categoria? oldInfo.categoria == categoria.id : false)= categoria.nombre
+                                        if errores && errores.length>0 
+                                            for error in errores
+                                                if error.path === 'categoria'
+                                                    p(class="text-red-500 text-sm")= error.msg
                                     div(class="sm:col-span-3")
                                         label(for="habitaciones" class="block text-sm font-medium text-gray-700") Habitaciones
                                         div(class="mt-1")
@@ -65,6 +74,10 @@ block contenido
                                                 option(value="") -- Seleccione --
                                                 each habitacion in [0,1, 2, 3, 4, 5]
                                                     option(value=habitacion selected=oldInfo.habitaciones? oldInfo.habitaciones == habitacion : false)= habitacion
+                                        if errores && errores.length>0 
+                                            for error in errores
+                                                if error.path === 'habitaciones'
+                                                    p(class="text-red-500 text-sm")= error.msg
 
                                     div(class="sm:col-span-3")
                                         label(for="wc" class="block text-sm font-medium text-gray-700") Baños
@@ -73,6 +86,10 @@ block contenido
                                                 option(value="") -- Seleccione --
                                                 each wc in [0,1, 2, 3, 4, 5]
                                                     option(value=wc selected=oldInfo.wc? oldInfo.wc == wc : false)= wc
+                                        if errores && errores.length>0 
+                                            for error in errores
+                                                if error.path === 'wc'
+                                                    p(class="text-red-500 text-sm")= error.msg
 
                                     div(class="sm:col-span-3")
                                         label(for="estacionamiento" class="block text-sm font-medium text-gray-700") Estacionamientos
@@ -81,6 +98,10 @@ block contenido
                                                 option(value="") -- Seleccione --
                                                 each estacionamiento in [0,1, 2, 3, 4, 5]
                                                     option(value=estacionamiento selected=oldInfo.estacionamiento? oldInfo.estacionamiento == estacionamiento : false)= estacionamiento
+                                        if errores && errores.length>0 
+                                            for error in errores
+                                                if error.path === 'estacionamiento'
+                                                    p(class="text-red-500 text-sm")= error.msg
 
                             // Ubicación
                             div(class="pt-8")
@@ -89,6 +110,10 @@ block contenido
                                     p(class="mt-1 text-sm text-gray-500") Especifica la ubicación de la propiedad.
 
                                 div(class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
+                                    
+
+                                    div(class="sm:col-span-6")
+                                        div(id="mapa" class="h-96 mt-4 rounded-lg shadow-lg")
                                     div(class="sm:col-span-3")
                                         label(for="calle" class="block text-sm font-medium text-gray-700") Calle
                                         div(class="mt-1")
@@ -104,9 +129,6 @@ block contenido
                                         div(class="mt-1")
                                             input(type="text" name="lng" id="lng" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.lng? oldInfo.lng : '')
 
-                                    div(class="sm:col-span-6")
-                                        div(id="mapa" class="h-96 mt-4 rounded-lg shadow-lg")
-
                             // Descripción
                             div(class="pt-8")
                                 div
@@ -117,6 +139,11 @@ block contenido
                                     label(for="descripcion" class="block text-sm font-medium text-gray-700") Descripción
                                     div(class="mt-1")
                                         textarea(name="descripcion" id="descripcion" rows="4" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.descripcion? oldInfo.descripcion : '')
+                                        if errores && errores.length >0
+                                            for error in errores
+                                                if error.path === 'descripcion'
+                                                    p(class="text-red-500 text-sm")= error.msg
+
                             // Botones de Acción
                             div(class="pt-8")
                                 div(class="flex justify-end space-x-4")
