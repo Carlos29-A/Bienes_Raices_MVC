@@ -165,7 +165,7 @@ const editarPropiedad = async (req, res) => {
     if (!propiedad) {
         return res.redirect('/auth/vendedor/panel')
     }
-
+    // Validar que la propiedad pertenece al usuario
     if (propiedad.usuarioId.toString() !== req.usuario.id.toString()) {
         return res.redirect('/auth/vendedor/panel')
     }
@@ -228,8 +228,11 @@ const actualizarPropiedad = async (req, res) => {
             calle: req.body.calle,
             categoriaId: req.body.categoria
         })
-
+        // Mandar mensaje de exito
+        req.flash('mensajeFlash', 'Propiedad actualizada correctamente')
+        req.flash('tipoFlash', 'exito')
         res.redirect('/propiedades/mis-propiedades')
+        
     } catch (error) {
         console.log(error)
         const categorias = await Categoria.findAll()

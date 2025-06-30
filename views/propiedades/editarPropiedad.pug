@@ -90,19 +90,19 @@ block contenido
 
                                 div(class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
                                     div(class="sm:col-span-3")
-                                        label(for="calle" class="block text-sm font-medium text-gray-700") Calle
+                                        label(for="calle" class="block text-sm font-medium text-gray-700 hidden") Calle
                                         div(class="mt-1")
-                                            input(type="text" name="calle" id="calle" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=propiedad.calle? propiedad.calle : '')
+                                            input(type="text" name="calle" id="calle" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200 hidden" value=propiedad.calle? propiedad.calle : '')
 
                                     div(class="sm:col-span-3")
-                                        label(for="lat" class="block text-sm font-medium text-gray-700") Latitud
+                                        label(for="lat" class="block text-sm font-medium text-gray-700 hidden") Latitud
                                         div(class="mt-1")
-                                            input(type="text" name="lat" id="lat" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=propiedad.lat? propiedad.lat : '')
+                                            input(type="text" name="lat" id="lat" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200 hidden" value=propiedad.lat? propiedad.lat : '')
 
                                     div(class="sm:col-span-3")
-                                        label(for="lng" class="block text-sm font-medium text-gray-700") Longitud
+                                        label(for="lng" class="block text-sm font-medium text-gray-700 hidden") Longitud
                                         div(class="mt-1")
-                                            input(type="text" name="lng" id="lng" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=propiedad.lng? propiedad.lng : '')
+                                            input(type="text" name="lng" id="lng" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200 hidden" value=propiedad.lng? propiedad.lng : '')
 
                                     div(class="sm:col-span-6")
                                         div(id="mapa" class="h-96 mt-4 rounded-lg shadow-lg")

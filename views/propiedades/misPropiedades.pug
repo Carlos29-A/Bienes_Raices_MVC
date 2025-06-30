@@ -20,6 +20,9 @@ block contenido
                             button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
                                 img(class="h-10 w-10 rounded-full" src="/img/avatar.png" alt=usuario.nombre)
                                 span= usuario.nombre
+                if mensajesFlash.length > 0 
+                    div(id="valorMensaje" class="hidden" data-show="true")
+                    include ../partials/MensajeModal.pug
 
             // Filtros Propiedades
             div(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 ")
@@ -49,6 +52,41 @@ block contenido
 block scripts
     script(src="/js/cambiarEstado.js")
     script(src="/js/filtrarPropiedades.js")
+    script.
+        const valorMensaje = document.getElementById('valorMensaje');
+                if (valorMensaje.dataset.show === 'true') {
+                    //- Mostrar el modal
+                    const modalMensaje = document.getElementById('modalMensaje');
+                    modalMensaje.classList.remove('hidden');
+
+                    //- Animacion de entrada
+                    setTimeout(() => {
+                        modalMensaje.querySelector('.bg-white').classList.remove('scale-95', 'opacity-0');
+                        modalMensaje.querySelector('.bg-white').classList.add('scale-100', 'opacity-100');
+                    }, 10);
+                }
+                //- Cerrar el modal cuando se haga click en el boton de aceptar
+                function cerrarModalMensajeEditar() {
+                    //- Encontrar el modal
+                    const modal = document.getElementById('modalMensaje');
+                    modal.classList.add('hidden');
+
+                    //- Animacion de salida
+                    setTimeout(() => {
+                        modal.querySelector('.bg-white').classList.remove('scale-100', 'opacity-100');
+                        modal.querySelector('.bg-white').classList.add('scale-95', 'opacity-0');
+                    }, 500);
+                }
+                //- Cerrar cuando se haga click fuera
+                document.getElementById('modalMensaje').addEventListener('click', function(e) {            
+                    if (e.target === this) cerrarModalMensajeEditar();
+                })
+                //- Cerrar con Escape
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') cerrarModalMensajeEditar();
+                })
+
+
                             
 
             
