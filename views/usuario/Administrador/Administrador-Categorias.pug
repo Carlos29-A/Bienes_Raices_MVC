@@ -17,47 +17,39 @@ block contenido
             //- Mensajes de Exito
             if mensajesFlash.length > 0
                 //- tener un valor que diga que si hay mensajes
+                include ../../partials/MensajeModal.pug
                 div(id="valorMensaje" class="hidden" data-show="true")
-                //- Crear un modal para mostrar el mensaje
-                div(id="modalMensaje" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden")
-                    div(class="bg-white rounded-2xl shadow-2xl max-w-sm w-full mx-4 transform transition-all duration-300 scale-95 opacity-0")
-                        //- Contenido del modal
-                        div(class="p-8 text-center")
-                            //- Icono
-                            div(class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6")
-                                i(class="fas fa-check text-green-500 text-2xl")
-                            //- Titulo y Mensaje
-                            h3(class="text-xl font-semibold text-gray-900 mb-3")= mensajesFlash[0]
-                            //- Botones
-                            div(class="flex justify-center gap-4")
-                                button(
-                                    onclick="cerrarModalMensaje()"
-                                    class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 cursor-pointer"
-
-                                )
-                                    i(class="fas fa-times mr-2")
-                                    | Cerrar
 
             //- Contenedor Principal
             div(class="p-8 bg-gray-100")
                 //- Barra de Acciones
                 div(class="flex justify-between items-center")
                     //- Buscador
-                    div(class="flex-1 max-w-md")
-                        div(class="relative")
+                    form(action="/auth/administrador/categorias" method="GET" class="flex-1 max-w-md flex items-end gap-4 ")
+                        div
+                            label(for="nombre" class="block text-sm font-medium text-gray-700 mb-1") Nombre de la Categoría
                             input(
                                 type="text"
+                                id="nombre"
+                                name="nombre"
                                 placeholder="Buscar categoría..."
-                                class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6819] focus:border-transparent"
+                                class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white placeholder:text-gray-400"
                             )
-                            i(class="fas fa-search absolute left-3 top-3 text-gray-400")
-                    
+                                
+                            
+                        //- Boton de Buscar
+                        button(
+                            type="submit"
+                            class="inline-flex items-center justify-center px-4  bg-[#FF6819] text-white rounded-lg hover:bg-[#E55A0F] transition-colors duration-200 shadow-sm hover:shadow-md cursor-pointer py-2 hover:shadow-lg"
+                        )
+                            i(class="fas fa-search mr-2")
+                            | Buscar
                     //- Botón Nueva Categoría
                     a(
                         href="/auth/administrador/categorias/crear"
-                        class="inline-flex items-center justify-center px-6 py-2 bg-[#FF6819] text-white rounded-lg hover:bg-[#E55A0F] transition-colors duration-200 shadow-sm hover:shadow-md cursor-pointer"
+                        class="inline-flex items-center justify-center px-4  bg-[#FF6819] text-white rounded-lg hover:bg-[#E55A0F] transition-colors duration-200 shadow-sm hover:shadow-md cursor-pointer"
                     )
-                        i(class="fas fa-plus mr-2")
+                        img(src="/img/agregarCategorias.png" class="w-15 h-15")
                         | Nueva Categoría
 
             //- Tabla de Categorías
@@ -72,119 +64,44 @@ block contenido
                         p(class="font-medium text-gray-900") Descripción
                     div(class="col-span-2")
                         p(class="font-medium text-gray-900") Propiedades
-                    div(class="col-span-2 text-right")
+                    div(class="col-span-2 text-center")
                         p(class="font-medium text-gray-900") Acciones
 
                 //- Lista de categorías
                 div(class="divide-y divide-gray-100 max-h-[calc(100vh-400px)] overflow-y-auto")
-                    //- Categoría 1
-                    each categoria in categorias 
-                        div(class="grid grid-cols-12 gap-4 p-4 hover:bg-gray-50 transition-colors duration-200 group")
-                            div(class="col-span-1 flex items-center")
-                                span(class="text-gray-600 font-medium")= categoria.id
-                            div(class="col-span-3 flex items-center")
-                                div(class="flex items-center space-x-3")
-                                    div
-                                        p(class="font-medium text-gray-900")= categoria.nombre
-                            div(class="col-span-4 flex items-center")
-                                p(class="text-gray-600")= categoria.descripcion
-                            div(class="col-span-2 flex items-center")
-                                div(class="flex flex-col")
-                                    span(class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium w-fit") #{propiedades.filter(propiedad => propiedad.categoriaId === categoria.id).length} propiedades
-                                    span(class="text-xs text-gray-500 mt-1") #{propiedades.filter(propiedad => propiedad.categoriaId === categoria.id).filter(propiedad => propiedad.publicado === true).length} propiedades  activas
-                            div(class="col-span-2 flex items-center justify-end")
-                                a(
-                                    href=`/auth/administrador/categorias/editar/${categoria.id}`
-                                    class="inline-flex items-center px-4 py-2 text-[#FF6819] hover:bg-orange-50 rounded-lg transition-colors duration-200"
-                                )
-                                    i(class="fas fa-edit mr-2")
-                                    | Editar
-                                button(type="submit" class="inline-flex items-center px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 cursor-pointer" onclick=`mostrarModalConfirmarEliminacion(${categoria.id})`)
-                                    i(class="fas fa-trash-alt mr-2")
-                                    | Eliminar
+                    if categorias.length === 0
+                        div(class="text-center text-gray-500 py-4")
+                            p(class="text-gray-500") No hay categorías que coincidan con la búsqueda
+                    else    
+                        //- Categoría 1
+                        each categoria in categorias 
+                            div(class="grid grid-cols-12 gap-4 p-4 hover:bg-gray-50 transition-colors duration-200 group")
+                                div(class="col-span-1 flex items-center")
+                                    span(class="text-gray-600 font-medium")= categoria.id
+                                div(class="col-span-3 flex items-center")
+                                    div(class="flex items-center space-x-3")
+                                        div
+                                            p(class="font-medium text-gray-900")= categoria.nombre
+                                div(class="col-span-4 flex items-center")
+                                    p(class="text-gray-600")= categoria.descripcion
+                                div(class="col-span-2 flex items-center")
+                                    div(class="flex flex-col")
+                                        span(class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium w-fit") #{propiedades.filter(propiedad => propiedad.categoriaId === categoria.id).length} propiedades
+                                        span(class="text-xs text-gray-500 mt-1") #{propiedades.filter(propiedad => propiedad.categoriaId === categoria.id).filter(propiedad => propiedad.publicado === true).length} propiedades  activas
+                                div(class="col-span-2 flex items-center justify-end")
+                                    a(
+                                        href=`/auth/administrador/categorias/editar/${categoria.id}`
+                                        class="inline-flex items-center px-4 py-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors duration-200 flex flex-col"
+                                    )
+                                        img(src="/img/editarCategorias.png" class="w-15 h-15")
+                                        | Editar
+                                    button(type="submit" class="inline-flex items-center px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 cursor-pointer flex flex-col" onclick=`abrirModalEliminarMensaje(${categoria.id}, 'Eliminar Categoría', '¿Estás seguro de que quieres eliminar esta categoría?', '/auth/administrador/categorias/eliminar/${categoria.id}')`)
+                                        img(src="/img/eliminarCategorias.png" class="w-15 h-15")
+                                        | Eliminar
 
             //- Crear un modal para confirmar la eliminación de una categoría
-            div(id="modalConfirmarEliminacion" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50")
-                div(class="bg-white rounded-2xl shadow-2xl max-w-sm w-full mx-4 transform transition-all duration-300 scale-95 opacity-0")
-                    //- Contenido del modal
-                    div(class="p-8 text-center")
-                        //- Icono
-                        div(class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6")
-                            i(class="fas fa-trash-alt text-red-500 text-2xl")
-                        //- Titulo y Mensaje
-                        h2(class="text-2xl font-bold text-gray-900 mb-4") Eliminar Categoría
-                        p(class="text-gray-600 mb-4") ¿Estás seguro de que deseas eliminar esta categoría?
-                        div(class="flex justify-center gap-4")
-                            button(id="btnCancelar" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 cursor-pointer" onclick="ocultarModalConfirmarEliminacion()")
-                                i(class="fas fa-times mr-2")
-                                | Cancelar
-                            form(method="POST" id="formEliminarCategoria")
-                                input(type="hidden" name="_csrf" value=csrfToken)
-                                button(id="btnEliminar" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 cursor-pointer")
-                                    i(class="fas fa-trash-alt mr-2")
-                                    | Eliminar
+            include ../../partials/MensajeEliminar.pug
 
 block scripts
-    script.
-        //- Recoger el valor del mensaje
-        const valorMensaje = document.getElementById('valorMensaje')
-        if (valorMensaje.dataset.show === 'true') {
-            //- Mostrar el modal
-            const modal = document.getElementById('modalMensaje')
-            modal.classList.remove('hidden')
-
-            setTimeout(() => {
-                modal.querySelector('.bg-white').classList.remove('scale-95', 'opacity-0')
-                modal.querySelector('.bg-white').classList.add('scale-100', 'opacity-100')
-            }, 10)
-        }
-
-        function cerrarModalMensaje() {
-            const modal = document.getElementById('modalMensaje')
-            modal.classList.add('hidden')
-
-            setTimeout(() => {
-                modal.querySelector('.bg-white').classList.remove('scale-100', 'opacity-100')
-                modal.querySelector('.bg-white').classList.add('scale-95', 'opacity-0')
-            }, 300)
-        }
-
-        //- Cerrar el modal al hacer click fuera del modal
-        document.getElementById('modalMensaje').addEventListener('click', (e) => {
-            if (e.target.id === 'modalMensaje') {
-                cerrarModalMensaje()
-            }
-        })  
-
-        //- crear la funcion para mostrar el modal de confirmacion de eliminacion
-        function mostrarModalConfirmarEliminacion(id) {
-            //- Actualizamos el form
-            const form = document.getElementById('formEliminarCategoria')
-            form.action = `/auth/administrador/categorias/eliminar/${id}`
-
-            //- Mostrar el modal
-            const modal = document.getElementById('modalConfirmarEliminacion')
-            modal.classList.remove('hidden')
-
-            setTimeout(() => {
-                modal.querySelector('.bg-white').classList.remove('scale-95', 'opacity-0')
-                modal.querySelector('.bg-white').classList.add('scale-100', 'opacity-100')
-            }, 10)
-        }
-        function ocultarModalConfirmarEliminacion() {
-            const modal = document.getElementById('modalConfirmarEliminacion')
-            modal.classList.add('hidden')
-
-            //- Animacion de salida
-            setTimeout(() => {
-                modal.querySelector('.bg-white').classList.remove('scale-100', 'opacity-100')
-                modal.querySelector('.bg-white').classList.add('scale-95', 'opacity-0')
-            }, 300)
-        }
-
-        //- Cerrar el modal al hacer click fuera del modal
-        document.getElementById('modalConfirmarEliminacion').addEventListener('click', (e) => {
-            if (e.target.id === 'modalConfirmarEliminacion') {
-                ocultarModalConfirmarEliminacion()
-                }
-        })
+    script(src="/js/agregarVentanaModal.js")
+    script(src="/js/ModalEliminar.js")

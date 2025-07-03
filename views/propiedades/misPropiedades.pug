@@ -4,88 +4,172 @@ block styles
     meta(name="csrf-token" content=csrfToken)
 
 block contenido
-    div(class="min-h-screen flex bg-gray-100")
+    div(class="min-h-screen flex bg-gray-50")
         include ../usuario/vendedor-Sidebar/Vendedor-Sidebar.pug
 
         // Main Content
         div(class="flex-1 pl-60")
             // Top Navigation
-            header(class="bg-white shadow-lg")
-                div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
-                    div(class="flex flex-col space-y-2")
-                        h1(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Mis Propiedades
-                        p(class="text-gray-600") Gestiona tus propiedades
+            header(class="bg-white shadow-sm border-b border-gray-200")
+                div(class="max-w-7xl mx-auto py-6 px-6 sm:px-8 lg:px-10 flex justify-between items-center")
                     div(class="flex items-center space-x-4")
-                        div(class="relative")
-                            button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
-                                img(class="h-10 w-10 rounded-full" src="/img/avatar.png" alt=usuario.nombre)
-                                span= usuario.nombre
+                        div
+                            h1(class="text-3xl font-bold text-[#F99E00]") Mis Propiedades
+                            p(class="text-sm text-gray-600") Gestiona y filtra tus propiedades
+                    
+                    div(class="flex items-center space-x-4")
+                        div(class="relative group")
+                            button(class="flex items-center space-x-3 text-gray-700 hover:text-gray-900 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100")
+                                img(class="h-8 w-8 rounded-full ring-2 ring-gray-200" src="/img/avatar.png" alt=usuario.nombre)
+                                span(class="font-medium")= usuario.nombre
+                                i(class="fas fa-chevron-down text-xs text-gray-400 group-hover:text-gray-600")
+                
                 if mensajesFlash.length > 0 
                     div(id="valorMensaje" class="hidden" data-show="true")
                     include ../partials/MensajeModal.pug
 
             // Filtros Propiedades
-            div(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 ")
-                div(class="flex items-center space-x-4 mt-4 max-w-7xl mx-auto border-2 border-gray-200 p-4 rounded-md bg-white ")
-                    h1(class="text-normal font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Filtrar propiedades :
-                    label(class="block text-sm font-medium text-gray-700") Estado
-                    select(class="border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:ring-opacity-50 px-4 py-2" id="estado_select")
-                        option(value="") --Seleccione--
-                        option(value=1 ) Publicado
-                        option(value=0 ) No Publicado
-                    label(class="block text-sm font-medium text-gray-700") Categoría
-                    select(class="border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:ring-opacity-50 px-4 py-2" id="categoria_select")
-                        option(value="") --Seleccione--
-                        each categoria in categorias
-                            option(value=categoria.id)= categoria.nombre
-                    label(class="block text-sm font-medium text-gray-700") Buscar
-                    input(type="text" class="border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:ring-opacity-50 px-4 py-2" id="buscar_input" placeholder="Buscar propiedades...")
+            main(class="max-w-7xl mx-auto py-8 px-6 sm:px-8 lg:px-10")
+                // Botón para mostrar/ocultar filtros
+                div(class="mb-6")
+                    button(id="toggleFiltros" class="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-200 text-sm font-medium text-gray-700 cursor-pointer")
+                        i(class="fas fa-filter text-[#F99E00]")
+                        span Mostrar Filtros
+                        i(class="fas fa-chevron-down text-xs text-gray-500 transition-transform duration-200" style="transition: transform 0.2s ease-in-out;")
                 
-                       
+                // Tarjeta de filtros (oculta por defecto)
+                div(id="filtrosContainer" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8 hidden" style="opacity: 0; transform: translateY(-10px); transition: all 0.2s ease-in-out;")
+                    // Header de filtros
+                    div(class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white")
+                        div(class="flex items-center justify-between")
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-filter text-[#F99E00] text-lg"></i>
+                                <h2 class="text-lg font-semibold text-gray-900">Filtros de Búsqueda</h2>
+                            </div>
+                            <button id="cerrarFiltros" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                                <i class="fas fa-times text-lg"></i>
+                            </button>
+                    
+                    // Contenido de filtros
+                    div(class="p-6")
+                        div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6")
+                            // Estado
+                            div(class="space-y-2")
+                                label(for="estado_select" class="block text-sm font-medium text-gray-700") Estado
+                                select(class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#F99E00] focus:border-transparent transition-all duration-200" id="estado_select")
+                                    option(value="") Todos los estados
+                                    option(value=1) Publicado
+                                    option(value=0) No Publicado
+                            
+                            // Categoría
+                            div(class="space-y-2")
+                                label(for="categoria_select" class="block text-sm font-medium text-gray-700") Categoría
+                                select(class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#F99E00] focus:border-transparent transition-all duration-200" id="categoria_select")
+                                    option(value="") Todas las categorías
+                                    each categoria in categorias
+                                        option(value=categoria.id)= categoria.nombre
+                            
+                            // Habitaciones
+                            div(class="space-y-2")
+                                label(for="habitaciones_select" class="block text-sm font-medium text-gray-700") Habitaciones
+                                select(class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#F99E00] focus:border-transparent transition-all duration-200" id="habitaciones_select")
+                                    option(value="") Cualquier cantidad
+                                    option(value=0) 0 habitaciones
+                                    option(value=1) 1 habitación
+                                    option(value=2) 2 habitaciones
+                                    option(value=3) 3 habitaciones
+                                    option(value=4) 4 habitaciones
+
+                            
+                            // Baños
+                            div(class="space-y-2")
+                                label(for="wc_select" class="block text-sm font-medium text-gray-700") Baños
+                                select(class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#F99E00] focus:border-transparent transition-all duration-200" id="wc_select")
+                                    option(value="") Cualquier cantidad
+                                    option(value=0) 0 baños
+                                    option(value=1) 1 baño
+                                    option(value=2) 2 baños
+                                    option(value=3) 3 baños
+                                    option(value=4) 4 baños
+
+                            
+                            // Estacionamientos
+                            div(class="space-y-2")
+                                label(for="estacionamiento_select" class="block text-sm font-medium text-gray-700") Estacionamientos
+                                select(class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#F99E00] focus:border-transparent transition-all duration-200" id="estacionamiento_select")
+                                    option(value="") Cualquier cantidad
+                                    option(value=0) 0 estacionamientos
+                                    option(value=1) 1 estacionamiento
+                                    option(value=2) 2 estacionamientos
+                                    option(value=3) 3 estacionamientos
+                                    option(value=4) 4 estacionamientos
+
+                            
+                            // Buscar
+                            div(class="space-y-2 md:col-span-2 lg:col-span-3 xl:col-span-2")
+                                label(for="buscar_input" class="block text-sm font-medium text-gray-700") Buscar por título
+                                input(type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#F99E00] focus:border-transparent transition-all duration-200" id="buscar_input" placeholder="Buscar propiedades...")
+                            
+                            // Botón limpiar filtros
+                            div(class="space-y-2 flex items-end")
+                                button(type="button" id="limpiar_filtros" class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm font-medium cursor-pointer")
+                                    i(class="fas fa-times mr-2")
+                                    | Limpiar Filtros
 
                 // Lista de Propiedades
-                div(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6")
-                    div(class="bg-white shadow overflow-hidden sm:rounded-md")
-                        ul(class="divide-y divide-gray-200")
+                div(class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden")
+                    // Header de resultados
+                    div(class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white")
+                        div(class="flex items-center justify-between")
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-list text-[#F99E00] text-lg"></i>
+                                <h2 class="text-lg font-semibold text-gray-900">Resultados</h2>
+                            </div>
+                            <div class="text-sm text-gray-600">
+                                <span id="contador_propiedades">0</span> propiedades encontradas
+                            </div>
+                    
+                    // Contenido de propiedades
+                    div(class="p-6")
+                        ul(class="space-y-4" id="lista_propiedades")
                             // Las propiedades se cargarán dinámicamente aquí
+
+        //- Modal de Confirmación de Eliminación
+    div(id="modalEliminar" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden")
+        div(class="bg-white rounded-2xl shadow-2xl max-w-sm w-full mx-4 transform transition-all duration-300 scale-95 opacity-0")
+            //- Contenido del Modal
+            div(class="p-8 text-center")
+                //- Icono
+                div(class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6")
+                    i(class="fas fa-trash text-red-500 text-2xl")
+                
+                //- Título y Mensaje
+                h3(class="text-xl font-semibold text-gray-900 mb-3") Eliminar Propiedad
+                p(class="text-gray-600 mb-6")
+                    | ¿Estás seguro de que quieres eliminar la propiedad 
+                    span(id="nombrePropiedad" class="font-medium text-gray-900")
+                    | ?
+
+            //- Botones
+            div(class="flex gap-3 px-8 pb-8")
+                button(
+                    onclick="cerrarModalEliminarPropiedad()"
+                    class="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors duration-200 font-medium cursor-pointer"
+                )
+                    | Cancelar
+                
+                form(id="formEliminar" method="POST" class="flex-1")
+                    input(type="hidden" name="_csrf" value=csrfToken)
+                    button(id="btnEliminar"
+                        type="submit"
+                        class="w-full px-4 py-3 bg-red-500 text-white rounded-xl hover:bg-red-800 transition-colors duration-200 font-medium cursor-pointer"
+                    )
+                        | Eliminar
      
 block scripts
     script(src="/js/cambiarEstado.js")
     script(src="/js/filtrarPropiedades.js")
-    script.
-        const valorMensaje = document.getElementById('valorMensaje');
-                if (valorMensaje.dataset.show === 'true') {
-                    //- Mostrar el modal
-                    const modalMensaje = document.getElementById('modalMensaje');
-                    modalMensaje.classList.remove('hidden');
-
-                    //- Animacion de entrada
-                    setTimeout(() => {
-                        modalMensaje.querySelector('.bg-white').classList.remove('scale-95', 'opacity-0');
-                        modalMensaje.querySelector('.bg-white').classList.add('scale-100', 'opacity-100');
-                    }, 10);
-                }
-                //- Cerrar el modal cuando se haga click en el boton de aceptar
-                function cerrarModalMensajeEditar() {
-                    //- Encontrar el modal
-                    const modal = document.getElementById('modalMensaje');
-                    modal.classList.add('hidden');
-
-                    //- Animacion de salida
-                    setTimeout(() => {
-                        modal.querySelector('.bg-white').classList.remove('scale-100', 'opacity-100');
-                        modal.querySelector('.bg-white').classList.add('scale-95', 'opacity-0');
-                    }, 500);
-                }
-                //- Cerrar cuando se haga click fuera
-                document.getElementById('modalMensaje').addEventListener('click', function(e) {            
-                    if (e.target === this) cerrarModalMensajeEditar();
-                })
-                //- Cerrar con Escape
-                document.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape') cerrarModalMensajeEditar();
-                })
-
+    script(src="/js/agregarVentanaModal.js")
 
                             
 

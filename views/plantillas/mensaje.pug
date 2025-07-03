@@ -1,9 +1,9 @@
 extends ../layout/index.pug
 
 block contenido
-    div(class="min-h-screen bg-gray-50 py-12 flex flex-col justify-center sm:py-16")
+    div(class="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 py-12 flex flex-col justify-center sm:py-16")
         div(class="py-3 sm:max-w-md sm:mx-auto w-full px-4 sm:px-0")
-            div(class="px-4 py-8 bg-white shadow-sm sm:rounded-lg sm:p-12 w-full")
+            div(class="px-4 py-8 bg-white sm:rounded-lg sm:p-12 w-full shadow-lg border border-gray-100")
                 div(class="max-w-sm mx-auto text-center")
                     // Icono según el tipo de mensaje
                     if tipo === 'error'
@@ -23,6 +23,6 @@ block contenido
                     p(class="text-gray-600 mb-8")= mensaje
                     
                     // Enlace a iniciar sesión
-                    a(href="/auth/login" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200")
+                    a(href="/auth/login" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#F99E00] hover:bg-[#F97101] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200")
                         i(class="fas fa-sign-in-alt mr-2")
                         | Iniciar Sesión

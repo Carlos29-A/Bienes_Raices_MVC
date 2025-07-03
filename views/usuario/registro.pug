@@ -1,11 +1,11 @@
 extends ../layout/index.pug
 
 block contenido
-    div(class="min-h-screen bg-gray-50 py-12 flex flex-col justify-center sm:py-16")
+    div(class="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 py-12 flex flex-col justify-center sm:py-16")
         div(class="py-3 sm:max-w-4xl sm:mx-auto w-full px-4 sm:px-0")
             div(class="flex flex-col md:flex-row gap-8")
                 // Formulario Principal
-                div(class="flex-1 px-4 py-8 bg-white shadow-sm sm:rounded-lg sm:p-12")
+                div(class="flex-1 px-4 py-8 bg-white  sm:rounded-lg sm:p-12 border border-gray-100 shadow-lg")
                     div(class="max-w-xl mx-auto")
                         div(class="flex items-center space-x-4 justify-center mb-12")
                             img(src="/img/agregarUsuario.png", alt="logo", class="w-20 h-20")
@@ -18,131 +18,91 @@ block contenido
                                     div
                                         label(for="nombre" class="block text-sm font-medium text-gray-600 mb-2") Nombres
                                         input(type="text" name="nombre" placeholder="Ingresa tu Nombre" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200" value=oldData ? oldData.nombre : '')
-                                    
+                                        - const nombreError = errores?.find(error => error.path === 'nombre');
+                                        if nombreError
+                                            p(class="text-red-500 text-sm")= nombreError.msg
                                     div
                                         label(for="apellido" class="block text-sm font-medium text-gray-600 mb-2") Apellidos
                                         input(type="text" name="apellido" placeholder="Ingresa tu Apellido" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200" value=oldData ? oldData.apellido : '')
-                                    
+                                        - const apellidoError = errores?.find(error => error.path === 'apellido');
+                                        if apellidoError
+                                            p(class="text-red-500 text-sm")= apellidoError.msg
                                     div
                                         label(for="email" class="block text-sm font-medium text-gray-600 mb-2") Correo Electrónico
                                         input(type="email" name="email" placeholder="Ejm: usuario@gmail.com" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200" value=oldData ? oldData.email : '')
-                                    
+                                        - const emailError = errores?.find(error => error.path === 'email');
+                                        if emailError
+                                            p(class="text-red-500 text-sm")= emailError.msg
+                                                    
                                     div
                                         label(for="telefono" class="block text-sm font-medium text-gray-600 mb-2") Teléfono
                                         input(type="tel" name="telefono" placeholder="Ejm: 923 456 789" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200" value=oldData ? oldData.telefono : '')
-                                    
+                                        - const telefonoError = errores?.find(error => error.path === 'telefono');
+                                        if telefonoError
+                                            p(class="text-red-500 text-sm")= telefonoError.msg
                                     div
                                         label(for="edad" class="block text-sm font-medium text-gray-600 mb-2") Edad
                                         input(type="number" name="edad" placeholder="Ingresa tu Edad" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200" value=oldData ? oldData.edad : '')
-                                    
+                                        - const edadError = errores?.find(error => error.path === 'edad');
+                                        if edadError
+                                            p(class="text-red-500 text-sm")= edadError.msg
                                     div(class="relative")
                                         label(for="password" class="block text-sm font-medium text-gray-600 mb-2") Password
                                         div(class="relative")
                                             input#password(type="password" name="password" placeholder="Tu Contraseña" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200")
                                             button(type="button" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePassword('password')")
                                                 i(class="fas fa-eye")
-                                    
+                                        - const passwordError = errores?.find(error => error.path === 'password');
+                                        if passwordError
+                                            p(class="text-red-500 text-sm")= passwordError.msg
                                     div(class="relative")
                                         label(for="password2" class="block text-sm font-medium text-gray-600 mb-2") Confirmar Password
                                         div(class="")
                                             input#password2(type="password" name="password2" placeholder="Confirmar Tu Contraseña" class="w-full px-2 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200")
                                             button(type="button" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePassword('password2')")
                                                 i(class="fas fa-eye")
-                                    
+                                        - const password2Error = errores?.find(error => error.path === 'password2');
+                                        if password2Error
+                                            p(class="text-red-500 text-sm")= password2Error.msg
                                     div
                                         label(class="block text-sm font-medium text-gray-600 mb-4") Tipo de Usuario
                                         div(class="grid grid-cols-2 gap-4")
                                             div(class="group")
                                                 input(type="radio" name="tipo" value="1" id="vendedor" class="hidden peer" checked)
-                                                label(for="vendedor" class="flex items-center justify-center p-6 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-blue-400 peer-checked:from-blue-400 peer-checked:to-blue-500 hover:border-blue-200 hover:bg-gray-50 transition-all duration-300 transform hover:scale-[1.02] peer-checked:scale-[1.02] peer-checked:shadow-lg peer-checked:shadow-blue-100")
+                                                label(for="vendedor" class="flex items-center justify-center p-6 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-[#F99E00] peer-checked:from-[#F99E00] peer-checked:to-[#F97101] hover:border-[#F99E00] hover:bg-gray-50 transition-all duration-300 transform hover:scale-[1.02] peer-checked:scale-[1.02] peer-checked:shadow-lg peer-checked:shadow-[#F99E00]")
                                                     i(class="fas fa-store text-2xl text-gray-600 transition-all duration-300 peer-checked:text-white mr-3")
                                                     div(class="flex flex-col justify-center items-center text-gray-700 peer-checked:text-white transition-all duration-300")
                                                         span(class="text-base font-semibold") Vendedor
                                                         p(class="text-xs mt-1 text-gray-500 peer-checked:text-white") Publicar Propiedades
-
-                                            
                                             div(class="group")
                                                 input(type="radio" name="tipo" value="2" id="comprador" class="hidden peer")
-                                                label(for="comprador" class="flex items-center justify-center p-6 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-blue-400  peer-checked:from-blue-400 peer-checked:to-blue-500 hover:border-blue-200 hover:bg-gray-50 transition-all duration-300 transform hover:scale-[1.02] peer-checked:scale-[1.02] peer-checked:shadow-lg peer-checked:shadow-blue-100")
+                                                label(for="comprador" class="flex items-center justify-center p-6 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-[#F99E00]  peer-checked:from-[#F99E00] peer-checked:to-[#F97101] hover:border-[#F99E00] hover:bg-gray-50 transition-all duration-300 transform hover:scale-[1.02] peer-checked:scale-[1.02] peer-checked:shadow-lg peer-checked:shadow-[#F99E00]")
                                                     i(class="fas fa-shopping-cart text-2xl text-gray-600 peer-checked:text-blue-50 mr-3")
                                                     div(class="flex flex-col justify-center items-center")
                                                         span(class="text-base font-semibold text-gray-700 peer-checked:text-blue-50") Comprador
                                                         p(class="text-xs mt-1 text-gray-500 peer-checked:text-blue-100") Buscar Propiedades
+                                        - const tipoError = errores?.find(error => error.path === 'tipo');
+                                        if tipoError
+                                            p(class="text-red-500 text-sm")= tipoError.msg
 
                                     div(class="flex justify-between items-center")
-                                        a(href="/auth/login" class="text-sm text-gray-500 hover:text-blue-500") ¿Ya tienes una cuenta? Inicia sesión
-                                        a(href="/auth/olvide-password" class="text-sm text-gray-500 hover:text-blue-500") ¿Olvidaste tu contraseña?
+                                        a(href="/auth/login" class="text-sm text-[#F99E00] hover:text-[#F97101]") ¿Ya tienes una cuenta? Inicia sesión
+                                        a(href="/auth/olvide-password" class="text-sm text-[#F99E00] hover:text-[#F97101]") ¿Olvidaste tu contraseña?
 
                                 div(class="pt-8")
                                     input(type="submit" value="Crear Cuenta" class="w-full py-3 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-[#F99E00] hover:bg-[#F97101] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 cursor-pointer ")
 
-                //- Modal de Errores
-                if errores && errores.length > 0
-                    div(id="modal-errores" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50")
-                        div(class="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4")
-                            //- Encabezado del Modal
-                            div(class="flex items-center justify-between p-4 border-b border-gray-200")
-                                div(class="flex items-center space-x-3")
-                                    i(class="fas fa-exclamation-circle text-2xl text-red-500")
-                                    h2(class="text-lg font-semibold text-red-700") Errores de Validación
-                                button(
-                                    onclick="cerrarModal()"
-                                    class="text-gray-400 hover:text-gray-500 focus:outline-none"
-                                )
-                                    i(class="fas fa-times text-xl")
-                            
-                            //- Contenido del Modal
-                            div(class="p-6")
-                                ul(class="space-y-3")
-                                    each error in errores
-                                        li(class="flex items-start space-x-2 text-sm text-red-600")
-                                            i(class="fas fa-times-circle mt-1")
-                                            span= error.msg
-                            
-                            //- Pie del Modal
-                            div(class="flex justify-end p-4 border-t border-gray-200")
-                                button(
-                                    onclick="cerrarModal()"
-                                    class="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                                )
-                                    | Entendido
-
 block scripts
+    //-    Ver contraseña cuando se clickea el icono de ojo
     script.
         function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            const icon = input.nextElementSibling.querySelector('i');
-            
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
+            const passwordInput = document.getElementById(inputId);
+            const toggleButton = document.querySelector(`button[onclick="togglePassword('${inputId}')"]`);
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
             } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+                passwordInput.type = 'password';
+                toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
             }
         }
-
-        // Función para cerrar el modal
-        function cerrarModal() {
-            const modal = document.getElementById('modal-errores');
-            if (modal) {
-                modal.classList.add('hidden');
-            }
-        }
-
-        // Cerrar modal al hacer clic fuera de él
-        window.onclick = function(event) {
-            const modal = document.getElementById('modal-errores');
-            if (event.target === modal) {
-                cerrarModal();
-            }
-        }
-
-        // Cerrar modal con la tecla Escape
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                cerrarModal();
-            }
-        });

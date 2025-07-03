@@ -1,6 +1,6 @@
 import express from 'express'
 import { registrarPropiedad, publicarPropiedad, agregarImagen, almacenarImagen, misPropiedades, editarPropiedad, actualizarPropiedad, eliminarPropiedad, cambiarEstado, obtenerPropiedades, buscarPropiedades, verPropiedad, obtenerCategorias, cambiarEstadoDesactivar, cambiarEstadoActivar } from '../controllers/propiedadControllers.js'
-import { obtenerPropiedadesCategoria } from '../controllers/apiControllers.js'
+import { obtenerPropiedadesCategoria, obtenerPropiedadesFiltradas } from '../controllers/apiControllers.js'
 import protegerRuta from '../middlewares/protegerRuta.js'
 import upload from '../middlewares/subirImagen.js'
 
@@ -38,6 +38,8 @@ router.get('/mis-propiedades', protegerRuta, misPropiedades)
 
 // Api para obtener todas las propiedades
 router.get('/api/propiedades', protegerRuta, obtenerPropiedades)
+// Api para obtener propiedades filtradas
+router.get('/api/propiedades/filtradas', protegerRuta, obtenerPropiedadesFiltradas)
 
 // Buscar propiedades
 router.get('/buscar', protegerRuta, buscarPropiedades)

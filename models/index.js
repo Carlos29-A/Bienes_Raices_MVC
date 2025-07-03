@@ -13,6 +13,7 @@ Favorito.belongsTo(Propiedad, { as: 'propiedadRelacion', foreignKey: 'propiedadI
 Mensaje.belongsTo(Usuario, { as: 'remitenteRelacion', foreignKey: 'remitenteId' })
 Mensaje.belongsTo(Usuario, { as: 'destinatarioRelacion', foreignKey: 'destinatarioId' })
 Mensaje.belongsTo(Propiedad, { as: 'propiedadRelacion', foreignKey: 'propiedadId' })
+Mensaje.belongsTo(Mensaje, { as: 'respuestaRelacion', foreignKey: 'respuestaId' })
 
 // Relaciones de comentarios y calificaciones
 ComentarioCalificacion.belongsTo(Usuario, { as: 'evaluadorRelacion', foreignKey: 'evaluadorId' })

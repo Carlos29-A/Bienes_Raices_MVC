@@ -38,8 +38,7 @@ block contenido
                     div(class="bg-white overflow-hidden  rounded-lg shadow-lg")
                         div(class="p-5")
                             div(class="flex items-center")
-                                div(class="flex-shrink-0 bg-green-500 rounded-md p-3")
-                                    i(class="fas fa-envelope text-white text-2xl")
+                                img(src="/img/EnviarMensaje.png" alt="Mensaje" class="h-15 w-15")
                                 div(class="ml-5 w-0 flex-1")
                                     dl
                                         dt(class="text-sm font-medium text-[#101828] truncate") Mensajes Respondidos
@@ -115,36 +114,4 @@ block contenido
                             p(class="text-gray-500 text-center") No hay mensajes recientes
                             
 block scripts
-    script.
-        const valorMensaje = document.getElementById('valorMensaje');
-        if (valorMensaje.dataset.show === 'true') {
-            //- Mostrar el modal
-            const modalMensaje = document.getElementById('modalMensaje');
-            modalMensaje.classList.remove('hidden');
-
-            //- Animacion de entrada
-            setTimeout(() => {
-                modalMensaje.querySelector('.bg-white').classList.remove('scale-95', 'opacity-0');
-                modalMensaje.querySelector('.bg-white').classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-        //- Cerrar el modal cuando se haga click en el boton de aceptar
-        function cerrarModalMensajeEditar() {
-            //- Encontrar el modal
-            const modal = document.getElementById('modalMensaje');
-            modal.classList.add('hidden');
-
-            //- Animacion de salida
-            setTimeout(() => {
-                modal.querySelector('.bg-white').classList.remove('scale-100', 'opacity-100');
-                modal.querySelector('.bg-white').classList.add('scale-95', 'opacity-0');
-            }, 500);
-        }
-        //- Cerrar cuando se haga click fuera
-        document.getElementById('modalMensaje').addEventListener('click', function(e) {            
-            if (e.target === this) cerrarModalMensajeEditar();
-        })
-        //- Cerrar con Escape
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') cerrarModalMensajeEditar();
-        })
+    script(src="/js/agregarVentanaModal.js")

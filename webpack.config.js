@@ -10,7 +10,8 @@ export default {
         agregarFavorito: './src/js/agregarFavorito.js',
         mapaComprador: './src/js/mapaComprador.js',
         filtrar: './src/js/filtrar.js',
-        filtrosAdmin: './src/js/filtrosAdmin.js'
+        filtrosAdmin: './src/js/filtrosAdmin.js',
+        agregarVentanaModal: './src/agregarVentanaModal.js'
     },
     output: {
         filename: '[name].js',

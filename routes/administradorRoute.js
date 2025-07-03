@@ -23,9 +23,11 @@ import {
     editarUsuarioAdministradorPost,
     editarPropiedadAdministrador,
     editarPropiedadAdministradorPost,
-    editarPerfilAdministradorPost
+    editarPerfilAdministradorPost,
+    eliminarMensajeAdministrador,
+    verMensajeAdministrador
 } from '../controllers/administradorControllers.js'
-import protegerRuta from '../middlewares/protegerRuta.js'
+import  protegerRuta from '../middlewares/protegerRuta.js'
 import upload from '../middlewares/subirImagen.js'
 
 const router = express.Router()
@@ -61,6 +63,8 @@ router.post('/categorias/editar/:id', protegerRuta, editarCategoriaAdministrador
 
 // Gestión de mensajes
 router.get('/mensajes', protegerRuta, panelAdministradorMensajes)
+router.post('/mensajes/eliminar/:id', protegerRuta, eliminarMensajeAdministrador)
+router.get('/mensajes/ver/:id', protegerRuta, verMensajeAdministrador)
 
 // Perfil del administrador
 router.get('/perfil', protegerRuta, panelAdministradorPerfil)

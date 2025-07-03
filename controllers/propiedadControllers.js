@@ -1,6 +1,14 @@
 import { check, validationResult } from 'express-validator'
 import { Usuario, Propiedad, Categoria, Favorito } from '../models/index.js'
 import { Op } from 'sequelize'
+import path from 'path'
+import fs from 'fs'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 const registrarPropiedad = async (req, res) => {
     const usuario = await Usuario.findOne({ where: { id: req.usuario.id } })
@@ -13,21 +21,20 @@ const registrarPropiedad = async (req, res) => {
         usuario,
         oldInfo: {},
         errores: [],
-        ruta: '/propiedades/crearPropiedad'
+        ruta: '/propiedades/crearPropiedad',
+        pagina: 'Crear Propiedad'
     })
 }
 
 const publicarPropiedad = async (req, res) => {
     await check('titulo').notEmpty().withMessage('El título es obligatorio').run(req)
     await check('precio').notEmpty().withMessage('El precio es obligatorio').run(req)
-    await check('precio').isInt({min: 50000}).withMessage('El precio debe ser mayor a 50000').run(req)
+    await check('precio').isInt({min: 30000}).withMessage('El precio debe ser mayor a 30000').run(req)
     await check('descripcion').notEmpty().withMessage('La descripción es obligatoria').run(req)
     await check('categoria').notEmpty().withMessage('La categoría es obligatoria').run(req)
     await check('habitaciones').notEmpty().withMessage('El número de habitaciones es obligatorio').run(req)
     await check('wc').notEmpty().withMessage('El número de baños es obligatorio').run(req)
     await check('estacionamiento').notEmpty().withMessage('El número de estacionamientos es obligatorio').run(req)
-    await check('lat').notEmpty().withMessage('La ubicación es obligatoria').run(req)
-    await check('lng').notEmpty().withMessage('La ubicación es obligatoria').run(req)
 
     const errores = validationResult(req)
     if (!errores.isEmpty()) {
@@ -37,7 +44,8 @@ const publicarPropiedad = async (req, res) => {
             usuario: req.usuario,
             oldInfo: req.body,
             errores: errores.array(),
-            ruta: '/propiedades/crearPropiedad'
+            ruta: '/propiedades/crearPropiedad',
+            pagina: 'Crear Propiedad'
         })
     }
 
@@ -67,7 +75,8 @@ const publicarPropiedad = async (req, res) => {
             usuario: req.usuario,
             oldInfo: req.body,
             errores: [{ msg: 'Hubo un error al publicar la propiedad' }],
-            ruta: '/propiedades/crearPropiedad'
+            ruta: '/propiedades/crearPropiedad',
+            pagina: 'Crear Propiedad'
         })
     }
 }
@@ -95,13 +104,13 @@ const agregarImagen = async (req, res) => {
         csrfToken: req.csrfToken(),
         propiedadId: id,
         usuario: req.usuario,
-        propiedad: propiedad
+        propiedad: propiedad,
+        pagina: 'Agregar Imagen'
     })
 }
 
 const almacenarImagen = async (req, res, next) => {
     const { id } = req.params
-    console.log('Subiendo imagen...')
     const propiedad = await Propiedad.findByPk(id)
 
     if (!propiedad) {
@@ -116,13 +125,17 @@ const almacenarImagen = async (req, res, next) => {
     try {
         // Verificar que se subió un archivo
         if (!req.file) {
-            console.log('No se subió ningún archivo')
             return res.redirect(`/propiedades/agregar-imagen/${id}`)
         }
 
         // Almacenar la imagen en la base de datos
         propiedad.imagen = req.file.filename
+        propiedad.publicado = true
         await propiedad.save()
+
+        // Mandar mensaje de exito
+        req.flash('mensajeFlash', 'Propiedad publicada correctamente')
+        req.flash('tipoFlash', 'exito')
 
         next()
     } catch (error) {
@@ -153,7 +166,8 @@ const misPropiedades = async (req, res) => {
         usuario,
         categorias,
         csrfToken: req.csrfToken(),
-        ruta: '/propiedades/mis-propiedades'
+        ruta: '/propiedades/mis-propiedades',
+        pagina: 'Mis Propiedades'
     })
 }
 
@@ -175,7 +189,8 @@ const editarPropiedad = async (req, res) => {
         categorias,
         usuario: req.usuario,
         csrfToken: req.csrfToken(),
-        oldInfo: propiedad
+        oldInfo: propiedad,
+        pagina: 'Editar Propiedad'
     })
 }
 
@@ -253,8 +268,19 @@ const eliminarPropiedad = async (req, res) => {
         return res.redirect('/auth/vendedor/panel')
     }
 
+    // Eliminar la imagen de la propiedad
+    if (propiedad.imagen) {
+        const pathImagen = path.join(__dirname, '../public/uploads/', propiedad.imagen)
+        if (fs.existsSync(pathImagen)) {
+            fs.unlinkSync(pathImagen)
+        }
+    }
+    
+    // Eliminar la propiedad
     await propiedad.destroy()
 
+    req.flash('mensajeFlash', 'Propiedad eliminada correctamente')
+    req.flash('tipoFlash', 'exito')
     res.redirect('/propiedades/mis-propiedades')
 }
 

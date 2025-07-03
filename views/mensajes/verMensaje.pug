@@ -215,7 +215,7 @@ block contenido
 
                                     //- Botones de Acción
                                     div(class="flex space-x-3")
-                                        if usuario.id === mensaje.remitenteId
+                                        if usuario.id === mensaje.remitenteId && mensaje.respuestaId === null
                                             a(
                                                 href=`/mensajes/editar/${mensaje.id}`
                                                 class="inline-flex items-center px-4 py-2 bg-[#FF6F17] text-white text-sm font-medium rounded-md hover:bg-[#FF8F17] transition-colors duration-200"
@@ -223,12 +223,13 @@ block contenido
                                                 i(class="fas fa-edit mr-2")
                                                 | Editar Mensaje
                                         
-                                        a(
-                                            href=`/mensajes/responder/${mensaje.id}`
-                                            class="inline-flex items-center px-4 py-2 bg-white border border-[#FF6F17] text-[#FF6F17] text-sm font-medium rounded-md hover:bg-orange-50 transition-colors duration-200"
-                                        )
-                                            i(class="fas fa-reply mr-2")
-                                            | Responder
+                                        if mensaje.respuestaId === null
+                                            a(
+                                                href=`/mensajes/responder/${mensaje.id}`
+                                                class="inline-flex items-center px-4 py-2 bg-white border border-[#FF6F17] text-[#FF6F17] text-sm font-medium rounded-md hover:bg-orange-50 transition-colors duration-200"
+                                            )
+                                                i(class="fas fa-reply mr-2")
+                                                | Responder
 
                                         if usuario.id === mensaje.remitenteId
                                             form(

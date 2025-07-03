@@ -100,11 +100,14 @@
     }
 
     //- Cerrar el modal al hacer click fuera del modal
-    document.getElementById('modalEliminarPropiedad').addEventListener('click', (e) => {
-        if (e.target.id === 'modalEliminarPropiedad') {
-            cerrarModalEliminarPropiedad()
-        }
-    })
+    const modalEliminarPropiedad = document.getElementById('modalEliminarPropiedad');
+    if (modalEliminarPropiedad) {
+        modalEliminarPropiedad.addEventListener('click', (e) => {
+            if (e.target.id === 'modalEliminarPropiedad') {
+                cerrarModalEliminarPropiedad();
+            }
+        });
+    }
 
     const mostrarPropiedades = (propiedades) => {
 
@@ -178,20 +181,19 @@
                                 />
                                 <p class="text-sm text-gray-600">${propiedad.usuarioRelacion.nombre}</p>
                             </div>
-
                             <div class="flex space-x-2">
                                 <a 
                                     href="/auth/administrador/propiedades/editar/${propiedad.id}"
-                                    class="inline-flex items-center px-3 py-1.5 text-sm text-[#FF6819] hover:bg-orange-50 rounded-lg transition-colors duration-200 cursor-pointer"
+                                    class="inline-flex items-center px-3 py-1.5 text-sm text-blue-500 hover:bg-blue-50 rounded-lg transition-colors duration-200 cursor-pointer"
                                 >
-                                    <i class="fas fa-edit mr-1.5"></i>
+                                    <img src="/img/editarPropiedad.png" class="w-15 h-15">
                                     Editar
                                 </a>
                                 <button
                                     class="inline-flex items-center px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 cursor-pointer"
-                                    onclick="eliminarPropiedad('${propiedad.id}')"
+                                    onclick="abrirModalEliminarMensaje('${propiedad.id}', 'Eliminar Propiedad', '¿Estás seguro de que quieres eliminar esta propiedad?', '/auth/administrador/propiedades/eliminar/${propiedad.id}')"
                                 >
-                                    <i class="fas fa-trash-alt mr-1.5"></i>
+                                    <img src="/img/eliminarPropiedad.png" class="w-15 h-15">
                                     Eliminar
                                 </button>
                             </div>

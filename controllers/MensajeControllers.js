@@ -127,8 +127,9 @@ const obtenerMensajes = async (req, res) => {
             }
         ]
     })
-    // Obtener los mensajes respondidos del comprador
-    const mensajesRespondidos = await Mensaje.findAll({
+    
+    // Obtener los mensajes recibidos del comprador
+    const mensajesRecibidos = await Mensaje.findAll({
         where : {
             destinatarioId : id,
         },
@@ -150,13 +151,18 @@ const obtenerMensajes = async (req, res) => {
         ]
     })
 
+    // Separar mensajes leídos y no leídos
+    const mensajesLeidos = mensajesRecibidos.filter(mensaje => mensaje.leido === true)
+    const mensajesNoLeidos = mensajesRecibidos.filter(mensaje => mensaje.leido === false)
+
     res.render('mensajes/mensajes', {
         titulo: 'Mensajes',
         mensajesEnviados,
         remitente,
         csrfToken: req.csrfToken(),
         ruta: '/mensajes/obtener',
-        mensajesRespondidos
+        mensajesLeidos,
+        mensajesNoLeidos
     })
 }
 
@@ -169,6 +175,7 @@ const obtenerMensajesVendedor = async (req, res) => {
         return res.redirect('/auth/login')
     }
 
+    // Mensajes recibidos por el vendedor
     const mensajes = await Mensaje.findAll({
         where : {
             destinatarioId : id
@@ -190,11 +197,47 @@ const obtenerMensajesVendedor = async (req, res) => {
         ]
     })
 
+    // Mensajes enviados por el vendedor (respuestas)
+    const mensajesRespondidos = await Mensaje.findAll({
+        where : {
+            remitenteId : id
+        },
+        include : [
+            {
+                model : Usuario,
+                as : "destinatarioRelacion",
+                attributes : ['nombre', 'email']
+            },
+            {
+                model : Propiedad,
+                as : "propiedadRelacion",
+                include : [
+                    {
+                        model : Categoria,
+                        as : "categoriaRelacion"
+                    }
+                ]
+            },
+            {
+                model : Usuario,
+                as : "remitenteRelacion",
+                attributes : ['nombre', 'email']
+            }
+        ]
+    })
+
+    const mensajesLeidos = mensajes.filter(mensaje => mensaje.leido === true)
+    const mensajesNoLeidos = mensajes.filter(mensaje => mensaje.leido === false)
+
     res.render('mensajes/mensajesVendedor', {
         mensajes,
         destinatario,
         csrfToken: req.csrfToken(),
-        ruta: '/mensajes/obtener/vendedor'
+        ruta: '/mensajes/obtener/vendedor',
+        pagina: 'Mensajes',
+        mensajesLeidos,
+        mensajesNoLeidos,
+        mensajesRespondidos
     })
 }
 const editarMensaje = async (req, res) => {
@@ -276,7 +319,7 @@ const editarMensajePost = async (req, res) => {
     }
 
 
-    // Validar si el editar el mensaje es el remitente
+    // Validar si el usuario puede editar el mensaje (debe ser el remitente)
     if(mensaje.remitenteId !== remitente.id){
         return res.redirect('/auth/login')
     }
@@ -304,7 +347,13 @@ const editarMensajePost = async (req, res) => {
 
     req.flash('mensajeFlash', 'Mensaje editado correctamente')
     req.flash('tipoFlash', 'exito')
-    res.redirect('/mensajes/obtener')
+    
+    // Redirigir a la página de mensajes según el tipo de usuario
+    if(remitente.tipo.toString() === '1') {
+        res.redirect('/mensajes/obtener/vendedor')
+    } else {
+        res.redirect('/mensajes/obtener')
+    }
     
 }
 
@@ -398,7 +447,8 @@ const verMensaje = async (req, res) => {
         mensaje,
         usuario,
         csrfToken: req.csrfToken(),
-        ruta
+        ruta,
+        pagina : 'Mensajes'
     })
 }
 
@@ -441,49 +491,36 @@ const responderMensaje = async (req, res) => {
     if(mensaje.destinatarioId !== id){
         return res.redirect('/auth/login')
     }
+    // Verificar si ya respondi el mensaje
+    if(mensaje.respuestaId === mensaje.id){
+        return res.redirect('/auth/login')
+    }
     // Determinar la ruta para el sidebar
     const ruta = remitente.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener'
     res.render('mensajes/responder', {
         mensaje,
         remitente,
         csrfToken: req.csrfToken(),
-        ruta
+        ruta,
+        pagina : 'Mensajes'
     })
 }
 
 const responderMensajePost = async (req, res) => {
 
-
+    // Obtener el id del remitente
     const { id } = req.usuario
+    // Obtener el id del mensaje
     const { id: mensajeId } = req.params
-    // El id del de la persona que ve el mensaje es el id del id del remitente
+    
+    // Obtener el remitente
     const remitente = await Usuario.findByPk(id)
-    // Obtener todos los mensajes del remitente
-    const mensajes = await Mensaje.findAll({
-        where : {
-            remitenteId : id
-        },
-        include : [
-            {
-                model : Usuario,
-                as : "destinatarioRelacion",
-                attributes : ['nombre', 'email', 'tipo']
-            },
-            {
-                model : Propiedad,
-                as : "propiedadRelacion",
-            },
-            {
-                model : Usuario,
-                as : "remitenteRelacion",
-                attributes : ['nombre', 'email', 'tipo']
-            }
-        ]
-    })
-    if (!remitente) {
+
+    if(!remitente){
         return res.redirect('/auth/login')
     }
-
+    
+    // Obtener el mensaje
     const mensaje = await Mensaje.findByPk(mensajeId, {
         include : [
             {
@@ -494,6 +531,12 @@ const responderMensajePost = async (req, res) => {
             {
                 model : Propiedad,
                 as : "propiedadRelacion",
+                include : [
+                    {
+                        model : Categoria,
+                        as : "categoriaRelacion"
+                    }
+                ]
             },
             {
                 model : Usuario,
@@ -501,47 +544,53 @@ const responderMensajePost = async (req, res) => {
                 attributes : ['nombre', 'email', 'tipo']
             }
         ]
+
     })
 
     if(!mensaje){
         return res.redirect('/auth/login')
     }
+
+    // Verificar si el usuario tiene permiso para responder el mensaje
+    if(mensaje.destinatarioId !== id){
+        return res.redirect('/auth/login')
+    }
+    // Verificar si el mensaje ya tiene una respuesta
+    if(mensaje.respuestaId){
+        return res.redirect('/auth/login')
+    }
     
-    // validar los datos del formulario
+    // Validar si el mensaje es requerido
     await check('respuesta')
         .notEmpty().withMessage('La respuesta es requerida')
         .isLength({ min: 10 }).withMessage('La respuesta debe tener al menos 10 caracteres')
         .run(req)
-    
+
     const errores = validationResult(req)
 
     if(!errores.isEmpty()){
         return res.render('mensajes/responder', {
+            errores : errores.array(),
             mensaje,
             remitente,
             csrfToken: req.csrfToken(),
-            ruta : '/mensajes/obtener/vendedor',
-            errores : errores.array()  
+            pagina : 'Mensajes'
         })
     }
-    const { respuesta } = req.body
-
-    try{
-        const mensajeCreado = await Mensaje.create({
-            mensaje : respuesta,
-            remitenteId : remitente.id,
-            destinatarioId : mensaje.remitenteId,
-            propiedadId : mensaje.propiedadId
-        })
-        const ruta = remitente.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener'
-
-        req.flash('mensajeFlash', 'Mensaje enviado correctamente')
-        req.flash('tipoFlash', 'exito')
-        res.redirect(ruta)
-
-    }catch(error){
-        console.log(error)
-    }
+    const ruta = remitente.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener'
+    // Crear la respuesta
+    const respuesta = await Mensaje.create({
+        mensaje : req.body.respuesta,
+        remitenteId : id,
+        destinatarioId : mensaje.remitenteId,
+        propiedadId : mensaje.propiedadId,
+        respuestaId : mensaje.id
+    })
+    //Enviar mensaje de exito
+    req.flash('mensajeFlash', 'Mensaje respondido correctamente')
+    req.flash('tipoFlash', 'exito')
+    res.redirect(ruta)
+    
 }
 
 

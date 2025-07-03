@@ -14,19 +14,50 @@ const __dirname = path.dirname(__filename)
 
 const registro = (req, res) => {
     res.render('usuario/registro', {
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        pagina: 'Registro'
     })
 }
 const crearUsuario = async (req, res) => {
 
-
+    // Validar nombre
     await check('nombre').notEmpty().withMessage('El nombre es requerido').run(req)
+    await check('nombre').not().matches(/[0-9]/).withMessage('El nombre no puede contener numeros').run(req)
+    // Validar apellido
     await check('apellido').notEmpty().withMessage('El apellido es requerido').run(req)
+    await check('apellido').not().matches(/[0-9]/).withMessage('El apellido no puede contener numeros').run(req)
+    // Validar email
     await check('email').notEmpty().withMessage('El email es requerido').run(req)
+    await check('email').isEmail().withMessage('El email no es valido').run(req)
+    // Validar telefono
     await check('telefono').notEmpty().withMessage('El telefono es requerido').run(req)
+    await check('telefono').isNumeric().withMessage('El telefono debe ser un numero').run(req)
+    await check('telefono').isLength({ min: 9, max: 9 }).withMessage('El telefono debe tener 9 digitos').run(req)
+    await check('telefono').matches(/^9[0-9]{8}$/).withMessage('El telefono debe ser de Perú').run(req)
+    // Validar edad
+    await check('edad').isInt({ min: 23, max: 80 }).withMessage('La edad debe ser mayor a 23 años y menor a 80 años').run(req)
     await check('edad').notEmpty().withMessage('La edad es requerida').run(req)
+    await check('edad').isNumeric().withMessage('La edad debe ser un numero').run(req)
+    // Validar contraseña
     await check('password').notEmpty().withMessage('La contraseña es requerida').run(req)
+    await check('password').isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres').run(req)
+    // Validar contraseña2
+    await check('password2').notEmpty().withMessage('La contraseña de confirmación es requerida').run(req)
+    await check('password2').isLength({ min: 8 }).withMessage('La contraseña de confirmación debe tener al menos 8 caracteres').run(req)
+    // Validar que las contraseñas coincidan
     await check('password2').equals(req.body.password).withMessage('Las contraseñas no coinciden').run(req)
+    // Validar tipo
+    await check('tipo').notEmpty().withMessage('El tipo de usuario es requerido').run(req)
+    
+
+
+    // Borrar los espacios en blanco
+    req.body.nombre = req.body.nombre.trim()
+    req.body.apellido = req.body.apellido.trim()
+    req.body.email = req.body.email.trim()
+    req.body.telefono = req.body.telefono.trim()
+    req.body.password = req.body.password.trim()
+    req.body.password2 = req.body.password2.trim()
 
 
     const { nombre, apellido, email, telefono, edad, password, tipo } = req.body
@@ -36,7 +67,8 @@ const crearUsuario = async (req, res) => {
         return res.render('usuario/registro', {
             csrfToken: req.csrfToken(),
             errores: errores.array(),
-            oldData: req.body
+            oldData: req.body,
+            pagina: 'Registro'
         })
     }
     // Verificar que el gmail no este registrado
@@ -44,8 +76,9 @@ const crearUsuario = async (req, res) => {
     if (usuarioExistente) {
         return res.render('usuario/registro', {
             csrfToken: req.csrfToken(),
-            errores: [{ msg: 'El correo electrónico ya está registrado' }],
-            oldData: req.body
+            errores: [{ msg: 'El correo electrónico ya está registrado', path: 'email' }],
+            oldData: req.body,
+            pagina: 'Registro'
         })
     }
 
@@ -71,7 +104,8 @@ const crearUsuario = async (req, res) => {
     res.render('plantillas/mensaje', {
         titulo: 'Cuenta creada correctamente',
         mensaje: 'Tu cuenta ha sido creada correctamente, se te ha enviado un correo de confirmación',
-        tipo: 'exito'
+        tipo: 'exito',
+        pagina: 'Registro'
     })
 }
 const confirmar = async (req, res) => {
@@ -95,12 +129,14 @@ const confirmar = async (req, res) => {
 }
 const olvideContraseña = (req, res) => {
     res.render('usuario/olvide-contraseña', {
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        pagina: 'Olvide Contraseña'
     })
 }
 const resetearPassword = async (req, res) => {
 
     await check('email').notEmpty().withMessage('El email es requerido').run(req)
+    await check('email').isEmail().withMessage('El email no es valido').run(req)
 
     const errores = validationResult(req)
     // Si hay errores
@@ -108,7 +144,8 @@ const resetearPassword = async (req, res) => {
         return res.render('usuario/olvide-contraseña', {
             csrfToken: req.csrfToken(),
             errores: errores.array(),
-            oldData: req.body
+            oldData: req.body,
+            pagina: 'Olvide Contraseña'
         })
     }
     const { email } = req.body
@@ -119,16 +156,18 @@ const resetearPassword = async (req, res) => {
     if (!usuario) {
         return res.render('usuario/olvide-contraseña', {
             csrfToken: req.csrfToken(),
-            errores: [{ msg: 'El correo electrónico no está registrado' }],
-            oldData: req.body
+            errores: [{ msg: 'El correo electrónico no está registrado', path: 'email' }],
+            oldData: req.body,
+            pagina: 'Olvide Contraseña'
         })
     }
     // Si la cuenta no esta confirmada
     if (usuario.confirmado === false) {
         return res.render('usuario/olvide-contraseña', {
             csrfToken: req.csrfToken(),
-            errores: [{ msg: 'Tu cuenta no está confirmada' }],
-            oldData: req.body
+            errores: [{ msg: 'Tu cuenta no está confirmada', path: 'email' }],
+            oldData: req.body,
+            pagina: 'Olvide Contraseña'
         })
     }
     usuario.token = generarId()
@@ -142,7 +181,8 @@ const resetearPassword = async (req, res) => {
     res.render('plantillas/mensaje', {
         titulo: 'Correo enviado correctamente',
         mensaje: 'Se ha enviado un correo para restablecer tu contraseña',
-        tipo: 'exito'
+        tipo: 'exito',
+        pagina: 'Olvide Contraseña'
     })
 }
 
@@ -202,19 +242,26 @@ const nuevaContraseña = async (req, res) => {
 }
 const login = (req, res) => {
     res.render('usuario/login', {
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        pagina: 'Iniciar Sesión'
     })
 }
 const iniciarSesion = async (req, res) => {
-    await check('email').notEmpty().withMessage('El email es requerido').run(req)
-    await check('password').notEmpty().withMessage('La contraseña es requerida').run(req)
 
+    // Validar email
+    await check('email').notEmpty().withMessage('El email es requerido').run(req)
+    await check('email').isEmail().withMessage('El email no es valido').run(req)
+    // Validar contraseña
+    await check('password').notEmpty().withMessage('La contraseña es requerida').run(req)
+    await check('password').isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres').run(req)
+    // Validar si hay errores
     const errores = validationResult(req)
 
     if (!errores.isEmpty()) {
         return res.render('usuario/login', {
             csrfToken: req.csrfToken(),
             errores: errores.array(),
+            pagina: 'Iniciar Sesión'
         })
     }
     const { email, password } = req.body
@@ -224,14 +271,16 @@ const iniciarSesion = async (req, res) => {
     if (!usuario) {
         return res.render('usuario/login', {
             csrfToken: req.csrfToken(),
-            errores: [{ msg: 'El correo electrónico no está registrado' }],
+            errores: [{ msg: 'El correo electrónico no está registrado', path: 'email' }],
+            pagina: 'Iniciar Sesión'
         })
     }
     // Verificar si la cuenta esta confirmada
     if (!usuario.confirmado) {
         return res.render('usuario/login', {
             csrfToken: req.csrfToken(),
-            errores: [{ msg: 'Tu cuenta no está confirmada' }],
+            errores: [{ msg: 'Tu cuenta no está confirmada', path: 'email' }],
+            pagina: 'Iniciar Sesión'
         })
     }
     // Comparar la contraseña
@@ -239,7 +288,8 @@ const iniciarSesion = async (req, res) => {
     if (!passwordCorrecto) {
         return res.render('usuario/login', {
             csrfToken: req.csrfToken(),
-            errores: [{ msg: 'La contraseña es incorrecta' }],
+            errores: [{ msg: 'La contraseña es incorrecta', path: 'password' }],
+            pagina: 'Iniciar Sesión'
         })
     }
 
@@ -312,7 +362,8 @@ const panelVendedor = async (req, res) => {
         propiedadesPublicadas,
         mensajes,
         mensajesRespondidos,
-        ruta: '/auth/vendedor/panel'
+        ruta: '/auth/vendedor/panel',
+        pagina: 'Panel de Vendedor'
     })
 }
 
@@ -383,78 +434,97 @@ const editarPerfil = async (req, res) => {
     res.render('usuario/editar-perfil', {
         titulo: 'Editar Perfil',
         usuario,
+        errores: [],
+        erroresPassword: [],
         csrfToken: req.csrfToken(),
-        ruta: '/auth/editar-perfil'
+        ruta: '/auth/editar-perfil',
+        pagina: 'Editar Perfil'
     })
 }
 const actualizarPerfil = async (req, res) => {
-
+    // Validar nombre
     await check('nombre').notEmpty().withMessage('El nombre es requerido').run(req)
+    await check('nombre').not().matches(/[0-9]/).withMessage('El nombre no puede contener numeros').run(req)
+    // Validar apellido
     await check('apellido').notEmpty().withMessage('El apellido es requerido').run(req)
+    await check('apellido').not().matches(/[0-9]/).withMessage('El apellido no puede contener numeros').run(req)
+    // Validar email
     await check('email').notEmpty().withMessage('El email es requerido').run(req)
+    await check('email').isEmail().withMessage('El email no es valido').run(req)
+    // Validar telefono
     await check('telefono').notEmpty().withMessage('El telefono es requerido').run(req)
+    await check('telefono').isNumeric().withMessage('El telefono debe ser un numero').run(req)
+    await check('telefono').isLength({ min: 9, max: 9 }).withMessage('El telefono debe tener 9 digitos').run(req)
+    await check('telefono').matches(/^9[0-9]{8}$/).withMessage('El telefono debe ser de Perú').run(req)
+    // Validar edad
+    await check('edad').isInt({ min: 23, max: 80 }).withMessage('La edad debe ser mayor a 23 años y menor a 80 años').run(req)
     await check('edad').notEmpty().withMessage('La edad es requerida').run(req)
+    await check('edad').isNumeric().withMessage('La edad debe ser un numero').run(req)
+
+    // Solo validar contraseñas si se están enviando
+    if (req.body.password_actual || req.body.password_nueva || req.body.password_confirmar) {
+        await check('password_actual').notEmpty().withMessage('La contraseña actual es requerida').run(req)
+        await check('password_nueva').notEmpty().withMessage('La contraseña nueva es requerida').run(req)
+        await check('password_confirmar').notEmpty().withMessage('La contraseña de confirmación es requerida').run(req)
+        await check('password_confirmar').equals(req.body.password_nueva).withMessage('Las contraseñas no coinciden').run(req)
+    }
+
+    // Borrar los espacios en blanco
+    req.body.nombre = req.body.nombre.trim()
+    req.body.apellido = req.body.apellido.trim()
+    req.body.email = req.body.email.trim()
+    req.body.telefono = req.body.telefono.trim()
 
     const errores = validationResult(req)
-
     const usuario = await Usuario.findOne({ where: { id: req.usuario.id } })
+
+    // Separar errores de información personal y contraseña
+    const erroresInfo = errores.array().filter(error => 
+        !['password_actual', 'password_nueva', 'password_confirmar'].includes(error.path)
+    )
+    const erroresPassword = errores.array().filter(error => 
+        ['password_actual', 'password_nueva', 'password_confirmar'].includes(error.path)
+    )
 
     if (!errores.isEmpty()) {
         return res.render('usuario/editar-perfil', {
             csrfToken: req.csrfToken(),
-            errores: errores.array(),
+            errores: erroresInfo,
+            erroresPassword: erroresPassword,
             oldData: req.body,
             usuario,
-            ruta: '/auth/editar-perfil'
+            ruta: '/auth/editar-perfil',
+            pagina: 'Editar Perfil'
         })
     }
     // Si quiere cambiar la contraseña
     if (req.body.password_actual) {
-        await check('password_nueva').notEmpty().withMessage('La contraseña nueva es requerida').run(req)
-        await check('password_confirmar').equals(req.body.password_nueva).withMessage('Las contraseñas no coinciden').run(req)
-
-        const errores = validationResult(req)
-
-        if (!errores.isEmpty()) {
-            return res.render('usuario/editar-perfil', {
-                csrfToken: req.csrfToken(),
-                erroresPassword: errores.array(),
-                usuario,
-                ruta: '/auth/editar-perfil'
-            })
-        }
         const passwordCorrecto = await usuario.verificarPassword(req.body.password_actual)
         if (!passwordCorrecto) {
             return res.render('usuario/editar-perfil', {
                 csrfToken: req.csrfToken(),
-                erroresPassword: [{ msg: 'La contraseña actual es incorrecta' }],
+                errores: [],
+                erroresPassword: [{ msg: 'La contraseña actual es incorrecta', path: 'password_actual' }],
                 usuario,
-                ruta: '/auth/editar-perfil'
-            })
-        }
-        if (req.body.password_nueva !== req.body.password_confirmar) {
-            return res.render('usuario/editar-perfil', {
-                csrfToken: req.csrfToken(),
-                erroresPassword: [{ msg: 'Las contraseñas no coinciden' }],
-                usuario,
-                ruta: '/auth/editar-perfil'
+                ruta: '/auth/editar-perfil',
+                pagina: 'Editar Perfil'
             })
         }
         if (req.body.password_nueva === req.body.password_actual) {
             return res.render('usuario/editar-perfil', {
                 csrfToken: req.csrfToken(),
-                erroresPassword: [{ msg: 'La contraseña nueva no puede ser igual a la contraseña actual' }],
+                errores: [],
+                erroresPassword: [{ msg: 'La contraseña nueva no puede ser igual a la contraseña actual', path: 'password_nueva' }],
                 usuario,
-                ruta: '/auth/editar-perfil'
+                ruta: '/auth/editar-perfil',
+                pagina: 'Editar Perfil'
             })
         }
         usuario.password = await bcrypt.hash(req.body.password_nueva, 10)
         await usuario.save()
-        res.render('plantillas/mensaje', {
-            titulo: 'Contraseña actualizada correctamente',
-            mensaje: 'Tu contraseña ha sido actualizada correctamente',
-            tipo: 'exito',
-        })
+        req.flash('mensajeFlash',   'Contraseña actualizada correctamente')
+        req.flash('tipoFlash', 'exito')
+        res.redirect('/auth/editar-perfil')
     }
 
 
@@ -465,6 +535,8 @@ const actualizarPerfil = async (req, res) => {
     usuario.telefono = telefono
     usuario.edad = edad
     await usuario.save()
+    req.flash('mensajeFlash', 'Perfil actualizado correctamente')
+    req.flash('tipoFlash', 'exito')
     res.redirect('/auth/editar-perfil')
 }
 

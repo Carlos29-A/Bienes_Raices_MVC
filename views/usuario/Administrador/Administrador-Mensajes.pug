@@ -15,109 +15,111 @@ block contenido
                             h1(class="text-2xl font-bold text-[#FF6F17]") Gestión de Mensajes
                             p(class="text-gray-600") Administra los mensajes del sistema
 
+            //- Mensaje de exito
+            if mensajesFlash.length > 0
+                //- Tener un valor que diga que si hay mensaje 
+                div(id="valorMensaje" class="hidden" data-show="true")
+                //- Crear un modal
+                include ../../partials/MensajeModal.pug
+
             //- Contenedor Principal
             div(class="flex-1 p-8 bg-gray-100")
                 //- Barra de Acciones
                 div(class="mb-6 flex justify-between items-center")
-                    //- Buscador
-                    div(class="flex-1 max-w-md")
-                        div(class="relative")
-                            input(
-                                type="text"
-                                placeholder="Buscar mensajes..."
-                                class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent"
-                            )
-                            i(class="fas fa-search absolute left-3 top-2.5 text-gray-400")
-
                     //- Filtros
-                    div(class="flex gap-4")
-                        select(class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
-                            option(value="") Todos los estados
-                            option(value="leido") Leídos
-                            option(value="no-leido") No leídos
-                        select(class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
-                            option(value="") Todos los tipos 
-                            option(value="vendedor") Vendedores
-                            option(value="comprador") Compradores
+                    form(action="/auth/administrador/mensajes" method="GET")
+                        div(class="flex gap-4")
+                            select(name="estado" class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
+                                option(value="") Todos los estados
+                                option(value="leido") Leídos
+                                option(value="no-leido") No leídos
+                            select(name="tipo" class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
+                                option(value="") Todos los tipos
+                                option(value="vendedor") Vendedores
+                                option(value="comprador") Compradores
+                            button(type="submit" class="px-4 py-2 bg-[#FF6F17] text-white rounded-lg hover:bg-[#F99E00] transition-colors duration-200 cursor-pointer")
+                                i(class="fas fa-search mr-2")
+                                | Buscar
+                if mensajes.length === 0
+                    div(class="text-center text-gray-600")
+                        p(class="text-lg font-medium") No hay mensajes que coincidan con los filtros
+                else
+                    //- Lista de Mensajes
+                    div(class="grid gap-8")
+                        each mensaje in mensajes
+                            div(class="relative bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 p-0 flex flex-col")
+                                //- Badge de estado leído/no leído
+                                if mensaje.leido
+                                    span(class="absolute top-4 right-4 px-2 py-0.5 rounded-full text-xs font-semibold bg-green-50 text-green-600 border border-green-200")
+                                        i(class="fas fa-check mr-1")
+                                        | Leído
+                                else
+                                    span(class="absolute top-4 right-4 px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700 border border-yellow-200")
+                                        i(class="fas fa-envelope mr-1")
+                                        | No leído
 
-                //- Lista de Mensajes
-                div(class="grid gap-6")
-                    each mensaje in mensajes
-                        div(class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow duration-200")
-                            //- Encabezado del Mensaje
-                            div(class="p-6 border-b border-gray-100")
-                                div(class="flex items-start justify-between")
-                                    //- Información del Remitente
-                                    div(class="flex items-start space-x-4")
-                                        img(
-                                            src="/img/avatar.png"
-                                            alt=mensaje.remitenteRelacion.nombre
-                                            class="w-12 h-12 rounded-full object-cover border-2 border-orange-100"
-                                        )
-                                        div
-                                            h3(class="text-lg font-semibold text-gray-900")= mensaje.remitenteRelacion.nombre
-                                            p(class="text-sm text-gray-600")= mensaje.remitenteRelacion.email
-                                            span(class=`inline-block mt-1 px-3 py-1 rounded-full text-sm font-medium ${
-                                                mensaje.remitenteRelacion.tipo.toString() === '1' 
-                                                    ? 'bg-orange-100 text-[#FF6F17]' 
-                                                    : 'bg-blue-100 text-blue-800'
-                                            }`)
-                                                = mensaje.remitenteRelacion.tipo.toString() === '1' ? 'Vendedor' : 'Comprador'
-
-                                    //- Estado del Mensaje
-                                    div(class="flex items-center space-x-2")
-                                        if mensaje.leido
-                                            span(class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800")
-                                                | Leído
-                                                
-                                        else
-                                            span(class="px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800")
-                                                | No Leído
-                                               
-
-                            //- Contenido del Mensaje
-                            div(class="p-6")
-                                //- Información de la Propiedad
-                                div(class="flex items-center gap-4 mb-4 p-3 bg-gray-50 rounded-lg")
+                                //- Encabezado de la Propiedad minimalista
+                                div(class="flex items-center gap-6 px-8 pt-8 pb-4")
                                     img(
                                         src=`/uploads/${mensaje.propiedadRelacion.imagen}`
                                         alt=mensaje.propiedadRelacion.titulo
-                                        class="w-16 h-16 object-cover rounded-lg"
+                                        class="w-32 h-32 object-cover rounded-lg border border-gray-200"
                                     )
-                                    div
-                                        p(class="font-medium text-gray-900")= mensaje.propiedadRelacion.titulo
-                                        p(class="text-sm text-[#FF6F17] font-bold")= `$ ${mensaje.propiedadRelacion.precio.toLocaleString()}`
-                                        div(class="flex items-center text-sm text-gray-600 mt-1")
-                                            img(src="/img/ubicacion.png" alt="Ubicación" class="w-4 h-4 mr-1")
-                                            = mensaje.propiedadRelacion.calle
+                                    div(class="flex-1 flex flex-col md:flex-row md:items-center md:justify-between gap-2")
+                                        div
+                                            p(class="font-semibold text-gray-900 text-lg mb-0.5")= mensaje.propiedadRelacion.titulo
+                                            p(class="text-[#FF6F17] font-bold text-base mb-0.5")= `$ ${mensaje.propiedadRelacion.precio.toLocaleString()}`
+                                        div(class="flex gap-4 text-sm text-gray-400 mt-1 md:mt-0")
+                                            span(class="flex items-center gap-1")
+                                                i(class="fas fa-tag text-xs")
+                                                = mensaje.propiedadRelacion.categoriaRelacion.nombre
+                                            span(class="flex items-center gap-1")
+                                                i(class="fas fa-map-marker-alt text-xs")
+                                                = mensaje.propiedadRelacion.calle
 
-                                //- Mensaje
-                                div(class="p-4 bg-gray-50 rounded-lg mb-4")
-                                    p(class="text-gray-700")= mensaje.mensaje
-                                    p(class="text-xs text-gray-500 mt-2")
-                                        i(class="fas fa-clock mr-2")
-                                        = mensaje.createdAt.toLocaleString()
+                                //- Remitente y Destinatario minimalista
+                                div(class="flex flex-col md:flex-row gap-4 px-8 pb-4")
+                                    //- Remitente
+                                    div(class="flex items-center gap-3 bg-gray-50 rounded-lg px-4 py-3 flex-1 min-w-0 shadow-sm border border-gray-100")
+                                        img(src="/img/avatar.png" alt=mensaje.remitenteRelacion.nombre class="w-10 h-10 rounded-full object-cover border border-gray-200")
+                                        div(class="truncate")
+                                            span(class="font-medium text-gray-900 text-sm truncate")= mensaje.remitenteRelacion.nombre
+                                            span(class="mx-1 text-gray-300") •
+                                            span(class="text-xs text-gray-500 truncate")= mensaje.remitenteRelacion.email
+                                            span(class=`ml-2 px-2 py-0.5 rounded-full text-xs font-semibold ${mensaje.remitenteRelacion.tipo.toString() === '1' ? 'bg-orange-50 text-[#FF6F17]' : 'bg-blue-50 text-blue-700'}`)
+                                                = mensaje.remitenteRelacion.tipo.toString() === '1' ? 'Vendedor' : 'Comprador'
+                                    //- Destinatario
+                                    div(class="flex items-center gap-3 bg-gray-50 rounded-lg px-4 py-3 flex-1 min-w-0 shadow-sm border border-gray-100")
+                                        img(src="/img/avatar.png" alt=mensaje.destinatarioRelacion.nombre class="w-10 h-10 rounded-full object-cover border border-gray-200")
+                                        div(class="truncate")
+                                            span(class="font-medium text-gray-900 text-sm truncate")= mensaje.destinatarioRelacion.nombre
+                                            span(class="mx-1 text-gray-300") •
+                                            span(class="text-xs text-gray-500 truncate")= mensaje.destinatarioRelacion.email
+                                            span(class=`ml-2 px-2 py-0.5 rounded-full text-xs font-semibold ${mensaje.destinatarioRelacion.tipo.toString() === '1' ? 'bg-orange-50 text-[#FF6F17]' : 'bg-blue-50 text-blue-700'}`)
+                                                = mensaje.destinatarioRelacion.tipo.toString() === '1' ? 'Vendedor' : 'Comprador'
 
-                                //- Acciones
-                                div(class="flex justify-end space-x-3")
+                                //- Mensaje minimalista
+                                div(class="bg-white rounded-lg px-8 py-6 mb-2 border-none shadow-none")
+                                    p(class="text-gray-800 text-base leading-relaxed whitespace-pre-line")= mensaje.mensaje
+
+                                //- Acciones minimalistas
+                                div(class="flex justify-end gap-3 px-8 pb-6")
                                     a(
                                         href=`/mensajes/ver/${mensaje.id}`
-                                        class="inline-flex items-center px-4 py-2 bg-[#FF6F17] text-white text-sm font-medium rounded-md hover:bg-[#FF8F17] transition-colors duration-200"
+                                        class="inline-flex items-center px-5 py-2 bg-[#FF6F17] text-white text-base font-semibold rounded-md hover:bg-[#F99E00] transition-colors duration-200 focus:outline-none"
                                     )
                                         i(class="fas fa-eye mr-2")
                                         | Ver Mensaje
                                     button(
-                                        onclick=`eliminarMensaje(${mensaje.id})`
-                                        class="inline-flex items-center px-4 py-2 bg-white border border-red-600 text-red-600 text-sm font-medium rounded-md hover:bg-red-50 transition-colors duration-200"
+                                        onclick=`abrirModalEliminarMensaje(${mensaje.id}, 'Eliminar Mensaje', '¿Estás seguro de que quieres eliminar este mensaje?', '/auth/administrador/mensajes/eliminar/${mensaje.id}')`
+                                        class="inline-flex items-center px-5 py-2 bg-white border border-red-500 text-red-600 text-base font-semibold rounded-md hover:bg-red-50 transition-colors duration-200 focus:outline-none cursor-pointer"
                                     )
                                         i(class="fas fa-trash-alt mr-2")
                                         | Eliminar
 
+    //- Modal de Confirmación de Eliminación
+    include ../../partials/MensajeEliminar.pug
+
 block scripts
-    script.
-        function eliminarMensaje(id) {
-            if(confirm('¿Estás seguro de que deseas eliminar este mensaje?')) {
-                // Aquí iría la lógica para eliminar el mensaje
-                console.log('Eliminando mensaje:', id);
-            }
-        }
+    script(src="/js/ModalEliminar.js")
+    script(src="/js/agregarVentanaModal.js")

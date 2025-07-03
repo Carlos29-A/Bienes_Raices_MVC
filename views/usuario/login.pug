@@ -1,15 +1,15 @@
 extends ../layout/index.pug
 
 block contenido
-    div(class="min-h-screen bg-gray-50 py-12 flex flex-col justify-center sm:py-16")
-        div(class="py-3 sm:max-w-md sm:mx-auto w-full px-4 sm:px-0")
-            div(class="px-4 py-8 bg-white shadow-sm sm:rounded-lg sm:p-12 w-full")
+    div(class="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 py-12 flex flex-col justify-center sm:py-16")
+        div(class="py-3 sm:max-w-md sm:mx-auto w-full px-4 sm:px-0" )
+            div(class="px-4 py-8 bg-white  sm:rounded-lg sm:p-12 w-full shadow-lg border border-gray-100")
                 div(class="max-w-sm mx-auto")
                     div(class="flex items-center  justify-center mb-12")
                         img(src="/img/usuarios.png", alt="logo", class="w-20 h-20")
                         h1(class="text-2xl font-semibold text-gray-900") Iniciar Sesión
                     
-                    form(action="" method="POST" class="space-y-8")
+                    form(action="" method="POST" class="space-y-8" novalidate)
                         input(type="hidden" name="_csrf" value=csrfToken)
                         div(class="space-y-6")
                             div
@@ -17,6 +17,9 @@ block contenido
                                 div(class="relative")
                                     i(class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400")
                                     input(type="email" name="email" id="email" placeholder="Ejm: usuario@gmail.com" class="w-full pl-10 pr-3 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200")
+                                - const emailError = errores?.find(error => error.path === 'email');
+                                if emailError
+                                    p(class="text-red-500 text-sm")= emailError.msg
                             
                             div(class="relative")
                                 label(for="password" class="block text-sm font-medium text-gray-600 mb-2") Password
@@ -25,6 +28,9 @@ block contenido
                                     input#password(type="password" name="password" placeholder="Tu Contraseña" class="w-full pl-10 pr-10 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-200")
                                     button(type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePassword('password')")
                                         i(class="fas fa-eye")
+                                - const passwordError = errores?.find(error => error.path === 'password');
+                                if passwordError
+                                    p(class="text-red-500 text-sm")= passwordError.msg
 
                             div(class="flex items-center justify-between")
                                 div(class="flex items-center")
@@ -39,73 +45,17 @@ block contenido
                                 p(class="text-sm text-gray-600") ¿No tienes una cuenta? 
                                     a(href="/auth/registro" class="font-medium text-[#F99E00] hover:text-[#F97101]") Regístrate aquí
 
-                //- Modal de Errores
-                if errores && errores.length > 0
-                    div(id="modal-errores" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50")
-                        div(class="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4")
-                            //- Encabezado del Modal
-                            div(class="flex items-center justify-between p-4 border-b border-gray-200")
-                                div(class="flex items-center space-x-3")
-                                    i(class="fas fa-exclamation-circle text-2xl text-red-500")
-                                    h2(class="text-lg font-semibold text-red-700") Errores de Validación
-                                button(
-                                    onclick="cerrarModal()"
-                                    class="text-gray-400 hover:text-gray-500 focus:outline-none"
-                                )
-                                    i(class="fas fa-times text-xl")
-                            
-                            //- Contenido del Modal
-                            div(class="p-6")
-                                ul(class="space-y-3")
-                                    each error in errores
-                                        li(class="flex items-start space-x-2 text-sm text-red-600")
-                                            i(class="fas fa-times-circle mt-1")
-                                            span= error.msg
-                            
-                            //- Pie del Modal
-                            div(class="flex justify-end p-4 border-t border-gray-200")
-                                button(
-                                    onclick="cerrarModal()"
-                                    class="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                                )
-                                    | Entendido
-
 block scripts
+    // ver Contraseña cuando se clickea el icono de ojo
     script.
         function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            const icon = input.nextElementSibling.querySelector('i');
-            
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
+            const passwordInput = document.getElementById(inputId);
+            const toggleButton = document.querySelector(`button[onclick="togglePassword('${inputId}')"]`);
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
             } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+                passwordInput.type = 'password';
+                toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
             }
         }
-
-        // Función para cerrar el modal
-        function cerrarModal() {
-            const modal = document.getElementById('modal-errores');
-            if (modal) {
-                modal.classList.add('hidden');
-            }
-        }
-
-        // Cerrar modal al hacer clic fuera de él
-        window.onclick = function(event) {
-            const modal = document.getElementById('modal-errores');
-            if (event.target === modal) {
-                cerrarModal();
-            }
-        }
-
-        // Cerrar modal con la tecla Escape
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                cerrarModal();
-            }
-        });

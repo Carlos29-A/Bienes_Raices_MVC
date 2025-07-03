@@ -3,181 +3,206 @@ block styles
     link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
     link(rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.13/dist/esri-leaflet-geocoder.css")
 block contenido
-    div(class="min-h-screen flex")
+    div(class="min-h-screen flex bg-gray-50")
         include ./Administrador-Sidebar/administradorSidebar.pug
 
         // Main Content
-        div(class="flex-1 ml-64")
+        div(class="flex-1 pl-60")
             // Top Navigation
-            header(class="bg-white shadow")
-                div(class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center")
-                    div(class="flex flex-col space-y-2")
-                        h1(class="text-3xl font-bold bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text") Crear Nueva Propiedad
-                        p(class="text-sm text-gray-500") Crea una nueva propiedad para tu usuario.
-
+            header(class="bg-white shadow-sm border-b border-gray-200")
+                div(class="max-w-7xl mx-auto py-6 px-6 sm:px-8 lg:px-10 flex justify-between items-center")
                     div(class="flex items-center space-x-4")
-                        div(class="relative")
-                            button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
-                                img(class="h-8 w-8 rounded-full" src="/img/avatar.png" alt="logo")
-                                span= usuario.nombre
+                        div
+                            h1(class="text-3xl font-bold text-[#F99E00]") Crear Nueva Propiedad
+                            p(class="text-sm text-gray-600") Crea una nueva propiedad para un usuario
+                    
+                    div(class="flex items-center space-x-4")
+                        div(class="relative group")
+                            button(class="flex items-center space-x-3 text-gray-700 hover:text-gray-900 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100")
+                                img(class="h-8 w-8 rounded-full ring-2 ring-gray-200" src="/img/avatar.png" alt=usuario.nombre)
+                                span(class="font-medium")= usuario.nombre
 
             // Agregar meta tag CSRF en el head
             meta(name="csrf-token" content=csrfToken)
 
             // Formulario de Propiedad
-            main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
-                div(class="px-4 py-6 sm:px-0")
-                    div(class="bg-white shadow rounded-lg")
-                        form(action="/auth/administrador/propiedades/crear" method="POST"  class="px-4 py-5 sm:p-6 space-y-8 divide-y divide-gray-200" novalidate)
-                            input(type="hidden" name="_csrf" value=csrfToken)
+            main(class="max-w-7xl mx-auto py-8 px-6 sm:px-8 lg:px-10")
+                // Breadcrumb y progreso
+                div(class="mb-8")
+                    div(class="flex items-center space-x-2 text-sm text-gray-600 mb-4")
+                        a(href="/auth/administrador/panel" class="hover:text-[#F99E00] transition-colors") Panel Administrador
+                        i(class="fas fa-chevron-right text-xs")
+                        span(class="text-gray-900 font-medium") Crear Propiedad
+                    
+                    // Barra de progreso
+                    div(class="w-full bg-gray-200 rounded-full h-2 mb-4")
+                        div(class="bg-gradient-to-r from-[#F99E00] to-[#F97101] h-2 rounded-full" style="width: 50%")
+                    
+                    div(class="flex items-center justify-between")
+                        div
+                            h2(class="text-3xl font-bold text-gray-900 mb-2") Paso 1 de 2
+                            p(class="text-gray-600") Información básica de la propiedad
+                        div(class="text-right")
+                            div(class="text-2xl font-bold text-[#F99E00]") 50%
+                            p(class="text-sm text-gray-500") En progreso
 
-                            // Información Principal
-                            div(class="space-y-6")
-                                //- Paso 1 de 2
-                                div(class="flex items-center space-x-4")
-                                    h3(class="text-lg leading-6 font-medium text-[#FF6F17]") Paso 1 de 2
+                // Tarjeta principal
+                div(class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden")
+                    form(action="/auth/administrador/propiedades/crear" method="POST" class="divide-y divide-gray-200" novalidate)
+                        input(type="hidden" name="_csrf" value=csrfToken)
+                        
+                        // Información Principal
+                        div(class="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white")
+                            div(class="flex items-center space-x-3")
+                                i(class="fas fa-info-circle text-[#F99E00] text-xl")
                                 div
-                                    h3(class="text-lg leading-6 font-medium text-[#FF6F17]") Información de la Propiedad
-                                    p(class="mt-1 text-sm text-gray-500") Ingresa los detalles principales de la propiedad.
-
-                                div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
-                                    div(class="sm:col-span-3")
-                                        label(for="titulo" class="block text-sm font-medium text-gray-700") Título
-                                        div(class="mt-1")
-                                            input(type="text" name="titulo" id="titulo" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.titulo? oldInfo.titulo : '')
-                                            if errores
-                                                each error in errores
-                                                    if error.path === 'titulo'
-                                                        p(class="text-red-500 text-sm")= error.msg
-
-                                    div(class="sm:col-span-3")
-                                        label(for="precio" class="block text-sm font-medium text-gray-700") Precio ($)
-                                        div(class="mt-1")
-                                            input(type="number" name="precio" id="precio" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.precio? oldInfo.precio : '')
-                                            if errores
-                                                each error in errores
-                                                    if error.path === 'precio'
-                                                        p(class="text-red-500 text-sm")= error.msg
-
-                                    div(class="sm:col-span-3")
-                                        label(for="categoria" class="block text-sm font-medium text-gray-700") Categoría
-                                        div(class="mt-1")
-                                            select(name="categoria" id="categoria" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
-                                                option(value="") -- Seleccione --
-                                                each categoria in categorias
-                                                    option(value=categoria.id selected=oldInfo.categoria? oldInfo.categoria == categoria.id : false)= categoria.nombre
-                                            if errores
-                                                each error in errores
-                                                    if error.path === 'categoria'
-                                                        p(class="text-red-500 text-sm")= error.msg
-
-                                    div(class="sm:col-span-3")
-                                        label(for="habitaciones" class="block text-sm font-medium text-gray-700") Habitaciones
-                                        div(class="mt-1")
-                                            select(name="habitaciones" id="habitaciones" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
-                                                option(value="") -- Seleccione --
-                                                each habitacion in [0,1, 2, 3, 4, 5]
-                                                    option(value=habitacion selected=oldInfo.habitaciones? oldInfo.habitaciones == habitacion : false)= habitacion
-                                            if errores
-                                                each error in errores
-                                                    if error.path === 'habitaciones'
-                                                        p(class="text-red-500 text-sm")= error.msg
-
-                                    div(class="sm:col-span-3")
-                                        label(for="wc" class="block text-sm font-medium text-gray-700") Baños
-                                        div(class="mt-1")
-                                            select(name="wc" id="wc" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
-                                                option(value="") -- Seleccione --
-                                                each wc in [0,1, 2, 3, 4, 5]
-                                                    option(value=wc selected=oldInfo.wc? oldInfo.wc == wc : false)= wc
-                                            if errores
-                                                each error in errores
-                                                    if error.path === 'wc'
-                                                        p(class="text-red-500 text-sm")= error.msg
-
-                                    div(class="sm:col-span-3")
-                                        label(for="estacionamiento" class="block text-sm font-medium text-gray-700") Estacionamientos
-                                        div(class="mt-1")
-                                            select(name="estacionamiento" id="estacionamiento" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
-                                                option(value="") -- Seleccione --
-                                                each estacionamiento in [0,1, 2, 3, 4, 5]
-                                                    option(value=estacionamiento selected=oldInfo.estacionamiento? oldInfo.estacionamiento == estacionamiento : false)= estacionamiento
-                                            if errores
-                                                each error in errores
-                                                    if error.path === 'estacionamiento'
-                                                        p(class="text-red-500 text-sm")= error.msg
-
-                            // Ubicación
-                            div(class="pt-8")
-                                div
-                                    h3(class="text-lg leading-6 font-medium text-[#FF6F17]") Ubicación
-                                    p(class="mt-1 text-sm text-gray-500") Especifica la ubicación de la propiedad.
-                                div(class="sm:col-span-6")
-                                    div(id="mapa" class="h-96 mt-4 rounded-lg shadow-lg")
-                                div(class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
-                                    div(class="sm:col-span-3")
-                                        label(for="calle" class="block text-sm font-medium text-gray-700") Calle
-                                        div(class="mt-1")
-                                            input(type="text" name="calle" id="calle" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.calle? oldInfo.calle : '')
-                                            if errores
-                                                each error in errores
-                                                    if error.path === 'calle'
-                                                        p(class="text-red-500 text-sm")= error.msg
-
-                                    div(class="sm:col-span-3")
-                                        label(for="lat" class="block text-sm font-medium text-gray-700") Latitud
-                                        div(class="mt-1")
-                                            input(type="text" name="lat" id="lat" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.lat? oldInfo.lat : '')
-                                            if errores
-                                                each error in errores
-                                                    if error.path === 'lat'
-                                                        p(class="text-red-500 text-sm")= error.msg
-
-                                    div(class="sm:col-span-3")
-                                        label(for="lng" class="block text-sm font-medium text-gray-700") Longitud
-                                        div(class="mt-1")
-                                            input(type="text" name="lng" id="lng" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.lng? oldInfo.lng : '')
-                                            if errores
-                                                each error in errores
-                                                    if error.path === 'lng'
-                                                        p(class="text-red-500 text-sm")= error.msg
-
-                                    
-
-                            // Descripción
-                            div(class="pt-8")
-                                div
-                                    h3(class="text-lg leading-6 font-medium text-[#FF6F17]") Descripción
-                                    p(class="mt-1 text-sm text-gray-500") Describe los detalles y características de la propiedad.
-                                    
-                                div(class="mt-6")
-                                    label(for="descripcion" class="block text-sm font-medium text-gray-700") Descripción
+                                    h3(class="text-xl font-semibold text-gray-900") Información de la Propiedad
+                                    p(class="text-gray-600") Ingresa los detalles principales de la propiedad
+                        
+                        div(class="p-8 space-y-8")
+                            div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
+                                div(class="sm:col-span-3")
+                                    label(for="titulo" class="block text-sm font-medium text-gray-700") Título
                                     div(class="mt-1")
-                                        textarea(name="descripcion" id="descripcion" rows="4" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.descripcion? oldInfo.descripcion : '')
-                                        if errores
-                                            each error in errores
-                                                if error.path === 'descripcion'
-                                                    p(class="text-red-500 text-sm")= error.msg
-                            //- Indicar a que usuario pertenece la propiedad
-                            div(class="pt-8 w-full")
-                                label(for="usuario" class="block text-sm font-medium text-gray-700") Usuario
-                                select(name="usuario" id="usuario" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
-                                    option(value="") -- Seleccione --
-                                    each usuario in usuarios
-                                        option(value=usuario.id selected=oldInfo.usuario? oldInfo.usuario == usuario.id : false)= usuario.nombre
-                                if errores
-                                    each error in errores
-                                        if error.path === 'usuario'
-                                            p(class="text-red-500 text-sm")= error.msg
-                            // Botones de Acción
-                            div(class="pt-8")
-                                div(class="flex justify-end space-x-4")
-                                    a(href="/auth/vendedor/panel" class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200")
-                                        i(class="fas fa-times mr-2")
-                                        | Cancelar
-                                    button(type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-[#FF6F17] hover:bg-[#FF8F17] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105 cursor-pointer")
-                                        i(class="fas fa-arrow-right mr-2")
-                                        | Siguiente
+                                        input(type="text" name="titulo" id="titulo" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.titulo? oldInfo.titulo : '')
+                                    - const tituloError = errores?.find(error => error.path === 'titulo');
+                                    if tituloError
+                                        p(class="text-red-500 text-sm")= tituloError.msg
+
+                                div(class="sm:col-span-3")
+                                    label(for="precio" class="block text-sm font-medium text-gray-700") Precio $
+                                    div(class="mt-1")
+                                        input(type="number" name="precio" id="precio" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.precio? oldInfo.precio : '')
+                                    - const precioError = errores?.find(error => error.path === 'precio');
+                                    if precioError
+                                        p(class="text-red-500 text-sm")= precioError.msg
+
+                                div(class="sm:col-span-3")
+                                    label(for="categoria" class="block text-sm font-medium text-gray-700") Categoría
+                                    div(class="mt-1")
+                                        select(name="categoria" id="categoria" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
+                                            option(value="") -- Seleccione --
+                                            each categoria in categorias
+                                                option(value=categoria.id selected=oldInfo.categoria? oldInfo.categoria == categoria.id : false)= categoria.nombre
+                                    - const categoriaError = errores?.find(error => error.path === 'categoria');
+                                    if categoriaError
+                                        p(class="text-red-500 text-sm")= categoriaError.msg
+
+                                div(class="sm:col-span-3")
+                                    label(for="habitaciones" class="block text-sm font-medium text-gray-700") Habitaciones
+                                    div(class="mt-1")
+                                        select(name="habitaciones" id="habitaciones" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
+                                            option(value="") -- Seleccione --
+                                            each habitacion in [0,1, 2, 3, 4, 5]
+                                                option(value=habitacion selected=oldInfo.habitaciones? oldInfo.habitaciones == habitacion : false)= habitacion
+                                    - const habitacionesError = errores?.find(error => error.path === 'habitaciones');
+                                    if habitacionesError
+                                        p(class="text-red-500 text-sm")= habitacionesError.msg
+
+                                div(class="sm:col-span-3")
+                                    label(for="wc" class="block text-sm font-medium text-gray-700") Baños
+                                    div(class="mt-1")
+                                        select(name="wc" id="wc" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
+                                            option(value="") -- Seleccione --
+                                            each wc in [0,1, 2, 3, 4, 5]
+                                                option(value=wc selected=oldInfo.wc? oldInfo.wc == wc : false)= wc
+                                    - const wcError = errores?.find(error => error.path === 'wc');
+                                    if wcError
+                                        p(class="text-red-500 text-sm")= wcError.msg
+
+                                div(class="sm:col-span-3")
+                                    label(for="estacionamiento" class="block text-sm font-medium text-gray-700") Estacionamientos
+                                    div(class="mt-1")
+                                        select(name="estacionamiento" id="estacionamiento" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
+                                            option(value="") -- Seleccione --
+                                            each estacionamiento in [0,1, 2, 3, 4, 5]
+                                                option(value=estacionamiento selected=oldInfo.estacionamiento? oldInfo.estacionamiento == estacionamiento : false)= estacionamiento
+                                    - const estacionamientoError = errores?.find(error => error.path === 'estacionamiento');
+                                    if estacionamientoError
+                                        p(class="text-red-500 text-sm")= estacionamientoError.msg
+
+                        // Ubicación
+                        div(class="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white")
+                            div(class="flex items-center space-x-3")
+                                i(class="fas fa-map-marker-alt text-[#F99E00] text-xl")
+                                div
+                                    h3(class="text-xl font-semibold text-gray-900") Ubicación
+                                    p(class="text-gray-600") Especifica la ubicación de la propiedad
+                        
+                        div(class="p-8")
+                            div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
+                                // Mapa
+                                div(class="sm:col-span-6")
+                                    div(id="mapa" class="h-96 mt-4 rounded-lg shadow-lg border border-gray-200")
+
+                                div(class="sm:col-span-3 hidden")
+                                    label(for="calle" class="block text-sm font-medium text-gray-700") Calle
+                                    div(class="mt-1")
+                                        input(type="text" name="calle" id="calle" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.calle? oldInfo.calle : '')
+                                    - const calleError = errores?.find(error => error.path === 'calle');
+                                    if calleError
+                                        p(class="text-red-500 text-sm")= calleError.msg
+
+                                div(class="sm:col-span-3 hidden")
+                                    label(for="lat" class="block text-sm font-medium text-gray-700") Latitud
+                                    div(class="mt-1")
+                                        input(type="text" name="lat" id="lat" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.lat? oldInfo.lat : '')
+                                    - const latError = errores?.find(error => error.path === 'lat');
+                                    if latError
+                                        p(class="text-red-500 text-sm")= latError.msg
+
+                                div(class="sm:col-span-3 hidden")
+                                    label(for="lng" class="block text-sm font-medium text-gray-700") Longitud
+                                    div(class="mt-1")
+                                        input(type="text" name="lng" id="lng" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.lng? oldInfo.lng : '')
+                                    - const lngError = errores?.find(error => error.path === 'lng');
+                                    if lngError
+                                        p(class="text-red-500 text-sm")= lngError.msg
+
+                        // Descripción
+                        div(class="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white")
+                            div(class="flex items-center space-x-3")
+                                i(class="fas fa-align-left text-[#F99E00] text-xl")
+                                div
+                                    h3(class="text-xl font-semibold text-gray-900") Descripción
+                                    p(class="text-gray-600") Describe los detalles y características de la propiedad
+                        
+                        div(class="p-8")
+                            label(for="descripcion" class="block text-sm font-medium text-gray-700") Descripción
+                            div(class="mt-1")
+                                textarea(name="descripcion" id="descripcion" rows="4" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=oldInfo.descripcion? oldInfo.descripcion : '')
+                                - const descripcionError = errores?.find(error => error.path === 'descripcion');
+                                if descripcionError
+                                    p(class="text-red-500 text-sm")= descripcionError.msg
+
+                        // Usuario
+                        div(class="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white")
+                            div(class="flex items-center space-x-3")
+                                i(class="fas fa-user text-[#F99E00] text-xl")
+                                div
+                                    h3(class="text-xl font-semibold text-gray-900") Asignar Vendedor
+                                    p(class="text-gray-600") Selecciona el vendedor al que pertenecerá la propiedad
+                        
+                        div(class="p-8")
+                            label(for="usuario" class="block text-sm font-medium text-gray-700") Vendedor
+                            select(name="usuario" id="usuario" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 transition-colors duration-200")
+                                option(value="") -- Seleccione --
+                                each usuario in usuarios
+                                    option(value=usuario.id selected=oldInfo.usuario? oldInfo.usuario == usuario.id : false)= usuario.nombre
+                            - const usuarioError = errores?.find(error => error.path === 'usuario');
+                            if usuarioError
+                                p(class="text-red-500 text-sm")= usuarioError.msg
+
+                        // Botones de Acción
+                        div(class="px-8 py-6 bg-gray-50")
+                            div(class="flex justify-end space-x-4")
+                                a(href="/auth/administrador/panel" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200 font-medium")
+                                    i(class="fas fa-times mr-2")
+                                    | Cancelar
+                                button(type="submit" class="px-8 py-3 bg-gradient-to-r from-[#F99E00] to-[#F97101] hover:from-[#F97101] hover:to-[#EA580C] text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#F99E00] focus:ring-offset-2 cursor-pointer")
+                                    i(class="fas fa-arrow-right mr-2")
+                                    | Siguiente
+
 block scripts
     link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
     link(rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.13/dist/esri-leaflet-geocoder.css")

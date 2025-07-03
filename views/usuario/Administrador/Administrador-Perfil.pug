@@ -73,46 +73,41 @@ block contenido
                                             label(for="nombre" class="block text-sm font-medium text-gray-700") Nombre
                                             div(class="mt-1")
                                                 input(type="text" name="nombre" id="nombre" value=usuario.nombre? usuario.nombre : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                if errores
-                                                    each error in errores
-                                                        if error.path === 'nombre'
-                                                            p(class="text-red-500 text-sm")= error.msg
+                                                -const nombre = errores?.find(error => error.path === 'nombre')
+                                                if nombre
+                                                    p(class="text-red-500 text-sm")= nombre.msg
 
                                         div(class="sm:col-span-3")
                                             label(for="apellido" class="block text-sm font-medium text-gray-700") Apellido
                                             div(class="mt-1")
                                                 input(type="text" name="apellido" id="apellido" value=usuario.apellido? usuario.apellido : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                if errores
-                                                    each error in errores
-                                                        if error.path === 'apellido'
-                                                            p(class="text-red-500 text-sm")= error.msg
+                                                -const apellido = errores?.find(error => error.path === 'apellido')
+                                                if apellido
+                                                    p(class="text-red-500 text-sm")= apellido.msg
 
                                         div(class="sm:col-span-3")
                                             label(for="email" class="block text-sm font-medium text-gray-700") Correo Electrónico
                                             div(class="mt-1")
                                                 input(type="email" name="email" id="email" value=usuario.email? usuario.email : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                if errores
-                                                    each error in errores
-                                                        if error.path === 'email'
-                                                            p(class="text-red-500 text-sm")= error.msg
+                                                -const email = errores?.find(error => error.path === 'email')
+                                                if email
+                                                    p(class="text-red-500 text-sm")= email.msg
 
                                         div(class="sm:col-span-3")
                                             label(for="telefono" class="block text-sm font-medium text-gray-700") Teléfono
                                             div(class="mt-1")
                                                 input(type="tel" name="telefono" id="telefono" value=usuario.telefono? usuario.telefono : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                if errores
-                                                    each error in errores
-                                                        if error.path === 'telefono'
-                                                            p(class="text-red-500 text-sm")= error.msg
+                                                -const telefono = errores?.find(error => error.path === 'telefono')
+                                                if telefono
+                                                    p(class="text-red-500 text-sm")= telefono.msg
 
                                         div(class="sm:col-span-3")
                                             label(for="edad" class="block text-sm font-medium text-gray-700") Edad
                                             div(class="mt-1")
                                                 input(type="number" name="edad" id="edad" value=usuario.edad? usuario.edad : '' required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                if errores
-                                                    each error in errores
-                                                        if error.path === 'edad'
-                                                            p(class="text-red-500 text-sm")= error.msg
+                                                -const edad = errores?.find(error => error.path === 'edad')
+                                                if edad
+                                                    p(class="text-red-500 text-sm")= edad.msg
 
                                 // Cambiar Contraseña
                                 div(class="pt-8")
@@ -124,28 +119,25 @@ block contenido
                                             label(for="password_actual" class="block text-sm font-medium text-gray-700") Contraseña Actual
                                             div(class="mt-1")
                                                 input(type="password" name="password_actual" id="password_actual" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                if errores
-                                                    each error in errores
-                                                        if error.path === 'password_actual'
-                                                            p(class="text-red-500 text-sm")= error.msg
+                                                -const password_actual = errores?.find(error => error.path === 'password_actual')
+                                                if password_actual
+                                                    p(class="text-red-500 text-sm")= password_actual.msg
 
                                         div(class="sm:col-span-4")
                                             label(for="password_nueva" class="block text-sm font-medium text-gray-700") Nueva Contraseña
                                             div(class="mt-1")
                                                 input(type="password" name="password_nueva" id="password_nueva" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                if errores
-                                                    each error in errores
-                                                        if error.path === 'password_nueva'
-                                                            p(class="text-red-500 text-sm")= error.msg
+                                                -const password_nueva = errores?.find(error => error.path === 'password_nueva')
+                                                if password_nueva
+                                                    p(class="text-red-500 text-sm")= password_nueva.msg
 
                                         div(class="sm:col-span-4")
                                             label(for="password_confirmar" class="block text-sm font-medium text-gray-700") Confirmar Nueva Contraseña
                                             div(class="mt-1")
                                                 input(type="password" name="password_confirmar" id="password_confirmar" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                if errores
-                                                    each error in errores
-                                                        if error.path === 'password_confirmar'
-                                                            p(class="text-red-500 text-sm")= error.msg
+                                                -const password_confirmar = errores?.find(error => error.path === 'password_confirmar')
+                                                if password_confirmar
+                                                    p(class="text-red-500 text-sm")= password_confirmar.msg
 
                                 // Botones de Acción
                                 div(class="pt-8")
@@ -237,36 +229,4 @@ block scripts
             });
         });
         //Modal de mensaje de exito
-    script.
-        const valorMensaje = document.getElementById('valorMensaje');
-        if (valorMensaje.dataset.show === 'true') {
-            //- Mostrar el modal
-            const modalMensaje = document.getElementById('modalMensaje');
-            modalMensaje.classList.remove('hidden');
-
-            //- Animacion de entrada
-            setTimeout(() => {
-                modalMensaje.querySelector('.bg-white').classList.remove('scale-95', 'opacity-0');
-                modalMensaje.querySelector('.bg-white').classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-        //- Cerrar el modal cuando se haga click en el boton de aceptar
-        function cerrarModalMensajeEditar() {
-            //- Encontrar el modal
-            const modal = document.getElementById('modalMensaje');
-            modal.classList.add('hidden');
-
-            //- Animacion de salida
-            setTimeout(() => {
-                modal.querySelector('.bg-white').classList.remove('scale-100', 'opacity-100');
-                modal.querySelector('.bg-white').classList.add('scale-95', 'opacity-0');
-            }, 500);
-        }
-        //- Cerrar cuando se haga click fuera
-        document.getElementById('modalMensaje').addEventListener('click', function(e) {            
-            if (e.target === this) cerrarModalMensajeEditar();
-        })
-        //- Cerrar con Escape
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') cerrarModalMensajeEditar();
-        })
+    

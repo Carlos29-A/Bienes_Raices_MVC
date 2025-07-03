@@ -1,6 +1,6 @@
 import express from 'express'
 import { registro, login, olvideContraseña, crearUsuario, confirmar, resetearPassword, reestablecerPassword, nuevaContraseña, iniciarSesion, panelVendedor, panelComprador, editarPerfil, actualizarPerfil, cerrarSesion, buscarPropiedades, misPropiedades, perfilUsuario } from '../controllers/usuarioControllers.js'
-import protegerRuta from '../middlewares/protegerRuta.js'
+import  protegerRuta  from '../middlewares/protegerRuta.js'
 
 const router = express.Router()
 

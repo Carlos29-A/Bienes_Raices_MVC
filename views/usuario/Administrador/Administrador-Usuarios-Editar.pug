@@ -27,46 +27,41 @@ block contenido
                             div
                                 label(for="nombre" class="block text-sm font-medium text-gray-600 mb-1") Nombre Completo
                                 input(type="text" id="nombre" name="nombre" value=usuarioEditar.nombre ? usuarioEditar.nombre : '' class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50")
-                                if errores && errores.length > 0
-                                    for error in errores
-                                        if error.path === 'nombre'
-                                            p(class="text-red-500 text-sm")= error.msg
+                                -const nombreError = errores?.find(error => error.path === 'nombre')
+                                if nombreError
+                                    p(class="text-red-500 text-sm")= nombreError.msg
                             
                             //- Apellido
                             div
                                 label(for="apellido" class="block text-sm font-medium text-gray-600 mb-1") Apellido
                                 input(type="text" id="apellido" name="apellido" value=usuarioEditar.apellido ? usuarioEditar.apellido : '' class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50")
-                                if errores && errores.length > 0
-                                    for error in errores
-                                        if error.path === 'apellido'
-                                            p(class="text-red-500 text-sm")= error.msg
+                                -const apellidoError = errores?.find(error => error.path === 'apellido')
+                                if apellidoError
+                                    p(class="text-red-500 text-sm")= apellidoError.msg
                             
                             //- Email
                             div
                                 label(for="email" class="block text-sm font-medium text-gray-600 mb-1") Correo Electrónico
                                 input(type="email" id="email" name="email" value=usuarioEditar.email ? usuarioEditar.email : '' class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50")
-                                if errores && errores.length > 0
-                                    for error in errores
-                                        if error.path === 'email'
-                                            p(class="text-red-500 text-sm")= error.msg
+                                -const emailError = errores?.find(error => error.path === 'email')
+                                if emailError
+                                    p(class="text-red-500 text-sm")= emailError.msg
                             
                             //- Teléfono
                             div
                                 label(for="telefono" class="block text-sm font-medium text-gray-600 mb-1") Teléfono
                                 input(type="tel" id="telefono" name="telefono" value=usuarioEditar.telefono ? usuarioEditar.telefono : '' class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50")
-                                if errores && errores.length > 0
-                                    for error in errores
-                                        if error.path === 'telefono'
-                                            p(class="text-red-500 text-sm")= error.msg
+                                -const telefonoError = errores?.find(error => error.path === 'telefono')
+                                if telefonoError
+                                    p(class="text-red-500 text-sm")= telefonoError.msg
                             
                             //- Edad
                             div
                                 label(for="edad" class="block text-sm font-medium text-gray-600 mb-1") Edad
                                 input(type="number" min="20" max="80" id="edad" name="edad" value=usuarioEditar.edad ? usuarioEditar.edad : '' class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50")
-                                if errores && errores.length > 0
-                                    for error in errores
-                                        if error.path === 'edad'
-                                            p(class="text-red-500 text-sm")= error.msg
+                                -const edadError = errores?.find(error => error.path === 'edad')
+                                if edadError
+                                    p(class="text-red-500 text-sm")= edadError.msg
                             //- Confirmación
                             div
                                 label(for="confirmado" class="block text-sm font-medium text-gray-600 mb-1") Confirmación
@@ -75,10 +70,9 @@ block contenido
                                     option(value="" selected=usuarioEditar.confirmado === "") Selecciona una opción
                                     option(value="1" selected=usuarioEditar.confirmado === true) Confirmado
                                     option(value="0" selected=usuarioEditar.confirmado === false) No Confirmado
-                                if errores && errores.length > 0
-                                    for error in errores
-                                        if error.path === 'confirmado'
-                                            p(class="text-red-500 text-sm")= error.msg
+                                -const confirmadoError = errores?.find(error => error.path === 'confirmado')
+                                if confirmadoError
+                                    p(class="text-red-500 text-sm")= confirmadoError.msg
                             //- Tipo de Usuario
                             div
                                 label(for="tipo" class="block text-sm font-medium text-gray-600 mb-1") Tipo de Usuario
@@ -87,10 +81,9 @@ block contenido
                                     option(value="" selected=usuarioEditar.tipo === "") Selecciona un tipo de usuario
                                     option(value="1" selected=usuarioEditar.tipo === "1") Vendedor
                                     option(value="2" selected=usuarioEditar.tipo === "2") Comprador
-                                if errores && errores.length > 0
-                                    for error in errores
-                                        if error.path === 'tipo'
-                                            p(class="text-red-500 text-sm")= error.msg
+                                -const tipoError = errores?.find(error => error.path === 'tipo')
+                                if tipoError
+                                    p(class="text-red-500 text-sm")= tipoError.msg
 
                     //- Seguridad
                     div(class="mt-8 space-y-6")
@@ -103,18 +96,16 @@ block contenido
                             div
                                 label(for="password" class="block text-sm font-medium text-gray-600 mb-1") Contraseña
                                 input(type="password" id="password" name="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50")
-                                if errores && errores.length > 0
-                                    for error in errores
-                                        if error.path === 'password'
-                                            p(class="text-red-500 text-sm")= error.msg
+                                -const passwordError = errores?.find(error => error.path === 'password')
+                                if passwordError
+                                    p(class="text-red-500 text-sm")= passwordError.msg
                             //- Confirmar Contraseña
                             div
                                 label(for="password_confirmar" class="block text-sm font-medium text-gray-600 mb-1") Confirmar Contraseña
                                 input(type="password" id="password_confirmar" name="password_confirmar" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50")
-                                if errores && errores.length > 0
-                                    for error in errores
-                                        if error.path === 'password_confirmar'
-                                            p(class="text-red-500 text-sm")= error.msg
+                                -const passwordConfirmarError = errores?.find(error => error.path === 'password_confirmar')
+                                if passwordConfirmarError
+                                    p(class="text-red-500 text-sm")= passwordConfirmarError.msg
 
                     //- Botones de Acción
                     div(class="mt-8 flex justify-end gap-4")
