@@ -7,6 +7,13 @@ block contenido
         
         //- Contenido Principal
         main(class="flex-1 p-6 ")
+
+            //- Mensajes de Exito
+            if mensajesFlash.length > 0
+                //- tener un valor que diga que si hay mensajes
+                include ../partials/MensajeModal.pug
+                div(id="valorMensaje" class="hidden" data-show="true")
+                
             //- Contenedor Principal
             div(class="max-w-7xl mx-auto")
                 //- Sección de Perfil
@@ -85,27 +92,14 @@ block contenido
                     
                     //- Formulario de Calificación
                     div(class="bg-gray-50 rounded-lg p-6 mb-8")
-                        h3(class="text-lg font-semibold text-gray-900 mb-4") Deja tu Calificación
-                        
-                        //- Mensajes Flash
-                        if mensajesFlash.length > 0
-                            if tipoFlash === 'error'
-                                each mensaje in mensajesFlash
-                                    div(class=`bg-red-100 border-red-400 text-red-700 px-4 py-3 rounded relative mb-4` role="alert")   
-                                        span(class="block sm:inline")= mensaje
-                            else
-                                each mensaje in mensajesFlash
-                                    div(class=`bg-green-100 border-green-400 text-green-700 px-4 py-3 rounded relative mb-4` role="alert")   
-                                        span(class="block sm:inline")= mensaje
-                            
-                        
+                        h3(class="text-lg font-semibold text-gray-900 mb-4") Deja tu Calificación                
                         form(action=`/comentario-calificacion/crear-comentario-calificacion/${usuario.id}` method="POST" novalidate)
                             input(type="hidden" name="_csrf" value=csrfToken)
                             
                             //- Contenedor de estrellas con radios
                             div(class="mb-4")
                                 label(for="calificacion" class="block text-sm font-medium text-gray-700 mb-2") Calificación
-                                div(class="flex items-center space-x-1")
+                                div(class="flex items-center space-x-1" id="contenedor-estrellas")
                                     each i in [1,2,3,4,5]
                                         div(class="relative")
                                             input(
@@ -117,10 +111,14 @@ block contenido
                                             )
                                             label(
                                                 for=`calificacion-${i}` 
-                                                class="text-2xl text-gray-300 peer-checked:text-[#FF6819] hover:text-[#FF6819] cursor-pointer"
+                                                class="text-2xl text-gray-300 hover:text-[#FF6819] cursor-pointer transition-colors duration-200"
+                                                data-rating=i
                                             )
                                                 i(class="fas fa-star")
-                            
+                                
+                            -const calificacion = errores?.find(error => error.path === 'calificacion')
+                                if calificacion
+                                    p(class="text-red-500 text-sm")= calificacion.msg
                             //- Comentario
                             div(class="mb-4")
                                 label(for="comentario" class="block text-sm font-medium text-gray-700 mb-2") Comentario
@@ -132,6 +130,9 @@ block contenido
                                     placeholder="Cuéntanos tu experiencia..."
                                     required
                                 )
+                                -const comentario = errores?.find(error => error.path === 'comentario')
+                                    if comentario
+                                        p(class="text-red-500 text-sm")= comentario.msg
                             button(
                                 type="submit"
                                 class="w-full bg-[#FF6819] text-white px-4 py-2 rounded-lg hover:bg-[#E55A0F] transition-colors duration-300 cursor-pointer"
@@ -139,96 +140,97 @@ block contenido
 
                     //- Lista de Calificaciones
                     div(class="space-y-6")
-                        //- Calificación 1
-                        div(class="border-b border-gray-200 pb-6")
-                            div(class="flex items-center justify-between mb-2")
-                                div(class="flex items-center space-x-3")
-                                    img(src="/img/avatar2.png" alt="Usuario" class="w-10 h-10 rounded-full")
-                                    div
-                                        h4(class="font-semibold text-gray-900") María González
-                                        p(class="text-sm text-gray-500") Hace 2 días
-                                div(class="flex items-center")
+                        each comentario in comentarios
+                            //- Calificación
+                            div(class="border-b border-gray-200 pb-6")
+                                //- Header con información del usuario y acciones
+                                div(class="flex items-center justify-between mb-3")
+                                    div(class="flex items-center space-x-3")
+                                        img(src="/img/avatar.png" alt="Usuario" class="w-10 h-10 rounded-full")
+                                        div
+                                            h4(class="font-semibold text-gray-900")= comentario.evaluadorRelacion.nombre
+                                            p(class="text-sm text-gray-500") Hace #{comentario.createdAt.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}  
+                                    //- Acciones (Editar y Eliminar)
+                                    if comentario.evaluadorId === evaluador.id
+                                        div(class="flex items-center space-x-3")
+                                            a(
+                                                href=`/comentario-calificacion/editar-comentario-calificacion/${comentario.id}` 
+                                                class="text-[#FF6819] hover:text-[#E55A0F] text-sm font-medium transition-colors duration-200"
+                                            )
+                                                i(class="fas fa-edit mr-1")
+                                                | Editar
+                                            button(
+                                                class="text-red-500 hover:text-red-700 text-sm font-medium transition-colors duration-200 cursor-pointer" 
+                                                onclick=`abrirModalEliminarMensaje(${comentario.id}, 'Eliminar Comentario', '¿Estás seguro de querer eliminar este comentario?', '/comentario-calificacion/eliminar-comentario-calificacion/${comentario.id}')`
+                                                type="button"
+                                            )
+                                                i(class="fas fa-trash mr-1")
+                                                | Eliminar
+                                            include ../partials/MensajeEliminar.pug
+                                
+                                //- Calificación con estrellas
+                                div(class="flex items-center mb-3")
                                     each i in [1,2,3,4,5]
-                                        i(class="fas fa-star text-[#FF6819]")
-                            p(class="text-gray-600") "Excelente servicio, muy profesional y atento. Me ayudó a encontrar la casa perfecta para mi familia."
+                                        i(class=`fas fa-star text-lg ${i <= comentario.calificacion ? 'text-[#FF6819]' : 'text-gray-300'}`)
+                                    span(class="ml-2 text-sm text-gray-600") #{comentario.calificacion} de 5 estrellas
+                                
+                                //- Comentario
+                                p(class="text-gray-600 leading-relaxed")= comentario.comentario
 
-                        //- Calificación 2
-                        div(class="border-b border-gray-200 pb-6")
-                            div(class="flex items-center justify-between mb-2")
-                                div(class="flex items-center space-x-3")
-                                    img(src="/img/avatar3.png" alt="Usuario" class="w-10 h-10 rounded-full")
-                                    div
-                                        h4(class="font-semibold text-gray-900") Juan Pérez
-                                        p(class="text-sm text-gray-500") Hace 1 semana
-                                div(class="flex items-center")
-                                    each i in [1,2,3,4]
-                                        i(class="fas fa-star text-[#FF6819]")
-                                    i(class="fas fa-star text-gray-300")
-                            p(class="text-gray-600") "Buen agente, conocedor del mercado. El proceso de compra fue fluido y transparente."
-
-                        //- Calificación 3
-                        div
-                            div(class="flex items-center justify-between mb-2")
-                                div(class="flex items-center space-x-3")
-                                    img(src="/img/avatar4.png" alt="Usuario" class="w-10 h-10 rounded-full")
-                                    div
-                                        h4(class="font-semibold text-gray-900") Ana Martínez
-                                        p(class="text-sm text-gray-500") Hace 2 semanas
-                                div(class="flex items-center")
-                                    each i in [1,2,3,4,5]
-                                        i(class="fas fa-star text-[#FF6819]")
-                            p(class="text-gray-600") "Carlos es un excelente profesional. Su conocimiento del mercado y su trato personalizado hicieron la diferencia."
 
     include ../layout/footer.pug
 
 block scripts
+    script(src="/js/agregarVentanaModal.js")
+    script(src="/js/ModalEliminar.js")
     script.
         // Script para el sistema de calificaciones
         document.addEventListener('DOMContentLoaded', function() {
-            const stars = document.querySelectorAll('[data-rating]');
-            let selectedRating = 0;
+            const contenedorEstrellas = document.getElementById('contenedor-estrellas');
+            const labels = contenedorEstrellas.querySelectorAll('label[data-rating]');
+            const inputs = contenedorEstrellas.querySelectorAll('input[type="radio"]');
+            let ratingSeleccionado = 0;
 
-            stars.forEach(star => {
-                star.addEventListener('click', function() {
-                    const rating = this.dataset.rating;
-                    selectedRating = rating;
-                    
-                    // Actualizar visualización de estrellas
-                    stars.forEach(s => {
-                        const starRating = s.dataset.rating;
-                        if (starRating <= rating) {
-                            s.classList.remove('text-gray-300');
-                            s.classList.add('text-[#FF6819]');
-                        } else {
-                            s.classList.remove('text-[#FF6819]');
-                            s.classList.add('text-gray-300');
-                        }
-                    });
+            // Función para actualizar las estrellas
+            function actualizarEstrellas(rating) {
+                labels.forEach((label, index) => {
+                    const ratingLabel = parseInt(label.dataset.rating);
+                    if (ratingLabel <= rating) {
+                        label.classList.remove('text-gray-300');
+                        label.classList.add('text-[#FF6819]');
+                    } else {
+                        label.classList.remove('text-[#FF6819]');
+                        label.classList.add('text-gray-300');
+                    }
+                });
+            }
+
+            // Event listener para cada label
+            labels.forEach(label => {
+                const rating = parseInt(label.dataset.rating);
+                
+                // Click en la estrella
+                label.addEventListener('click', function() {
+                    ratingSeleccionado = rating;
+                    actualizarEstrellas(rating);
                 });
 
-                // Efecto hover
-                star.addEventListener('mouseover', function() {
-                    const rating = this.dataset.rating;
-                    stars.forEach(s => {
-                        const starRating = s.dataset.rating;
-                        if (starRating <= rating) {
-                            s.classList.remove('text-gray-300');
-                            s.classList.add('text-[#FF6819]');
-                        }
-                    });
+                // Hover sobre la estrella
+                label.addEventListener('mouseenter', function() {
+                    actualizarEstrellas(rating);
                 });
 
-                star.addEventListener('mouseout', function() {
-                    stars.forEach(s => {
-                        const starRating = s.dataset.rating;
-                        if (starRating <= selectedRating) {
-                            s.classList.remove('text-gray-300');
-                            s.classList.add('text-[#FF6819]');
-                        } else {
-                            s.classList.remove('text-[#FF6819]');
-                            s.classList.add('text-gray-300');
-                        }
-                    });
+                // Salir del hover
+                label.addEventListener('mouseleave', function() {
+                    actualizarEstrellas(ratingSeleccionado);
+                });
+            });
+
+            // Event listener para los inputs (por si acaso)
+            inputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    ratingSeleccionado = parseInt(this.value);
+                    actualizarEstrellas(ratingSeleccionado);
                 });
             });
         }); 

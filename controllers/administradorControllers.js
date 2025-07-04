@@ -12,14 +12,6 @@ const __dirname = path.dirname(__filename)
 
 // Panel de administrador
 const panelAdministrador = async (req, res) => {
-    const {id} = req.usuario
-
-    const administrador = await Usuario.findOne({ where: { id } })
-
-    if(!administrador || administrador.tipo !== 3){
-        return res.redirect('/auth/login')
-    }
-
     // Propiedades
     const [propiedades, propiedadesActivas] = await Promise.all([
         Propiedad.findAll(
@@ -63,14 +55,6 @@ const panelAdministrador = async (req, res) => {
 }
 
 const panelAdministradorUsuarios = async (req, res) => {
-    const {id} = req.usuario
-
-    const administrador = await Usuario.findOne({ where: { id } })
-
-    // Si no es administrador, redirigir a la página de login
-    if(!administrador){
-        return res.redirect('/auth/login')
-    }
 
     // Recuperar los filtros
     const { tipo, estado, nombre, gmail } = req.query
@@ -95,13 +79,6 @@ const panelAdministradorUsuarios = async (req, res) => {
 }
 
 const panelAdministradorPropiedades = async (req, res) => {
-    const {id} = req.usuario
-
-    const administrador = await Usuario.findOne({ where: { id } })
-
-    if(!administrador){
-        return res.redirect('/auth/login')
-    }
 
     const propiedades = await Propiedad.findAll({
         include: [
@@ -126,13 +103,6 @@ const panelAdministradorPropiedades = async (req, res) => {
 }
 
 const panelAdministradorMensajes = async (req, res) => {
-    const {id} = req.usuario
-
-    const administrador = await Usuario.findOne({ where: { id } })
-
-    if(!administrador){
-        return res.redirect('/auth/login')
-    }
 
     const { estado, tipo } = req.query
 
@@ -177,13 +147,8 @@ const panelAdministradorMensajes = async (req, res) => {
 }
 
 const panelAdministradorPerfil = async (req, res) => {
-    const {id} = req.usuario
 
-    const administrador = await Usuario.findOne({ where: { id } })
-
-    if(!administrador){
-        return res.redirect('/auth/login')
-    }
+    const administrador =  await Usuario.findOne({ where: { id: req.usuario.id } })
 
     res.render('usuario/Administrador/Administrador-Perfil', {
         titulo: 'Perfil de Administrador',
@@ -194,12 +159,11 @@ const panelAdministradorPerfil = async (req, res) => {
 }
 
 const editarPerfilAdministradorPost = async (req, res) => {
-    const {id} = req.usuario
-    const administrador = await Usuario.findOne({ where: { id } })
 
-    if(!administrador){
-        return res.redirect('/auth/login')
-    }
+
+    // Recoger el administrador
+    const administrador = await Usuario.findOne({ where: { id: req.usuario.id } })
+
 
     // validar los datos
     await check('nombre').notEmpty().withMessage('El nombre es requerido').run(req)
@@ -274,12 +238,12 @@ const editarPerfilAdministradorPost = async (req, res) => {
     res.redirect('/auth/administrador/perfil')
 
 }
+
+
 // Acciones del administrador con respecto a los usuarios
 
 const crearUsuarioAdministrador = async (req, res) => {
-    const {id} = req.usuario
 
-    const administrador = await Usuario.findOne({ where: { id } })
     // Usuarios
     const usuarios = await Usuario.findAll({where: {tipo: { [Op.or]: [1, 2] }}})
     // Propiedades
@@ -288,9 +252,6 @@ const crearUsuarioAdministrador = async (req, res) => {
     const mensajes = await Mensaje.findAll()
     // Categorias
     const categorias = await Categoria.findAll()
-    if(!administrador){
-        return res.redirect('/auth/login')
-    }
 
     res.render('usuario/Administrador/Administrador-Usuarios-Crear', {
         titulo: 'Crear Usuario',
@@ -367,14 +328,7 @@ const editarUsuarioAdministrador = async (req, res) => {
     })
 }
 const editarUsuarioAdministradorPost = async (req, res) => {
-    // Recoger al administrador
-    const { id } = req.usuario
-    const administrador = await Usuario.findByPk(id)
 
-    // Si no es administrador, redirigir a la página de login
-    if(!administrador){
-        return res.redirect('/auth/login')
-    }else{
         // Recoger al usuario a editar
         const { id } = req.params
         const usuario = await Usuario.findByPk(id)
@@ -426,7 +380,7 @@ const editarUsuarioAdministradorPost = async (req, res) => {
         }
     }
 
-}
+
 
 const eliminarUsuarioAdministrador = async (req, res) => {
     const { id } = req.params
@@ -465,17 +419,8 @@ const eliminarUsuarioAdministrador = async (req, res) => {
 }
 
 
-
-
 // Acciones del administrador con respecto a las propiedades
 const crearPropiedadAdministrador = async (req, res) => {
-    const {id} = req.usuario
-
-    const administrador = await Usuario.findOne({ where: { id } })
-
-    if(!administrador){
-        return res.redirect('/auth/login')
-    }
     // Vendedores
     const vendedores = await Usuario.findAll({where: {tipo: 1}})
 
@@ -587,54 +532,39 @@ const subirImagenAdministradorPropiedad = async (req, res, next) => {
 }
 
 const editarPropiedadAdministrador = async (req, res) => {
-    // Verificar si el usuario existe
-    const { id } = req.usuario
-    const administrador = await Usuario.findOne({ where: { id } })
-
-    if(!administrador){
-        return res.redirect('/auth/login')
-    }else{
-        // Recoger la propiedad a editar
-        const { id} = req.params
-        await Propiedad.findByPk(id, { include : [
-            {
-                model: Categoria,
-                as: 'categoriaRelacion'
-            },
-            {
-                model: Usuario,
-                as: 'usuarioRelacion'
-            }
-        ]}).then(propiedad => {
-            if (!propiedad){
-                return res.redirect('/auth/administrador/propiedades')
-            }
-            // Mostramos el formulario
-            res.status(200).render('usuario/Administrador/Administrador-Propiedades-Editar', {
-                titulo: 'Editar Propiedad',
-                usuario: administrador,
-                propiedad,
-                csrfToken: req.csrfToken(),
-                pagina: 'Editar Propiedad'
-            })
-            
-        }).catch(error => {
-            console.log(error)
+    // Recoger la propiedad a editar
+    const { id} = req.params
+    await Propiedad.findByPk(id, { include : [
+        {
+            model: Categoria,
+            as: 'categoriaRelacion'
+        },
+        {
+            model: Usuario,
+            as: 'usuarioRelacion'
+        }
+    ]}).then(propiedad => {
+        if (!propiedad){
+            return res.redirect('/auth/administrador/propiedades')
+        }
+        // Mostramos el formulario
+        res.status(200).render('usuario/Administrador/Administrador-Propiedades-Editar', {
+            titulo: 'Editar Propiedad',
+            usuario: req.usuario,
+            propiedad,
+            csrfToken: req.csrfToken(),
+            pagina: 'Editar Propiedad'
         })
-    }
-
+        
+    }).catch(error => {
+        console.log(error)
+    })
 }
+
+
 const editarPropiedadAdministradorPost = async (req, res) => {
 
     try {
-        // Verificar si el usuario existe
-        const { id } = req.usuario
-        const administrador = await Usuario.findOne({ where: { id } })
-
-        if(!administrador){
-            return res.redirect('/auth/login')
-        }
-
         // Recoger la propiedad a editar
         const { id: propiedadId } = req.params
         const propiedad = await Propiedad.findByPk(propiedadId, { include : [
@@ -726,14 +656,6 @@ const eliminarPropiedadAdministrador = async (req, res) => {
 
 // Acciones del administrador con respecto a las categorías
 const panelAdministradorCategorias = async (req, res) => {
-    const {id} = req.usuario
-    
-    const administrador = await Usuario.findOne({ where: { id } })
-
-    if(!administrador){
-        return res.redirect('/auth/login')
-    }
-
     // Recuperar el filtro
     const { nombre } = req.query
 
@@ -753,13 +675,6 @@ const panelAdministradorCategorias = async (req, res) => {
 }
 
 const crearCategoriaAdministrador = async (req, res) => {
-    const {id} = req.usuario
-
-    const administrador = await Usuario.findOne({ where: { id } })
-
-    if(!administrador){
-        return res.redirect('/auth/login')
-    }
 
     res.render('usuario/Administrador/Administrador-Categorias-Crear', {
         titulo: 'Crear Categoría',
@@ -912,17 +827,7 @@ const editarCategoriaAdministradorPost = async (req, res) => {
 
 // Acciones del administrador con respecto a los mensajes
 
-
 const eliminarMensajeAdministrador = async (req, res) => {
-    // Encontramos al administrador
-    const { id : usuarioId } = req.usuario;
-
-    const administrador = await Usuario.findOne({ where: { id : usuarioId } });
-
-    if(!administrador){
-        return res.redirect('/auth/login')
-    }
-
     const { id : mensajeId } = req.params;
 
     // Econtramos el mensaje

@@ -82,7 +82,7 @@ block contenido
                                 div(class="px-6 py-4 bg-white border-t border-gray-100 flex justify-between")
                                     //- Botón Volver
                                     a(
-                                        href=usuario.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener'
+                                        href=usuario.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener/comprador'
                                         class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition-colors duration-200"
                                     )
                                         i(class="fas fa-arrow-left mr-2")
@@ -97,27 +97,24 @@ block contenido
                                             )
                                                 i(class="fas fa-edit mr-2")
                                                 | Editar Mensaje
-                                        
-                                        a(
-                                            href=`/mensajes/responder/${mensaje.id}`
-                                            class="inline-flex items-center px-4 py-2 bg-white border border-[#FF6F17] text-[#FF6F17] text-sm font-medium rounded-md hover:bg-orange-50 transition-colors duration-200"
-                                        )
-                                            i(class="fas fa-reply mr-2")
-                                            | Responder
+
+                                        //- Si el mensaje fue enviado el comprador no puede responder
+                                        if mensaje.respuestaId === null && usuario.id === mensaje.destinatarioId
+                                            a(
+                                                href=`/mensajes/responder/${mensaje.id}`
+                                                class="inline-flex items-center px-4 py-2 bg-white border border-[#FF6F17] text-[#FF6F17] text-sm font-medium rounded-md hover:bg-orange-50 transition-colors duration-200"
+                                            )
+                                                i(class="fas fa-reply mr-2")
+                                                | Responder
 
                                         if usuario.id === mensaje.remitenteId
-                                            form(
-                                                action=`/mensajes/eliminar/${mensaje.id}?_csrf=${csrfToken}`
-                                                method="POST"
-                                                class="inline"
-                                                onsubmit="return confirm('¿Estás seguro de que deseas eliminar este mensaje?')"
+                                            button(
+                                                class="text-sm bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-300 cursor-pointer"
+                                                onclick=`abrirModalEliminarMensaje(${mensaje.id}, 'Eliminar Mensaje', '¿Estás seguro de querer eliminar este mensaje?', '/mensajes/eliminar/${mensaje.id}')`
                                             )
-                                                button(
-                                                    type="submit"
-                                                    class="inline-flex items-center px-4 py-2 bg-red-100 text-red-600 text-sm font-medium rounded-md hover:bg-red-200 transition-colors duration-200"
-                                                )
-                                                    i(class="fas fa-trash-alt mr-2")
-                                                    | Eliminar 
+                                                i(class="fas fa-trash-alt mr-2")
+                                                | Eliminar 
+                                            include ../partials/MensajeEliminar.pug
 
         else
             div(class="min-h-screen bg-gray-100 flex")
@@ -207,7 +204,7 @@ block contenido
                                 div(class="px-6 py-4 bg-white border-t border-gray-100 flex justify-between")
                                     //- Botón Volver
                                     a(
-                                        href=usuario.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener'
+                                        href=usuario.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener/comprador'
                                         class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition-colors duration-200"
                                     )
                                         i(class="fas fa-arrow-left mr-2")
@@ -245,4 +242,6 @@ block contenido
                                                     i(class="fas fa-trash-alt mr-2")
                                                     | Eliminar 
 
-                
+block scripts
+    script(src="/js/ModalEliminar.js")
+    script(src="/js/agregarVentanaModal.js")

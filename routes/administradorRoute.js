@@ -27,47 +27,47 @@ import {
     eliminarMensajeAdministrador,
     verMensajeAdministrador
 } from '../controllers/administradorControllers.js'
-import  protegerRuta from '../middlewares/protegerRuta.js'
+import  { protegerRuta, validarAdministrador } from '../middlewares/protegerRuta.js'
 import upload from '../middlewares/subirImagen.js'
 
 const router = express.Router()
 
 // Panel principal del administrador
-router.get('/panel', protegerRuta, panelAdministrador)
+router.get('/panel', protegerRuta, validarAdministrador, panelAdministrador)
 
 // Gestión de usuarios
-router.get('/usuarios', protegerRuta, panelAdministradorUsuarios)
-router.get('/usuarios/crear', protegerRuta, crearUsuarioAdministrador)
-router.post('/usuarios/crear', protegerRuta, crearUsuarioAdministradorPost)
-router.get('/usuarios/editar/:id', protegerRuta, editarUsuarioAdministrador)
-router.post('/usuarios/editar/:id', protegerRuta, editarUsuarioAdministradorPost)
+router.get('/usuarios', protegerRuta, validarAdministrador, panelAdministradorUsuarios)
+router.get('/usuarios/crear', protegerRuta, validarAdministrador, crearUsuarioAdministrador)
+router.post('/usuarios/crear', protegerRuta, validarAdministrador, crearUsuarioAdministradorPost)
+router.get('/usuarios/editar/:id', protegerRuta, validarAdministrador, editarUsuarioAdministrador)
+router.post('/usuarios/editar/:id', protegerRuta, validarAdministrador, editarUsuarioAdministradorPost)
 router.post('/usuarios/eliminar/:id', protegerRuta, eliminarUsuarioAdministrador)
 
 // Gestión de propiedades
-router.get('/propiedades', protegerRuta, panelAdministradorPropiedades)
-router.get('/propiedades/crear', protegerRuta, crearPropiedadAdministrador)
-router.post('/propiedades/crear', protegerRuta, crearPropiedadAdministradorPost)
-router.get('/propiedades/agregar-imagen/:id', protegerRuta, agregarImagenAdministradorPropiedad)
-router.post('/propiedades/agregar-imagen/:id', protegerRuta, upload.single('imagenAdmin'), subirImagenAdministradorPropiedad)
-router.get('/propiedades/editar/:id', protegerRuta, editarPropiedadAdministrador)
-router.post('/propiedades/editar/:id', protegerRuta, editarPropiedadAdministradorPost)
-router.post('/propiedades/eliminar/:id', protegerRuta, eliminarPropiedadAdministrador)
+router.get('/propiedades', protegerRuta, validarAdministrador, panelAdministradorPropiedades)
+router.get('/propiedades/crear', protegerRuta, validarAdministrador, crearPropiedadAdministrador)
+router.post('/propiedades/crear', protegerRuta, validarAdministrador, crearPropiedadAdministradorPost)
+router.get('/propiedades/agregar-imagen/:id', protegerRuta, validarAdministrador, agregarImagenAdministradorPropiedad)
+router.post('/propiedades/agregar-imagen/:id', protegerRuta, validarAdministrador, upload.single('imagenAdmin'), subirImagenAdministradorPropiedad)
+router.get('/propiedades/editar/:id', protegerRuta, validarAdministrador, editarPropiedadAdministrador)
+router.post('/propiedades/editar/:id', protegerRuta, validarAdministrador, editarPropiedadAdministradorPost)
+router.post('/propiedades/eliminar/:id', protegerRuta, validarAdministrador, eliminarPropiedadAdministrador)
 
 // Gestión de categorías
-router.get('/categorias', protegerRuta, panelAdministradorCategorias)
-router.get('/categorias/crear', protegerRuta, crearCategoriaAdministrador)
-router.post('/categorias/crear', protegerRuta, crearCategoriaAdministradorPost)
-router.post('/categorias/eliminar/:id', protegerRuta, eliminarCategoriaAdministrador)
-router.get('/categorias/editar/:id', protegerRuta, editarCategoriaAdministrador)
-router.post('/categorias/editar/:id', protegerRuta, editarCategoriaAdministradorPost)
+router.get('/categorias', protegerRuta, validarAdministrador, panelAdministradorCategorias)
+router.get('/categorias/crear', protegerRuta, validarAdministrador, crearCategoriaAdministrador)
+router.post('/categorias/crear', protegerRuta, validarAdministrador, crearCategoriaAdministradorPost)
+router.post('/categorias/eliminar/:id', protegerRuta, validarAdministrador, eliminarCategoriaAdministrador)
+router.get('/categorias/editar/:id', protegerRuta, validarAdministrador, editarCategoriaAdministrador)
+router.post('/categorias/editar/:id', protegerRuta, validarAdministrador, editarCategoriaAdministradorPost)
 
 // Gestión de mensajes
-router.get('/mensajes', protegerRuta, panelAdministradorMensajes)
-router.post('/mensajes/eliminar/:id', protegerRuta, eliminarMensajeAdministrador)
-router.get('/mensajes/ver/:id', protegerRuta, verMensajeAdministrador)
+router.get('/mensajes', protegerRuta, validarAdministrador, panelAdministradorMensajes)
+router.post('/mensajes/eliminar/:id', protegerRuta, validarAdministrador, eliminarMensajeAdministrador)
+router.get('/mensajes/ver/:id', protegerRuta, validarAdministrador, verMensajeAdministrador)
 
 // Perfil del administrador
-router.get('/perfil', protegerRuta, panelAdministradorPerfil)
-router.post('/perfil', protegerRuta, editarPerfilAdministradorPost)
+router.get('/perfil', protegerRuta, validarAdministrador, panelAdministradorPerfil)
+router.post('/perfil', protegerRuta, validarAdministrador, editarPerfilAdministradorPost)
 
 export default router 

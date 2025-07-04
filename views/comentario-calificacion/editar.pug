@@ -1,0 +1,212 @@
+extends ../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-100 flex flex-col")
+        include ../usuario/comprador-Sidebar/compradorSidebar.pug
+
+        //- Contenido Principal
+        main(class="flex-1 ")
+            //- Encabezado
+            header(class="bg-white border-b border-gray-200 px-8 py-6")
+                div(class="flex items-center justify-between")
+                    div
+                        h1(class="text-2xl font-bold text-gray-900") Editar Comentario
+                        p(class="text-gray-600 mt-1") Modifica tu calificación y comentario
+                    div(class="flex items-center space-x-3")
+                        span(class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium") Comentario ID: ##{comentario.id}
+                        span(class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium") Activo
+
+            //- Contenedor Principal
+            div(class="p-8")
+                div(class="max-w-4xl mx-auto space-y-8")
+                    
+                    //- Información del Comentario
+                    div(class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden")
+                        div(class="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100")
+                            h2(class="text-lg font-semibold text-gray-900") Información del Comentario
+                        
+                        div(class="p-6 space-y-6")
+                            //- Datos del Evaluador
+                            div(class="grid grid-cols-1 md:grid-cols-2 gap-6")
+                                div(class="space-y-2")
+                                    label(class="block text-sm font-medium text-gray-700") Evaluador
+                                    div(class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg")
+                                        img(src="/img/avatar.png" alt="Avatar" class="w-10 h-10 rounded-full")
+                                        div
+                                            p(class="font-medium text-gray-900")= evaluador.nombre
+                                            p(class="text-sm text-gray-600")= evaluador.email
+                                
+                                div(class="space-y-2")
+                                    label(class="block text-sm font-medium text-gray-700") Usuario Evaluado
+                                    div(class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg")
+                                        img(src="/img/avatar.png" alt="Avatar" class="w-10 h-10 rounded-full")
+                                        div
+                                            p(class="font-medium text-gray-900")= comentario.evaluadoRelacion.nombre
+                                            p(class="text-sm text-gray-600")= comentario.evaluadoRelacion.email
+                            
+                            //- Fecha y Estado
+                            div(class="grid grid-cols-1 md:grid-cols-3 gap-6")
+                                div(class="space-y-2")
+                                    label(class="block text-sm font-medium text-gray-700") Fecha de Creación
+                                    p(class="p-3 bg-gray-50 rounded-lg text-gray-900")= comentario.createdAt.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
+                                
+                                div(class="space-y-2")
+                                    label(class="block text-sm font-medium text-gray-700") Última Modificación
+                                    p(class="p-3 bg-gray-50 rounded-lg text-gray-900")= comentario.updatedAt.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
+                                
+                                div(class="space-y-2")
+                                    label(class="block text-sm font-medium text-gray-700") Estado
+                                    span(class="inline-flex px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium") Activo
+
+                    //- Formulario de Edición
+                    div(class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden")
+                        div(class="px-6 py-4 bg-gradient-to-r from-orange-50 to-yellow-50 border-b border-gray-100")
+                            h2(class="text-lg font-semibold text-gray-900") Editar Calificación y Comentario
+                        
+                        form(action=`/comentario-calificacion/editar-comentario-calificacion/${comentario.id}` method="POST" class="p-6 space-y-6" novalidate)
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            
+                            //- Calificación Actual
+                            div(class="space-y-3")
+                                label(class="block text-sm font-medium text-gray-700") Calificación Actual
+                                div(class="flex items-center space-x-1 p-4 bg-gray-50 rounded-lg")
+                                    each i in [1,2,3,4,5]
+                                        i(class=`fas fa-star text-2xl ${i <= comentario.calificacion ? 'text-[#FF6819]' : 'text-gray-300'}`)
+                                    span(class="ml-3 text-sm text-gray-600") #{comentario.calificacion} de 5 estrellas
+                            
+                            //- Nueva Calificación
+                            div(class="space-y-3")
+                                label(for="calificacion" class="block text-sm font-medium text-gray-700") Nueva Calificación
+                                div(class="flex items-center space-x-1" id="contenedor-estrellas")
+                                    each i in [1,2,3,4,5]
+                                        div(class="relative")
+                                            input(
+                                                type="radio" 
+                                                name="calificacion" 
+                                                id=`calificacion-${i}` 
+                                                value=i 
+                                                class="peer hidden"
+                                                checked=i === comentario.calificacion
+                                            )
+                                            label(
+                                                for=`calificacion-${i}` 
+                                                class="text-2xl text-gray-300 hover:text-[#FF6819] cursor-pointer transition-colors duration-200"
+                                                data-rating=i
+                                            )
+                                                i(class="fas fa-star")
+                                
+                                -const calificacion = errores?.find(error => error.path === 'calificacion')
+                                if calificacion
+                                    p(class="text-red-500 text-sm")= calificacion.msg
+                            
+                            //- Comentario Actual
+                            div(class="space-y-3")
+                                label(class="block text-sm font-medium text-gray-700") Comentario Actual
+                                div(class="p-4 bg-gray-50 rounded-lg border border-gray-200")
+                                    p(class="text-gray-700 italic")= comentario.comentario
+                            
+                            //- Nuevo Comentario
+                            div(class="space-y-3")
+                                label(for="comentario" class="block text-sm font-medium text-gray-700") Nuevo Comentario
+                                textarea(
+                                    id="comentario"
+                                    name="comentario"
+                                    rows="4"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6819] focus:border-transparent transition-colors duration-200 resize-none"
+                                    placeholder="Escribe tu nuevo comentario aquí..."
+                                    required
+                                )= comentario.comentario
+                                
+                                -const comentarioError = errores?.find(error => error.path === 'comentario')
+                                if comentarioError
+                                    p(class="text-red-500 text-sm")= comentarioError.msg
+                            
+                            //- Botones de Acción
+                            div(class="flex justify-end space-x-4 pt-6 border-t border-gray-100")
+                                a(
+                                    href="/usuario/perfil"
+                                    class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                                )
+                                    i(class="fas fa-times mr-2")
+                                    | Cancelar
+                                
+                                button(
+                                    type="submit"
+                                    class="px-6 py-3 bg-[#FF6819] text-white rounded-lg hover:bg-[#E55A0F] transition-colors duration-200 cursor-pointer"
+                                )
+                                    i(class="fas fa-save mr-2")
+                                    | Guardar Cambios
+
+
+block scripts
+    script(src="/js/agregarVentanaModal.js")
+    script.
+        // Script para el sistema de calificaciones
+        document.addEventListener('DOMContentLoaded', function() {
+            const contenedorEstrellas = document.getElementById('contenedor-estrellas');
+            const labels = contenedorEstrellas.querySelectorAll('label[data-rating]');
+            const inputs = contenedorEstrellas.querySelectorAll('input[type="radio"]');
+            let ratingSeleccionado = #{comentario.calificacion}; // Valor inicial
+
+            // Función para actualizar las estrellas
+            function actualizarEstrellas(rating) {
+                labels.forEach((label, index) => {
+                    const ratingLabel = parseInt(label.dataset.rating);
+                    if (ratingLabel <= rating) {
+                        label.classList.remove('text-gray-300');
+                        label.classList.add('text-[#FF6819]');
+                    } else {
+                        label.classList.remove('text-[#FF6819]');
+                        label.classList.add('text-gray-300');
+                    }
+                });
+            }
+
+            // Inicializar estrellas
+            actualizarEstrellas(ratingSeleccionado);
+
+            // Event listener para cada label
+            labels.forEach(label => {
+                const rating = parseInt(label.dataset.rating);
+                
+                // Click en la estrella
+                label.addEventListener('click', function() {
+                    ratingSeleccionado = rating;
+                    actualizarEstrellas(rating);
+                });
+
+                // Hover sobre la estrella
+                label.addEventListener('mouseenter', function() {
+                    actualizarEstrellas(rating);
+                });
+
+                // Salir del hover
+                label.addEventListener('mouseleave', function() {
+                    actualizarEstrellas(ratingSeleccionado);
+                });
+            });
+
+            // Event listener para los inputs
+            inputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    ratingSeleccionado = parseInt(this.value);
+                    actualizarEstrellas(ratingSeleccionado);
+                });
+            });
+
+            // Modal de carga al enviar formulario
+            const form = document.querySelector('form');
+            if(form) {
+                form.addEventListener('submit', function() {
+                    // Mostrar modal de carga si existe
+                    const modalMensaje = document.getElementById('modalMensaje');
+                    if(modalMensaje) {
+                        modalMensaje.classList.remove('hidden');
+                        const mensajeCarga = document.getElementById('mensajeCarga');
+                        if(mensajeCarga) {
+                            mensajeCarga.textContent = 'Guardando cambios del comentario...';
+                        }
+                    }
+                });
+            }
+        });

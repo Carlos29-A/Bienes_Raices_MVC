@@ -16,9 +16,11 @@ block contenido
                                     button(class="flex items-center space-x-2 text-gray-700 hover:text-gray-900")
                                         img(class="h-10 w-10 rounded-full" src="/img/avatar.png" alt="Vendedor")
                                         span= usuario.nombre
-
                     // Contenido del Perfil
                     main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
+                        if mensajesFlash.length > 0
+                            div(id="valorMensaje" class="hidden" data-show="true")
+                                include ../partials/MensajeModal.pug
                         div(class="px-4 py-6 sm:px-0 ")
                             div(class="bg-white shadow rounded-lg")
                                 // Información del Perfil
@@ -116,7 +118,7 @@ block contenido
                                                 label(for="password_actual" class="block text-sm font-medium text-gray-700") Contraseña Actual
                                                 div(class="mt-1")
                                                     input(type="password" name="password_actual" id="password_actual" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                    -const password_actual = erroresPassword.find(error => error.path === 'password_actual')
+                                                    -const password_actual = errores.find(error => error.path === 'password_actual')
                                                     if password_actual
                                                         p(class="text-red-500 text-sm")= password_actual.msg
 
@@ -124,7 +126,7 @@ block contenido
                                                 label(for="password_nueva" class="block text-sm font-medium text-gray-700") Nueva Contraseña
                                                 div(class="mt-1")
                                                     input(type="password" name="password_nueva" id="password_nueva" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                    -const password_nueva = erroresPassword.find(error => error.path === 'password_nueva')
+                                                    -const password_nueva = errores.find(error => error.path === 'password_nueva')
                                                     if password_nueva
                                                         p(class="text-red-500 text-sm")= password_nueva.msg
 
@@ -132,7 +134,7 @@ block contenido
                                                 label(for="password_confirmar" class="block text-sm font-medium text-gray-700") Confirmar Nueva Contraseña
                                                 div(class="mt-1")
                                                     input(type="password" name="password_confirmar" id="password_confirmar" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                    -const password_confirmar = erroresPassword.find(error => error.path === 'password_confirmar')
+                                                    -const password_confirmar = errores.find(error => error.path === 'password_confirmar')
                                                     if password_confirmar
                                                         p(class="text-red-500 text-sm")= password_confirmar.msg
 
@@ -258,7 +260,7 @@ block contenido
                                                 label(for="password_actual" class="block text-sm font-medium text-gray-700") Contraseña Actual
                                                 div(class="mt-1")
                                                     input(type="password" name="password_actual" id="password_actual" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                    -const password_actual = erroresPassword.find(error => error.path === 'password_actual')
+                                                    -const password_actual = errores?.find(error => error.path === 'password_actual')
                                                     if password_actual
                                                         p(class="text-red-500 text-sm")= password_actual.msg
 
@@ -266,7 +268,7 @@ block contenido
                                                 label(for="password_nueva" class="block text-sm font-medium text-gray-700") Nueva Contraseña
                                                 div(class="mt-1")
                                                     input(type="password" name="password_nueva" id="password_nueva" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                    -const password_nueva = erroresPassword.find(error => error.path === 'password_nueva')
+                                                    -const password_nueva = errores?.find(error => error.path === 'password_nueva')
                                                     if password_nueva
                                                         p(class="text-red-500 text-sm")= password_nueva.msg
 
@@ -274,7 +276,7 @@ block contenido
                                                 label(for="password_confirmar" class="block text-sm font-medium text-gray-700") Confirmar Nueva Contraseña
                                                 div(class="mt-1")
                                                     input(type="password" name="password_confirmar" id="password_confirmar" class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")
-                                                    -const password_confirmar = erroresPassword.find(error => error.path === 'password_confirmar')
+                                                    -const password_confirmar = errores?.find(error => error.path === 'password_confirmar')
                                                     if password_confirmar
                                                         p(class="text-red-500 text-sm")= password_confirmar.msg
 

@@ -1,0 +1,54 @@
+extends ../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-100 flex flex-col")
+        include ../usuario/comprador-Sidebar/compradorSidebar.pug
+        //- Contenido Principal
+        main(class="flex-1 ")
+            //- Encabezado Simple
+            header(class="bg-white border-b border-gray-200 px-8 py-4")
+                h1(class="text-xl font-semibold text-[#FF6819] mb-4 text-center") Responder Mensaje a #{mensaje.remitenteRelacion.nombre}
+            //- Contenedor Principal
+            div(class="p-6")
+                //- Formulario Simple
+                form(action=`/mensajes/responder/comprador/${mensaje.id}` method="POST" class="max-w-2xl mx-auto bg-white rounded-lg shadow-sm border border-gray-100" novalidate)
+                    input(type="hidden" name="_csrf" value=csrfToken)
+                    
+                    //- Información del Mensaje Original
+                    div(class="p-4 border-b border-gray-100 bg-gray-50 rounded-lg")
+                        p(class="text-sm text-gray-600 mb-1") Mensaje de: 
+                            span(class="font-medium text-gray-900")= mensaje.destinatarioRelacion.nombre
+                        p(class="text-sm text-gray-600") Para :
+                            span(class="font-medium text-gray-900")= mensaje.remitenteRelacion.nombre
+                        p(class="text-sm text-gray-600") Propiedad: 
+                            span(class="font-medium text-gray-900")= mensaje.propiedadRelacion.titulo
+                    
+                    //- Área de Respuesta
+                    div(class="p-4")
+                        label(for="respuesta" class="block text-sm font-medium text-gray-700 mb-2") Tu Respuesta
+                        textarea(
+                            id="respuesta"
+                            name="respuesta"
+                            rows="6"
+                            placeholder="Escribe tu respuesta aquí..."
+                            class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6819] focus:border-transparent transition-colors duration-200 resize-none"
+                            required
+                        )
+                        -const respuesta = errores?.find(error => error.path === 'respuesta')
+                            if respuesta
+                                p(class="mt-1 text-sm text-red-600 font-bold")= respuesta.msg
+
+                    //- Botones de Acción
+                    div(class="px-4 py-3 bg-gray-50 border-t border-gray-100 flex justify-end space-x-3")
+                        a(
+                            href=`/mensajes/obtener/comprador`
+                            class="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors duration-200 cursor-pointer hover:bg-gray-200 rounded-lg border border-gray-500"
+                        )
+                            | Cancelar
+                        
+                        button(
+                            type="submit"
+                            class="px-4 py-2 bg-[#FF6819] text-white rounded-lg hover:bg-[#E55A0F] transition-colors duration-200 cursor-pointer"
+                        )
+                            | Enviar
+

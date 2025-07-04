@@ -97,42 +97,21 @@ const enviarMensajePost = async (req, res) => {
 
     req.flash('mensajeFlash', 'Mensaje enviado correctamente')
     req.flash('tipoFlash', 'exito')
-    res.redirect('/mensajes/obtener')
+    res.redirect('/mensajes/obtener/comprador')
 }
 
-const obtenerMensajes = async (req, res) => {
-    // Obtener los mensajes de la base de datos del usuario
+const obtenerMensajesComprador = async (req, res) => {
+    // Obtener el usuario
     const { id } = req.usuario
 
-    const remitente = await Usuario.findByPk(id)
+    const comprador = await Usuario.findByPk(id)
 
-    if(!remitente){
+    if(!comprador){
         return res.redirect('/auth/login')
     }
 
-    // Mostrar los mensajes de la base de datos del usuario
-    const mensajesEnviados = await Mensaje.findAll({
-        where : {
-            remitenteId : id
-        },
-        include : [
-            {
-                model : Usuario,
-                as : "destinatarioRelacion",
-                attributes : ['nombre', 'email']
-            },
-            {
-                model : Propiedad,
-                as : "propiedadRelacion",
-            }
-        ]
-    })
-    
-    // Obtener los mensajes recibidos del comprador
-    const mensajesRecibidos = await Mensaje.findAll({
-        where : {
-            destinatarioId : id,
-        },
+    // Obtener los mensajes de la base de datos del usuario
+    const mensajes = await Mensaje.findAll({
         include : [
             {
                 model : Usuario,
@@ -146,23 +125,26 @@ const obtenerMensajes = async (req, res) => {
             {
                 model : Usuario,
                 as : "destinatarioRelacion",
-                attributes : ['nombre', 'email']
             }
         ]
+
     })
 
-    // Separar mensajes leídos y no leídos
-    const mensajesLeidos = mensajesRecibidos.filter(mensaje => mensaje.leido === true)
-    const mensajesNoLeidos = mensajesRecibidos.filter(mensaje => mensaje.leido === false)
+    // Mostrar mensajes Enviados
+    const mensajesEnviados = mensajes.filter(mensaje => mensaje.remitenteId === id)
+    // Mostrar mensajes Recibidos
+    const mensajesRecibidos = mensajes.filter(mensaje => mensaje.destinatarioId === id)
+    // Mostrar mensajes Respondidos
+    const mensajesRespondidos = mensajes.filter(mensaje => mensaje.respuestaId !== null)
 
-    res.render('mensajes/mensajes', {
+    res.render('mensajes/mensajesComprador', {
         titulo: 'Mensajes',
-        mensajesEnviados,
-        remitente,
+        comprador,
         csrfToken: req.csrfToken(),
-        ruta: '/mensajes/obtener',
-        mensajesLeidos,
-        mensajesNoLeidos
+        ruta: '/mensajes/obtener/comprador',
+        mensajesEnviados,
+        mensajesRecibidos,
+        mensajesRespondidos
     })
 }
 
@@ -352,7 +334,7 @@ const editarMensajePost = async (req, res) => {
     if(remitente.tipo.toString() === '1') {
         res.redirect('/mensajes/obtener/vendedor')
     } else {
-        res.redirect('/mensajes/obtener')
+        res.redirect('/mensajes/obtener/comprador')
     }
     
 }
@@ -378,13 +360,18 @@ const eliminarMensaje = async (req, res) => {
         return res.redirect('/auth/login')
     }
 
+
     await mensaje.destroy()
 
     // Redirigir a la página de mensajes según el tipo de usuario
     if(remitente.tipo.toString() === '1') {
+        req.flash('mensajeFlash', 'Mensaje eliminado correctamente')
+        req.flash('tipoFlash', 'exito')
         res.redirect('/mensajes/obtener/vendedor')
     } else {
-        res.redirect('/mensajes/obtener')
+        req.flash('mensajeFlash', 'Mensaje eliminado correctamente')
+        req.flash('tipoFlash', 'exito')
+        res.redirect('/mensajes/obtener/comprador')
     }
 }
 
@@ -496,7 +483,7 @@ const responderMensaje = async (req, res) => {
         return res.redirect('/auth/login')
     }
     // Determinar la ruta para el sidebar
-    const ruta = remitente.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener'
+    const ruta = remitente.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener/comprador'
     res.render('mensajes/responder', {
         mensaje,
         remitente,
@@ -555,10 +542,6 @@ const responderMensajePost = async (req, res) => {
     if(mensaje.destinatarioId !== id){
         return res.redirect('/auth/login')
     }
-    // Verificar si el mensaje ya tiene una respuesta
-    if(mensaje.respuestaId){
-        return res.redirect('/auth/login')
-    }
     
     // Validar si el mensaje es requerido
     await check('respuesta')
@@ -577,7 +560,7 @@ const responderMensajePost = async (req, res) => {
             pagina : 'Mensajes'
         })
     }
-    const ruta = remitente.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener'
+    const ruta = remitente.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener/comprador'
     // Crear la respuesta
     const respuesta = await Mensaje.create({
         mensaje : req.body.respuesta,
@@ -594,11 +577,137 @@ const responderMensajePost = async (req, res) => {
 }
 
 
+const responderMensajeComprador = async (req, res) => {
+
+    const { id } = req.usuario
+    const { id: mensajeId } = req.params
+
+    const comprador = await Usuario.findByPk(id)
+
+    if(!comprador){ 
+        return res.redirect('/auth/login')
+    }
+
+    const mensaje = await Mensaje.findByPk(mensajeId, {
+        include : [
+            {
+                model : Usuario,
+                as : "remitenteRelacion",
+                attributes : ['nombre', 'email', 'tipo']
+            },
+            {
+                model : Propiedad,
+                as : "propiedadRelacion",
+                include : [ 
+                    {
+                        model : Categoria,
+                        as : "categoriaRelacion"
+                    }
+                ]
+            },
+            {
+                model : Usuario,
+                as : "destinatarioRelacion",
+                attributes : ['nombre', 'email', 'tipo']
+            }
+        ]
+    })
+
+    if(!mensaje){
+        return res.redirect('/auth/login')
+    }
+
+    res.render('mensajes/responderComprador', {
+        mensaje,
+        comprador,
+        csrfToken: req.csrfToken(),
+        pagina : 'Mensajes'
+    })
+    
+
+}
+
+const responderMensajeCompradorPost = async (req, res) => {
+
+    const { id } = req.usuario
+    const { id: mensajeId } = req.params
+
+    const comprador = await Usuario.findByPk(id)
+
+    if(!comprador){
+        return res.redirect('/auth/login')
+    }
+    const mensaje = await Mensaje.findByPk(mensajeId, {
+        include: [
+            {
+                model: Usuario,
+                as: "remitenteRelacion",
+                attributes: ['nombre', 'email', 'tipo']
+            },
+            {
+                model: Propiedad,
+                as: "propiedadRelacion",
+                include: [
+                    {
+                        model: Categoria,
+                        as: "categoriaRelacion"
+                    }
+                ]
+            },
+            {
+                model: Usuario,
+                as: "destinatarioRelacion",
+                attributes: ['nombre', 'email', 'tipo']
+            }
+        ]
+    })
+    // Validar campo
+    await check('respuesta')
+        .notEmpty().withMessage('La respuesta es requerida')
+        .isLength({ min: 10 }).withMessage('La respuesta debe tener al menos 10 caracteres')
+        .run(req)
+
+    const errores = validationResult(req)
+
+    if(!errores.isEmpty()){
+        return res.render('mensajes/responderComprador', {
+            errores : errores.array(),
+            mensaje,
+            comprador,
+            csrfToken: req.csrfToken(),
+            pagina : 'Mensajes'
+        })
+    }
+
+    if(!mensaje){
+        return res.redirect('/auth/login')
+    }
+    
+
+    // Crear la respuesta
+    await Mensaje.create({
+        mensaje : req.body.respuesta,
+        remitenteId : id,
+        destinatarioId : mensaje.remitenteId,
+        propiedadId : mensaje.propiedadId,
+        respuestaId : mensaje.id
+    })
+
+    // Marcar el mensaje como leído
+    mensaje.leido = true
+    await mensaje.save()
+
+    // Enviar el mensaje de exito
+    req.flash('mensajeFlash', 'Mensaje respondido correctamente')
+    req.flash('tipoFlash', 'exito')
+    res.redirect('/mensajes/obtener/comprador')
+    
+}
 
 
 export {
     enviarMensaje,
-    obtenerMensajes,
+    obtenerMensajesComprador,
     eliminarMensaje,
     enviarMensajePost,
     editarMensaje,
@@ -606,5 +715,7 @@ export {
     obtenerMensajesVendedor,
     verMensaje,
     responderMensaje,
-    responderMensajePost
+    responderMensajePost,
+    responderMensajeComprador,
+    responderMensajeCompradorPost
 }

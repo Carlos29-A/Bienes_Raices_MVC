@@ -196,3 +196,4 @@ function cerrarModalMensaje() {
 
 //- Hacer la función global para que el botón pueda acceder a ella
 window.cerrarModalMensajeEditar = cerrarModalMensaje;
+

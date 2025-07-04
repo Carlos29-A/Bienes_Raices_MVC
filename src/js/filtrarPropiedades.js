@@ -299,12 +299,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const url = `/propiedades/api/propiedades/filtradas?${params.toString()}`
-            console.log('URL de búsqueda:', url)
 
             // Obtener las propiedades
             const respuesta = await fetch(url)
             const propiedades = await respuesta.json()
-            console.log('Propiedades recibidas:', propiedades)
             mostrarPropiedades(propiedades)
         } catch (error) {
             console.log('Error al obtener propiedades:', error)

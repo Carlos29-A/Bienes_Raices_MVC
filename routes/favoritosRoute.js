@@ -1,5 +1,5 @@
 import express from 'express'
-import protegerRuta from '../middlewares/protegerRuta.js'
+import { protegerRuta, validarVendedor, validarComprador } from '../middlewares/protegerRuta.js'
 import { favoritos, agregarFavorito } from '../controllers/favoritoControllers.js'
 
 const router = express.Router()

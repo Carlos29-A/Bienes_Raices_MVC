@@ -1,6 +1,6 @@
 import express from 'express'
 import { obtenerPropiedades, obtenerPropiedadesCategoria, obtenerFavoritos, obtenerPropiedadesAdmin, obtenerPropiedadesFiltradas } from '../controllers/apiControllers.js'
-import protegerRuta from '../middlewares/protegerRuta.js'
+import { protegerRuta, validarVendedor, validarComprador } from '../middlewares/protegerRuta.js'
 
 const router = express.Router()
 

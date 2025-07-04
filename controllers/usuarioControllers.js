@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser"
 import fs from "fs"
 import path from "path"
 import { fileURLToPath } from "url"
+import { validarUsuario, validarPerfil } from "../helpers/Validaciones.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -20,36 +21,16 @@ const registro = (req, res) => {
 }
 const crearUsuario = async (req, res) => {
 
-    // Validar nombre
-    await check('nombre').notEmpty().withMessage('El nombre es requerido').run(req)
-    await check('nombre').not().matches(/[0-9]/).withMessage('El nombre no puede contener numeros').run(req)
-    // Validar apellido
-    await check('apellido').notEmpty().withMessage('El apellido es requerido').run(req)
-    await check('apellido').not().matches(/[0-9]/).withMessage('El apellido no puede contener numeros').run(req)
-    // Validar email
-    await check('email').notEmpty().withMessage('El email es requerido').run(req)
-    await check('email').isEmail().withMessage('El email no es valido').run(req)
-    // Validar telefono
-    await check('telefono').notEmpty().withMessage('El telefono es requerido').run(req)
-    await check('telefono').isNumeric().withMessage('El telefono debe ser un numero').run(req)
-    await check('telefono').isLength({ min: 9, max: 9 }).withMessage('El telefono debe tener 9 digitos').run(req)
-    await check('telefono').matches(/^9[0-9]{8}$/).withMessage('El telefono debe ser de Perú').run(req)
-    // Validar edad
-    await check('edad').isInt({ min: 23, max: 80 }).withMessage('La edad debe ser mayor a 23 años y menor a 80 años').run(req)
-    await check('edad').notEmpty().withMessage('La edad es requerida').run(req)
-    await check('edad').isNumeric().withMessage('La edad debe ser un numero').run(req)
-    // Validar contraseña
-    await check('password').notEmpty().withMessage('La contraseña es requerida').run(req)
-    await check('password').isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres').run(req)
-    // Validar contraseña2
-    await check('password2').notEmpty().withMessage('La contraseña de confirmación es requerida').run(req)
-    await check('password2').isLength({ min: 8 }).withMessage('La contraseña de confirmación debe tener al menos 8 caracteres').run(req)
-    // Validar que las contraseñas coincidan
-    await check('password2').equals(req.body.password).withMessage('Las contraseñas no coinciden').run(req)
-    // Validar tipo
-    await check('tipo').notEmpty().withMessage('El tipo de usuario es requerido').run(req)
-    
+    const errores = await validarUsuario(req)
 
+    if(!errores.isEmpty()){
+        return res.render('usuario/registro', {
+            csrfToken: req.csrfToken(),
+            errores: errores.array(),
+            oldData: req.body,
+            pagina: 'Registro'
+        })
+    }
 
     // Borrar los espacios en blanco
     req.body.nombre = req.body.nombre.trim()
@@ -61,16 +42,6 @@ const crearUsuario = async (req, res) => {
 
 
     const { nombre, apellido, email, telefono, edad, password, tipo } = req.body
-    const errores = validationResult(req)
-
-    if (!errores.isEmpty()) {
-        return res.render('usuario/registro', {
-            csrfToken: req.csrfToken(),
-            errores: errores.array(),
-            oldData: req.body,
-            pagina: 'Registro'
-        })
-    }
     // Verificar que el gmail no este registrado
     const usuarioExistente = await Usuario.findOne({ where: { email } })
     if (usuarioExistente) {
@@ -328,11 +299,7 @@ const cerrarSesion = (req, res) => {
 
 const panelVendedor = async (req, res) => {
     const usuario = await Usuario.findOne({ where: { id: req.usuario.id } })
-    
-    if(!usuario){
-        return res.redirect('/auth/login')
-    }
-    
+       
     const propiedades = await Propiedad.findAll({ where: { usuarioId: req.usuario.id } })
     const propiedadesPublicadas = propiedades.filter(propiedad => propiedad.publicado === true)
     
@@ -435,38 +402,25 @@ const editarPerfil = async (req, res) => {
         titulo: 'Editar Perfil',
         usuario,
         errores: [],
-        erroresPassword: [],
         csrfToken: req.csrfToken(),
         ruta: '/auth/editar-perfil',
         pagina: 'Editar Perfil'
     })
 }
 const actualizarPerfil = async (req, res) => {
-    // Validar nombre
-    await check('nombre').notEmpty().withMessage('El nombre es requerido').run(req)
-    await check('nombre').not().matches(/[0-9]/).withMessage('El nombre no puede contener numeros').run(req)
-    // Validar apellido
-    await check('apellido').notEmpty().withMessage('El apellido es requerido').run(req)
-    await check('apellido').not().matches(/[0-9]/).withMessage('El apellido no puede contener numeros').run(req)
-    // Validar email
-    await check('email').notEmpty().withMessage('El email es requerido').run(req)
-    await check('email').isEmail().withMessage('El email no es valido').run(req)
-    // Validar telefono
-    await check('telefono').notEmpty().withMessage('El telefono es requerido').run(req)
-    await check('telefono').isNumeric().withMessage('El telefono debe ser un numero').run(req)
-    await check('telefono').isLength({ min: 9, max: 9 }).withMessage('El telefono debe tener 9 digitos').run(req)
-    await check('telefono').matches(/^9[0-9]{8}$/).withMessage('El telefono debe ser de Perú').run(req)
-    // Validar edad
-    await check('edad').isInt({ min: 23, max: 80 }).withMessage('La edad debe ser mayor a 23 años y menor a 80 años').run(req)
-    await check('edad').notEmpty().withMessage('La edad es requerida').run(req)
-    await check('edad').isNumeric().withMessage('La edad debe ser un numero').run(req)
 
-    // Solo validar contraseñas si se están enviando
-    if (req.body.password_actual || req.body.password_nueva || req.body.password_confirmar) {
-        await check('password_actual').notEmpty().withMessage('La contraseña actual es requerida').run(req)
-        await check('password_nueva').notEmpty().withMessage('La contraseña nueva es requerida').run(req)
-        await check('password_confirmar').notEmpty().withMessage('La contraseña de confirmación es requerida').run(req)
-        await check('password_confirmar').equals(req.body.password_nueva).withMessage('Las contraseñas no coinciden').run(req)
+    const usuario = await Usuario.findOne({ where: { id: req.usuario.id } })
+
+    const errores = await validarPerfil(req)
+
+    if(!errores.isEmpty()){
+        return res.render('usuario/editar-perfil', {
+            csrfToken: req.csrfToken(),
+            errores: errores.array(),
+            usuario: usuario,
+            ruta: '/auth/editar-perfil',
+            pagina: 'Editar Perfil'
+        })
     }
 
     // Borrar los espacios en blanco
@@ -475,28 +429,7 @@ const actualizarPerfil = async (req, res) => {
     req.body.email = req.body.email.trim()
     req.body.telefono = req.body.telefono.trim()
 
-    const errores = validationResult(req)
-    const usuario = await Usuario.findOne({ where: { id: req.usuario.id } })
 
-    // Separar errores de información personal y contraseña
-    const erroresInfo = errores.array().filter(error => 
-        !['password_actual', 'password_nueva', 'password_confirmar'].includes(error.path)
-    )
-    const erroresPassword = errores.array().filter(error => 
-        ['password_actual', 'password_nueva', 'password_confirmar'].includes(error.path)
-    )
-
-    if (!errores.isEmpty()) {
-        return res.render('usuario/editar-perfil', {
-            csrfToken: req.csrfToken(),
-            errores: erroresInfo,
-            erroresPassword: erroresPassword,
-            oldData: req.body,
-            usuario,
-            ruta: '/auth/editar-perfil',
-            pagina: 'Editar Perfil'
-        })
-    }
     // Si quiere cambiar la contraseña
     if (req.body.password_actual) {
         const passwordCorrecto = await usuario.verificarPassword(req.body.password_actual)
@@ -521,9 +454,9 @@ const actualizarPerfil = async (req, res) => {
             })
         }
         usuario.password = await bcrypt.hash(req.body.password_nueva, 10)
+        usuario.password = req.body.password_nueva
         await usuario.save()
-        req.flash('mensajeFlash',   'Contraseña actualizada correctamente')
-        req.flash('tipoFlash', 'exito')
+        console.log('Contraseña actualizada correctamente')
         res.redirect('/auth/editar-perfil')
     }
 
@@ -535,8 +468,10 @@ const actualizarPerfil = async (req, res) => {
     usuario.telefono = telefono
     usuario.edad = edad
     await usuario.save()
-    req.flash('mensajeFlash', 'Perfil actualizado correctamente')
+    // mensaje flash
+    req.flash('mensajeFlash', 'Perfil dsadsdadsadsadsad correctamente')
     req.flash('tipoFlash', 'exito')
+    console.log(req.flash('mensajeFlash'))
     res.redirect('/auth/editar-perfil')
 }
 

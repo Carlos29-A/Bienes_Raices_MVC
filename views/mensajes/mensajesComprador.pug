@@ -1,7 +1,6 @@
 extends ../layout/index.pug
-
 block contenido
-    if remitente.tipo.toString() === '2'
+    if comprador.tipo.toString() === '2'
         div(class="min-h-screen bg-gray-100 flex flex-col")
             include ../usuario/comprador-Sidebar/compradorSidebar.pug
             //- Contenido Principal
@@ -9,18 +8,14 @@ block contenido
                 // Titulo
                 div(class="bg-white p-4 shadow-md")
                     div(class="max-w-7xl mx-auto")
-                        h1(class="text-3xl font-bold text-[#FF6819]") Mensajes del comprador #{remitente.nombre}
+                        h1(class="text-3xl font-bold text-[#FF6819]") Mensajes del comprador #{comprador.nombre}
                         p(class="text-gray-600") Gestiona y organiza los mensajes de los compradores
                 //- Contenedor de Mensajes
                 div(class="flex-1 p-8")
                     //Mensaje de exito
                     if mensajesFlash.length > 0
-                        div(class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert")   
-                            span(class="block sm:inline")= mensajesFlash[0]
-                            span(class="absolute top-0 bottom-0 right-0 px-4 py-3")
-                                svg(class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20")
-                                    title("Close")
-                                    path(d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z")
+                        include ../partials/MensajeModal.pug
+                        div(id="valorMensaje" class="hidden" data-show="true")
                     //- Lista de Conversaciones
                     div(class="max-w-7xl mx-auto space-y-6")
                         //- Mensajes Recibidos
@@ -28,7 +23,7 @@ block contenido
                             h2(class="text-xl font-semibold text-[#FF6819] mb-4 flex items-center")
                                 i(class="fas fa-inbox mr-2")
                                 | Mensajes Recibidos
-                            each mensaje in mensajesRespondidos
+                            each mensaje in mensajesRecibidos
                                 //- Mensaje Estático 1
                                 div(class="bg-gray-100 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 mb-4")
                                     div(class="p-6 bg-white")
@@ -41,10 +36,14 @@ block contenido
                                                     p(class="text-sm text-gray-600 font-bold truncate")= mensaje.propiedadRelacion.titulo
                                                     p(class="text-sm text-gray-500")= mensaje.createdAt.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
                                             div(class="flex items-center space-x-2")
-                                                span(class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium") Recibido
                                                 a(href=`/mensajes/ver/${mensaje.id}` class="text-sm bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors duration-200 cursor-pointer")
                                                     i(class="fas fa-eye mr-2")
                                                     | Ver Detalles
+                                                //- Opcion para responder el mensaje y que el comprador pueda responder
+                                                if mensaje.respuestaId !== null && mensaje.destinatarioId === comprador.id
+                                                    a(href=`/mensajes/responder/comprador/${mensaje.id}` class="text-sm bg-white border border-[#FF6F17] text-[#FF6F17] px-4 py-2 rounded-md hover:bg-orange-50 transition-colors duration-200 cursor-pointer")
+                                                        i(class="fas fa-reply mr-2")
+                                                        | Responder
                                         div(class="mt-4 bg-gray-50 rounded-lg p-4")
                                             p(class="text-gray-700")= mensaje.mensaje
 
@@ -66,19 +65,22 @@ block contenido
                                                         p(class="text-sm text-gray-600 font-bold truncate")= mensaje.propiedadRelacion.titulo
                                                         p(class="text-sm text-gray-500")= mensaje.createdAt.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
                                                 div(class="flex items-center space-x-2")
-                                                    span(class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium") Enviado
                                                     a(href=`/mensajes/ver/${mensaje.id}` class="text-sm bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors duration-200 cursor-pointer")
                                                         i(class="fas fa-eye mr-2")
                                                         | Ver Detalles
-                                                    if mensaje.remitenteId === remitente.id
+                                                    if mensaje.remitenteId === comprador.id
                                                         a(href=`/mensajes/editar/${mensaje.id}` class="text-sm bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-600 hover:scale-105 transition-all duration-300 cursor-pointer")
                                                             i(class="fas fa-edit mr-2")
                                                             | Editar
-                                                    form(action=`/mensajes/eliminar/${mensaje.id}` method="POST" class="inline")
-                                                        input(type="hidden" name="_csrf" value=csrfToken)
-                                                        button(type="submit" class="text-sm bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-300 cursor-pointer")
-                                                            i(class="fas fa-trash-alt mr-2")
-                                                            | Eliminar
+                                                    button(
+                                                        type="button"
+                                                        class="text-sm bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-300 cursor-pointer"
+                                                        onclick=`abrirModalEliminarMensaje(${mensaje.id}, 'Eliminar Mensaje', '¿Estás seguro de querer eliminar este mensaje?', '/mensajes/eliminar/${mensaje.id}')`
+                                                    )
+                                                        i(class="fas fa-trash-alt mr-2")
+                                                        | Eliminar
+                                                    include ../partials/MensajeEliminar.pug
+                                                    
                                             div(class="mt-4 bg-gray-50 rounded-lg p-4")
                                                 //- Si el mensaje es muy largo, se corta y se muestra un boton para ver el mensaje completo
                                                 if mensaje.mensaje.length > 100
@@ -108,7 +110,7 @@ block contenido
                                             div(class="flex items-center space-x-4")
                                                 img(src="/img/avatar.png" class="w-12 h-12 rounded-full object-cover border-2 border-blue-100")
                                                 div(class="flex-1 min-w-0")
-                                                    h3(class="text-lg font-semibold text-gray-900 truncate") Mensaje para #{mensaje.destinatarioRelacion.nombre} de #{mensaje.remitenteRelacion.nombre}
+                                                    h3(class="text-lg font-semibold text-gray-900 truncate") Mensaje respondido por #{mensaje.destinatarioRelacion.nombre} de #{mensaje.remitenteRelacion.nombre}
                                             
                                                     p(class="text-sm text-gray-600 font-bold truncate")= mensaje.propiedadRelacion.titulo
                                                     p(class="text-sm text-gray-500")= mensaje.createdAt.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -120,21 +122,8 @@ block contenido
                                         div(class="mt-4 bg-gray-50 rounded-lg p-4")
                                             p(class="text-gray-700")= mensaje.mensaje
 
-                    //- Mensaje Informativo
-                    div(class="max-w-4xl mx-auto mt-8 bg-[#FFF7ED] rounded-lg p-6")
-                        div(class="flex items-start space-x-4")
-                            div(class="flex-shrink-0")
-                                i(class="fas fa-info-circle text-2xl text-[#FF6F39]")
-                            div
-                                h4(class="text-lg font-semibold text-[#FF6F39] mb-2") Información Importante
-                                p(class="text-gray-700")
-                                    | Para mantener una comunicación efectiva, te recomendamos:
-                                ul(class="list-disc list-inside mt-2 space-y-1 text-gray-700")
-                                    li Ser claro y conciso en tus respuestas
-                                    li Mantener un tono profesional y cordial
-                                    li Responder en un plazo máximo de 24 horas
-                                    li Incluir información relevante sobre la propiedad
-                                    li Confirmar los detalles importantes por escrito
+        
+        
 
     else
         div(class="min-h-screen bg-gray-100 flex")
@@ -288,23 +277,12 @@ block contenido
                                     div(class="mt-4 bg-gray-50 rounded-lg p-4")
                                         p(class="text-gray-700") "El terreno cuenta con todos los servicios básicos y está listo para construcción..."
 
-                    //- Mensaje Informativo
-                    div(class="max-w-4xl mx-auto mt-8 bg-[#FFF7ED] rounded-lg p-6")
-                        div(class="flex items-start space-x-4")
-                            div(class="flex-shrink-0")
-                                i(class="fas fa-info-circle text-2xl text-[#FF6F39]")
-                            div
-                                h4(class="text-lg font-semibold text-[#FF6F39] mb-2") Información Importante
-                                p(class="text-gray-700")
-                                    | Para mantener una comunicación efectiva, te recomendamos:
-                                ul(class="list-disc list-inside mt-2 space-y-1 text-gray-700")
-                                    li Ser claro y conciso en tus respuestas
-                                    li Mantener un tono profesional y cordial
-                                    li Responder en un plazo máximo de 24 horas
-                                    li Incluir información relevante sobre la propiedad
-                                    li Confirmar los detalles importantes por escrito
+
 
 block scripts
+    script(src="/js/ModalEliminar.js")
+    script(src="/js/agregarVentanaModal.js")
+    
     script.
         document.addEventListener('DOMContentLoaded', function() {
             // Manejo de pestañas
@@ -329,4 +307,4 @@ block scripts
                 });
             });
         });
-    
+        

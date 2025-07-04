@@ -51,6 +51,35 @@ window.cerrarModalEliminar = function() {
     }, 200);
 }
 
+// Función para mostrar modal de carga durante eliminación
+window.mostrarModalCargaEliminacion = function() {
+    // Cerrar modal de confirmación
+    window.cerrarModalEliminar();
+    
+    // Mostrar modal de carga usando el modalMensaje existente
+    const modalMensaje = document.getElementById('modalMensaje');
+    const mensajeCarga = document.getElementById('mensajeCarga');
+    const mensajePrincipal = document.getElementById('mensajePrincipal');
+    
+    if(modalMensaje && mensajeCarga) {
+        modalMensaje.classList.remove('hidden');
+        mensajeCarga.textContent = 'Eliminando comentario...';
+        
+        if (mensajePrincipal) {
+            mensajePrincipal.classList.add('hidden');
+        }
+        
+        // Animación de entrada
+        setTimeout(() => {
+            const modalContent = modalMensaje.querySelector('.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }
+        }, 100);
+    }
+}
+
 // Cerrar modal al hacer clic fuera de él
 document.addEventListener('DOMContentLoaded', function(){
     const modalEliminar = document.getElementById('modalEliminar');
@@ -59,6 +88,15 @@ document.addEventListener('DOMContentLoaded', function(){
             if(e.target === modalEliminar){
                 window.cerrarModalEliminar();
             }
+        });
+    }
+    
+    // Event listener para el formulario de eliminación
+    const formEliminar = document.getElementById('formEliminar');
+    if(formEliminar) {
+        formEliminar.addEventListener('submit', function() {
+            // Mostrar modal de carga
+            window.mostrarModalCargaEliminacion();
         });
     }
 });

@@ -39,6 +39,9 @@ const obtenerPropiedadesAdmin = async (req, res) => {
 }
 
 const obtenerPropiedadesFiltradas = async (req, res) => {
+    // Obtener el usuario logueado
+    const { id } = req.usuario
+    
     const { estado, categoria, habitaciones, wc, estacionamiento, buscar } = req.query
     
     // Construir el objeto where
@@ -89,6 +92,9 @@ const obtenerPropiedadesFiltradas = async (req, res) => {
     try {
         const propiedades = await Propiedad.findAll({
             where,
+            where : {
+                usuarioId : id
+            },
             include: [
                 {
                     model: Categoria,

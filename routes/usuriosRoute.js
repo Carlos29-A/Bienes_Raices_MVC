@@ -1,6 +1,6 @@
 import express from 'express'
 import { registro, login, olvideContraseña, crearUsuario, confirmar, resetearPassword, reestablecerPassword, nuevaContraseña, iniciarSesion, panelVendedor, panelComprador, editarPerfil, actualizarPerfil, cerrarSesion, buscarPropiedades, misPropiedades, perfilUsuario } from '../controllers/usuarioControllers.js'
-import  protegerRuta  from '../middlewares/protegerRuta.js'
+import  { protegerRuta, validarVendedor, validarComprador } from '../middlewares/protegerRuta.js'
 
 const router = express.Router()
 
@@ -20,7 +20,7 @@ router.get('/login', login)
 router.post('/login', iniciarSesion)
 
 // Vendedor
-router.get('/vendedor/panel', protegerRuta, panelVendedor)
+router.get('/vendedor/panel', protegerRuta, validarVendedor, panelVendedor)
 
 // Comprador
 router.get('/comprador/panel', protegerRuta, panelComprador)
