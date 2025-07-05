@@ -1,0 +1,35 @@
+//- Navegación Principal
+nav(class="bg-gradient-to-r from-[#1E2939] to-[#101828] shadow-lg")
+    div(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8")
+        //- Barra superior con logo y menú
+        div(class="flex items-center justify-between h-16")
+            //- Logo
+            a(href="/auth/comprador/panel" class="flex items-center space-x-3")
+                img(src="/img/logo.png" alt="Logo" class="w-15 h-10")
+                span(class="text-white text-xl font-bold") InmoElegante
+            
+            //- Menú principal
+            div(class="hidden md:flex items-center space-x-8")
+                a(href="/" class=`${ruta === "/" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
+                    i(class="fas fa-home mr-2")
+                    span Inicio
+                //- Buscar Propiedades
+                a(href="/buscarPropiedades" class=`${ruta === "/buscarPropiedades" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
+                    i(class="fas fa-search mr-2")
+                    span Buscar
+                //- Inicio de sesion
+                a(href="/auth/login" class=`${ruta === "/auth/login" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
+                    i(class="fas fa-user mr-2")
+                    span Iniciar Sesión
+                //- Registrarse
+                a(href="/auth/registro" class=`${ruta === "/auth/registro" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
+                    i(class="fas fa-user-plus mr-2")
+                    span Registrarse
+                //- Nosotros
+                a(href="/nosotros" class=`${ruta === "/nosotros" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
+                    i(class="fas fa-info-circle mr-2")
+                    span Nosotros
+                //- Contacto
+                a(href="/contacto" class=`${ruta === "/contacto" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
+                    i(class="fas fa-envelope mr-2")
+                    span Contacto

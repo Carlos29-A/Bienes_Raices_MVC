@@ -1,0 +1,94 @@
+extends ../layout/index
+
+block contenido
+    include sidebar.pug
+    
+    //- Hero Section
+    section(class="relative bg-gradient-to-r from-[#1E2939] to-[#101828] py-20")
+        div(class="absolute inset-0 overflow-hidden")
+            //- Patrón de fondo decorativo
+            div(class="absolute inset-0 bg-[url('/img/hogar.png')] opacity-10 bg-repeat")
+        div(class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center")
+            h1(class="text-4xl md:text-5xl font-bold text-white mb-6") Sobre InmoElegante
+            p(class="text-xl text-gray-300 max-w-3xl mx-auto") Transformando sueños en hogares: Tu socio confiable en el mundo inmobiliario desde 2024.
+
+    //- Valores Section
+    section(class="py-16 bg-white")
+        div(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8")
+            div(class="text-center mb-12")
+                h2(class="text-3xl font-bold text-gray-900") Nuestros Valores
+                p(class="mt-4 text-lg text-gray-600") Los pilares que guían nuestro servicio
+
+            div(class="grid grid-cols-1 md:grid-cols-3 gap-8")
+                //- Confianza
+                div(class="bg-gray-50 p-8 rounded-2xl text-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1")
+                    div(class="w-16 h-16 bg-[#FF6819] rounded-full flex items-center justify-center mx-auto mb-6")
+                        i(class="fas fa-handshake text-2xl text-white")
+                    h3(class="text-xl font-bold text-gray-900 mb-4") Confianza
+                    p(class="text-gray-600") Construimos relaciones duraderas basadas en la transparencia y la honestidad.
+
+                //- Excelencia
+                div(class="bg-gray-50 p-8 rounded-2xl text-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1")
+                    div(class="w-16 h-16 bg-[#FF6819] rounded-full flex items-center justify-center mx-auto mb-6")
+                        i(class="fas fa-star text-2xl text-white")
+                    h3(class="text-xl font-bold text-gray-900 mb-4") Excelencia
+                    p(class="text-gray-600") Nos esforzamos por superar las expectativas en cada interacción.
+
+                //- Innovación
+                div(class="bg-gray-50 p-8 rounded-2xl text-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1")
+                    div(class="w-16 h-16 bg-[#FF6819] rounded-full flex items-center justify-center mx-auto mb-6")
+                        i(class="fas fa-lightbulb text-2xl text-white")
+                    h3(class="text-xl font-bold text-gray-900 mb-4") Innovación
+                    p(class="text-gray-600") Adoptamos las últimas tecnologías para mejorar la experiencia inmobiliaria.
+    //- Equipo Section desarrolladores
+    section(class="py-16 bg-gray-50")
+        div(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8")
+            div(class="text-center mb-12")
+                h2(class="text-3xl font-bold text-gray-900") Nuestro Equipo de Desarrolladores
+                p(class="mt-4 text-lg text-gray-600") Profesionales dedicados a tu servicio
+
+            div(class="grid grid-cols-1 md:grid-cols-3 gap-8")
+                //- Miembro 1
+                div(class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300")
+                    img(src="/img/avatar.png" alt="Carlos Aguilar" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover")
+                    h3(class="text-xl font-bold text-gray-900 text-center") Carlos Aguilar 
+                    p(class="text-[#FF6819] text-center mb-4") Desarrollador
+                    p(class="text-gray-600 text-center") "Desarrollador de la aplicación"
+
+                //- Miembro 2
+                div(class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300")
+                    img(src="/img/avatar.png" alt="Kaleb Arteaga" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover")
+                    h3(class="text-xl font-bold text-gray-900 text-center") Kaleb Arteaga
+                    p(class="text-[#FF6819] text-center mb-4") Desarrollador
+                    p(class="text-gray-600 text-center") "Desarrollador de la aplicación"
+
+                //- Miembro 3
+                div(class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300")
+                    img(src="/img/avatar.png" alt="Oswaldo Mantilla" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover")
+                    h3(class="text-xl font-bold text-gray-900 text-center") Oswaldo Mantilla 
+                    p(class="text-[#FF6819] text-center mb-4") Desarrollador
+                    p(class="text-gray-600 text-center") "Desarrollador de la aplicación"
+                div(class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300")
+                    img(src="/img/avatar.png" alt="Adrian Benitez" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover")
+                    h3(class="text-xl font-bold text-gray-900 text-center") Adrian Benitez 
+                    p(class="text-[#FF6819] text-center mb-4") Desarrollador
+                    p(class="text-gray-600 text-center") "Desarrollador de la aplicación"
+                div(class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300")
+                    img(src="/img/avatar.png" alt="Gustavo Gonzalez" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover")
+                    h3(class="text-xl font-bold text-gray-900 text-center") Gustavo Gonzalez 
+                    p(class="text-[#FF6819] text-center mb-4") Desarrollador
+                    p(class="text-gray-600 text-center") "Desarrollador de la aplicación"
+    //- CTA Section
+    section(class="py-16 bg-white")
+        div(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center")
+            h2(class="text-3xl font-bold text-gray-900 mb-6") ¿Listo para encontrar tu hogar ideal?
+            p(class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto") Únete a nuestra comunidad de propietarios satisfechos y descubre la diferencia de trabajar con expertos inmobiliarios.
+            div(class="flex justify-center gap-4")
+                a(href="/buscarPropiedades" class="bg-gradient-to-r from-[#FF6819] to-[#FF8F17] text-white px-8 py-3 rounded-lg font-medium hover:from-[#E55A0F] hover:to-[#FF6819] transition-all duration-200 transform hover:scale-105 shadow-lg")
+                    i(class="fas fa-search mr-2")
+                    | Explorar Propiedades
+                a(href="/auth/registro" class="bg-gray-100 text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-200 transition-all duration-200")
+                    i(class="fas fa-user-plus mr-2")
+                    | Registrarse
+
+    include ../layout/footer.pug

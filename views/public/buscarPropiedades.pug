@@ -4,9 +4,9 @@ block styles
     meta(name="csrf-token" content=csrfToken)
 
 block contenido
+    include sidebar.pug
     div(class="min-h-screen bg-gray-100 flex flex-col")
         
-        include ../usuario/comprador-Sidebar/compradorSidebar.pug
         //- Contenido Principal
         div(class="flex-1")
             //- Header Principal
@@ -29,7 +29,7 @@ block contenido
                             i(class="fas fa-filter text-[#FF6819] mr-3")
                             | Filtros de Búsqueda
                     
-                    form(action="/propiedades/buscar" method="GET" class="bg-gray-50 rounded-xl p-6 border border-gray-200")
+                    form(action="/buscarPropiedades" method="GET" class="bg-gray-50 rounded-xl p-6 border border-gray-200")
                         //- Filtros Principales
                         div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6")
                             //- Ubicación
@@ -178,14 +178,6 @@ block contenido
                                     div(class="absolute bottom-4 right-4")
                                         p(class="bg-white/95 backdrop-blur-sm text-gray-800 px-4 py-2 rounded-xl font-bold text-xl shadow-lg")
                                             | $ #{propiedad.precio.toLocaleString()}
-                                    
-                                    //- Botón de Favorito (corazón)
-                                    div(class="absolute top-4 right-4")
-                                        button(
-                                            class=`w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-[#FF6819] hover:text-white transition-all duration-200 transform hover:scale-110 agregar-favorito ${favoritos.some(favorito => favorito.propiedadId === propiedad.id) ? 'text-red-500' : 'text-gray-400'}` 
-                                            data-propiedad-id=propiedad.id
-                                        )
-                                            i(class="fas fa-heart")
 
                                 //- Contenido de la Propiedad
                                 div(class="p-6")
@@ -227,13 +219,13 @@ block contenido
                                         //- Botones de Acción
                                         div(class="flex space-x-3")
                                             a(
-                                                href=`/propiedades/${propiedad.id}`
+                                                href=`/propiedad/${propiedad.id}`
                                                 class="flex-1 bg-gradient-to-r from-[#FF6819] to-[#FF8F17] text-white px-4 py-2 rounded-lg font-medium hover:from-[#E55A0F] hover:to-[#FF6819] transition-all duration-200 transform hover:scale-105 shadow-md text-center text-sm"
                                             )
                                                 | Ver Detalles
                                             a(
-                                                href=`/mensajes/enviar/${propiedad.id}/${propiedad.usuarioRelacion.id}`
-                                                class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition-all duration-200 text-center text-sm"
+                                                href=`/auth/login`
+                                                class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition-all duration-200 text-center text-sm public-contactar"
                                             )
                                                 | Contactar
 
@@ -259,4 +251,25 @@ block contenido
                             | Ajustar Filtros
 
 block scripts
-    script(src="/js/agregarFavorito.js")
+    script.
+        const publicContactar = document.querySelectorAll('.public-contactar');
+        publicContactar.forEach(element => {
+            element.addEventListener('mouseover', (e) => {
+                //- Cambair de color a #FF6819
+                element.classList.remove('hover:bg-gray-200')
+                //- Agregar el un gradiente de #FF6819 a #FF8F17
+                element.classList.add('hover:bg-[#FF6819]')
+                element.classList.add('hover:text-white')
+                //- Cambiar texto a Iniciar Sesión
+                element.textContent = 'Iniciar Sesión';
+            });
+            element.addEventListener('mouseout', () => {
+                //- Eliminar el bg
+                element.classList.remove('hover:bg-[#FF6819]')
+                element.classList.add('hover:bg-gray-200')
+                element.classList.remove('hover:text-white')
+                element.textContent = 'Contactar';
+            });
+        });
+
+

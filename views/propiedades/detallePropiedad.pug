@@ -2,7 +2,10 @@ extends ../layout/index.pug
 
 block contenido
     div(class="min-h-screen bg-gray-100 flex flex-col")
-        include ../usuario/comprador-Sidebar/compradorSidebar.pug
+        if usuario
+            include ../usuario/comprador-Sidebar/compradorSidebar.pug
+        else
+            include ../public/sidebar.pug
 
         //- Contenido Principal
         div(class="flex-1  p-5")
@@ -21,8 +24,12 @@ block contenido
                         class="w-full h-full object-cover"
                     )
                     //- Botón de Favorito
-                    button(class=`absolute top-4 right-4 ${favoritos.some(favorito => favorito.propiedadId === propiedad.id) ? 'text-red-500' : 'text-gray-700'}  py-2 px-4 rounded-md transition-colors cursor-pointer agregar-favorito text-2xl` data-propiedad-id=propiedad.id data-usuario-id=propiedad.usuarioRelacion.id ) 
-                        i(class="fas fa-heart")
+                    if usuario
+                        button(class=`absolute top-4 right-4 ${favoritos.some(favorito => favorito.propiedadId === propiedad.id) ? 'text-red-500' : 'text-gray-700'}  py-2 px-4 rounded-md transition-colors cursor-pointer agregar-favorito text-2xl` data-propiedad-id=propiedad.id data-usuario-id=propiedad.usuarioRelacion.id ) 
+                            i(class="fas fa-heart")
+                    else
+                        a(href="/auth/login" class="absolute top-4 right-4 text-gray-700 py-2 px-4 rounded-md transition-colors cursor-pointer text-2xl")
+                            i(class="fas fa-heart")
 
                 //- Información Principal
                 div(class="p-6")
@@ -67,15 +74,35 @@ block contenido
 
                     //- Botones de Acción
                     div(class="flex space-x-4 mt-8")
-                        a(
-                            href=`/mensajes/enviar/${propiedad.id}/${propiedad.usuarioRelacion.id}`	
-                            class="flex-1 bg-gradient-to-r from-[#FF641A] to-[#B08262]  text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer hover:scale-105 transition-all duration-300"
-                        )
-                            i(class="fas fa-envelope mr-2")
-                            | Contactar Vendedor
+                        if usuario
+                            a(
+                                href=`/mensajes/enviar/${propiedad.id}/${propiedad.usuarioRelacion.id}`	
+                                class="flex-1 bg-gradient-to-r from-[#FF641A] to-[#B08262]  text-white py-3 px-6 rounded-lg  transition-colors cursor-pointer hover:scale-105 transition-all duration-300"
+                            )
+                                i(class="fas fa-envelope mr-2")
+                                | Contactar Vendedor
+                        else
+                            a(href=`/auth/login` class="flex-1 bg-gradient-to-r from-[#FF641A] to-[#B08262]  text-white py-3 px-6 rounded-lg  transition-colors cursor-pointer hover:scale-105 transition-all duration-300 text-center public-contactar") 
+                                i(class="fas fa-envelope mr-2")
+                                | Contactar Vendedor
                         a(href=`/comentario-calificacion/crear-comentario-calificacion/${propiedad.usuarioRelacion.id}` class="flex-1 bg-gradient-to-r from-[#FF641A] to-[#B08262]  text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer hover:scale-105 transition-all duration-300 text-center") 
                             i(class="fas fa-phone mr-2")
                             | Ver Perfil Vendedor
 
 block scripts
     script(src="/js/agregarFavorito.js")
+    script.
+        const publicContactar = document.querySelector('.public-contactar');
+        publicContactar.addEventListener('mouseover', (e) => {
+            e.target.classList.remove('hover:bg-gradient-to-r', 'from-[#FF641A]', 'to-[#B08262]')
+            e.target.classList.add('hover:bg-gradient-to-r', 'from-[#FF641A]', 'to-[#B08262]')
+            e.target.textContent = 'Iniciar Sesión';
+            e.target.classList.add('font-bold')
+        });
+        publicContactar.addEventListener('mouseout', (e) => {
+            e.target.classList.remove('hover:bg-gradient-to-r', 'from-[#FF641A]', 'to-[#B08262]')
+            e.target.classList.add('hover:bg-gradient-to-r', 'from-[#FF641A]', 'to-[#B08262]')
+            e.target.textContent = 'Contactar';
+            e.target.classList.remove('font-bold')
+        });
+

@@ -1,0 +1,139 @@
+extends ../layout/index.pug
+
+block styles
+    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
+
+block contenido
+    include sidebar.pug
+    div(class="min-h-screen bg-gray-100 flex flex-col")
+        //- Contenido Principal
+        main(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8")
+            //- Encabezado y Filtros
+            div(class="p-6 mb-8")
+                div(class="text-center mb-6")
+                    h1(class="text-3xl font-bold text-[#FF6819]") Encuentra tu Propiedad Ideal
+                    p(class="mt-2 text-gray-600") Explora propiedades en el mapa y encuentra el lugar perfecto para ti
+
+                //- Filtros
+                div(class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white p-4 rounded-lg shadow-md")
+                    //- Filtro de Categoría
+                    div(class="flex flex-col")
+                        label(for="categorias" class="block text-sm font-medium text-gray-700 mb-1") Categoría
+                        select(name="categorias" id="categoria" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FF6819] focus:ring-[#FF6819] sm:text-sm")
+                            option(value=""  selected) Seleccionar Categoría
+                            each categoria in categorias
+                                option(value=categoria.id)= categoria.nombre
+
+                    //- Filtro de Habitaciones
+                    div(class="flex flex-col")
+                        label(for="habitaciones" class="block text-sm font-medium text-gray-700 mb-1") Habitaciones
+                        select(name="habitaciones" id="habitaciones" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FF6819] focus:ring-[#FF6819] sm:text-sm")
+                            option(value="" selected) Seleccionar
+                            option(value="1") 1 Habitación
+                            option(value="2") 2 Habitaciones
+                            option(value="3") 3 Habitaciones
+                            option(value="4") 4 Habitaciones
+
+                    //- Filtro de baños
+                    div(class="flex flex-col")
+                        label(for="baños" class="block text-sm font-medium text-gray-700 mb-1") Baños
+                        select(name="baños" id="baños" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FF6819] focus:ring-[#FF6819] sm:text-sm")
+                            option(value="" selected) Seleccionar
+                            option(value="1") 1 Baño
+                            option(value="2") 2 Baños
+                            option(value="3") 3 Baños
+
+                    //- Filtro de estacionamiento
+                    div(class="flex flex-col")
+                        label(for="estacionamiento" class="block text-sm font-medium text-gray-700 mb-1") Estacionamiento
+                        select(name="estacionamiento" id="estacionamiento" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FF6819] focus:ring-[#FF6819] sm:text-sm")
+                            option(value="" selected) Seleccionar
+                            option(value="1") 1 Estacionamiento
+                            option(value="2") 2 Estacionamientos
+                            option(value="3") 3 Estacionamientos
+           
+            //- Mapa
+            div(class="bg-white rounded-xl shadow-lg overflow-hidden mb-8")
+                div(class="h-[600px] w-full" id="mapa-comprador")
+
+            //- Propiedades
+            section(class=" p-8")
+                div(class="flex justify-between items-center mb-6")
+                    h2(class="text-2xl font-bold text-[#FF6819]") Propiedades Disponibles
+                    div(class="flex items-center space-x-2")
+                        span(class="text-gray-600 text-sm")= `${propiedades.length} propiedades encontradas`
+
+                div(class="grid grid-cols-1 md:grid-cols-3 gap-8")
+                    each propiedad in propiedades
+                        article(class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 transform hover:-translate-y-2 h-[500px] flex flex-col")
+                            //- Imagen y Categoría
+                            div(class="relative h-64 overflow-hidden flex-shrink-0")
+                                //- Imagen Principal
+                                img(
+                                    src=`/uploads/${propiedad.imagen}` 
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    alt=propiedad.titulo
+                                )
+                                
+                                //- Overlay Gradiente
+                                div(class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300")
+                                
+                                //- Etiqueta de Categoría
+                                div(class="absolute top-4 left-4")
+                                    span(class="bg-gradient-to-r from-[#FF6819] to-[#FF9F00] text-white px-4 py-2 rounded-full text-xs font-bold uppercase shadow-lg")
+                                        = propiedad.categoriaId ? propiedad.categoriaRelacion.nombre : 'Sin categoría'
+                                
+                                //- Precio
+                                div(class="absolute bottom-4 right-4")
+                                    p(class="bg-white/95 backdrop-blur-sm text-gray-800 px-4 py-2 rounded-xl font-bold text-xl shadow-lg")
+                                        | $ #{propiedad.precio.toLocaleString()}
+                                
+                            //- Contenido de la Propiedad
+                            div(class="p-6 flex flex-col flex-grow")
+                                //- Título
+                                h3(class="text-xl font-bold text-gray-900 mb-3 line-clamp-1 group-hover:text-[#FF6819] transition-colors duration-200")
+                                    = propiedad.titulo
+
+                                //- Características Principales
+                                div(class="grid grid-cols-3 gap-4 py-4 border-y border-gray-100 mb-4")
+                                    //- Habitaciones
+                                    div(class="flex flex-col items-center text-center")
+                                        div(class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mb-2 group-hover:bg-[#FF6819] group-hover:text-white transition-all duration-200")
+                                            i(class="fas fa-bed text-gray-600 group-hover:text-white")
+                                        span(class="text-sm font-medium text-gray-700")
+                                            = `${propiedad.habitaciones} Hab.`
+                                    
+                                    //- Baños
+                                    div(class="flex flex-col items-center text-center")
+                                        div(class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mb-2 group-hover:bg-[#FF6819] group-hover:text-white transition-all duration-200")
+                                            i(class="fas fa-bath text-gray-600 group-hover:text-white")
+                                        span(class="text-sm font-medium text-gray-700")
+                                            = `${propiedad.wc} Baños`
+                                    
+                                    //- Estacionamiento
+                                    div(class="flex flex-col items-center text-center")
+                                        div(class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mb-2 group-hover:bg-[#FF6819] group-hover:text-white transition-all duration-200")
+                                            i(class="fas fa-car text-gray-600 group-hover:text-white")
+                                        span(class="text-sm font-medium text-gray-700")
+                                            = `${propiedad.estacionamiento} Est.`
+
+                                //- Ubicación y Botón de Detalles
+                                div(class="flex items-center justify-between mt-auto")
+                                    //- Ubicación
+                                    div(class="flex items-center text-gray-600 flex-1 mr-4 line-clamp-1")
+                                        i(class="fas fa-map-marker-alt mr-2 text-[#FF6819]")
+                                        span(class="text-sm truncate")
+                                            = propiedad.calle
+                                    
+                                    //- Botón Ver Detalles
+                                    a(
+                                        href=`/propiedades/${propiedad.id}`
+                                        class="inline-flex items-center bg-gradient-to-r from-[#FF6819] to-[#FF8F17] text-white px-4 py-2 rounded-lg font-medium hover:from-[#E55A0F] hover:to-[#FF6819] transition-all duration-200 transform hover:scale-105 shadow-md"
+                                    )
+                                        span(class="text-sm mr-2") Ver detalles
+                                        i(class="fas fa-arrow-right")
+    include ../layout/footer.pug
+block scripts
+    script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
+    script(src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous")
+    script(src="/js/mapaComprador.js")

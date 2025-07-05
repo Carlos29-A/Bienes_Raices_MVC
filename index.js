@@ -11,6 +11,7 @@ import mensajeRouter from './routes/mensajeRoute.js'
 import apiRoute from './routes/apiRoute.js'
 import comentarioCalificacionRouter from './routes/ComentarioCalificacion.js'
 import administradorRouter from './routes/administradorRoute.js'
+import publicoRoute from './routes/publicRoute.js'
 import flash from 'connect-flash'
 import session from 'express-session'
 import { Op } from 'sequelize'
@@ -97,7 +98,7 @@ app.use('/favoritos', favoritosRouter)
 app.use('/mensajes', mensajeRouter)
 app.use('/api', apiRoute)
 app.use('/comentario-calificacion', comentarioCalificacionRouter)
-
+app.use('/', publicoRoute)
 // Puerto
 const port = process.env.PORT || 3000
 app.listen(port, () => {
