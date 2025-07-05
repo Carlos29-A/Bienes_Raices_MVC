@@ -119,7 +119,9 @@ const buscarPropiedades = async function(req, res){
 const contacto = (req, res) => {
     res.render('public/contacto', {
         pagina: 'Contacto',
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        ruta: '/contacto',
+        pagina: 'Contacto'
     })
 }
 

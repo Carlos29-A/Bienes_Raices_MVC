@@ -152,10 +152,35 @@ const obtenerFavoritos = async (req, res) => {
     res.json(favoritos)
 }
 
+const obtenerPropiedadesPublicas = async (req, res) => {
+    try {
+        const propiedades = await Propiedad.findAll({
+            where: {
+                publicado: true
+            },
+            include: [
+                {
+                    model: Categoria,
+                    as: "categoriaRelacion"
+                },
+                {
+                    model: Usuario,
+                    as: "usuarioRelacion"
+                }
+            ]
+        })
+        res.json(propiedades)
+    } catch (error) {
+        console.error('Error al obtener propiedades públicas:', error)
+        res.status(500).json({ error: 'Error al obtener propiedades públicas' })
+    }
+}
+
 export {
     obtenerPropiedades, 
     obtenerPropiedadesCategoria,
     obtenerFavoritos,
     obtenerPropiedadesAdmin,
-    obtenerPropiedadesFiltradas
+    obtenerPropiedadesFiltradas,
+    obtenerPropiedadesPublicas
 }

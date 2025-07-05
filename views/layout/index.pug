@@ -9,8 +9,13 @@ html(lang="es")
         link(rel="stylesheet", href="/font/poppins/poppins.css")
         link(rel="stylesheet", href="/icons/fontawesome/css/all.min.css")
         block styles
-    body 
+    body
+        include ../partials/accesibilidad.pug
+
+        include ../partials/audio.pug
         block contenido
             include ../partials/mensajes
         
         block scripts
+        script(src="/js/accesibilidad.js")
+        script(src="/js/audio.js")

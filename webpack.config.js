@@ -1,20 +1,26 @@
-import path from 'path'
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default {
     mode: 'development',
     entry: {
         mapa: './src/js/mapa.js',
         agregarImagen: './src/js/agregarImagen.js',
-        cambiarEstado: './src/js/cambiarEstado.js',
-        filtrarPropiedades: './src/js/filtrarPropiedades.js',
-        agregarFavorito: './src/js/agregarFavorito.js',
         mapaComprador: './src/js/mapaComprador.js',
+        mapaPublico: './src/js/mapaPublico.js',
+        agregarFavorito: './src/js/agregarFavorito.js',
+        cambiarEstado: './src/js/cambiarEstado.js',
         filtrar: './src/js/filtrar.js',
+        filtrarPropiedades: './src/js/filtrarPropiedades.js',
         filtrosAdmin: './src/js/filtrosAdmin.js',
-        agregarVentanaModal: './src/agregarVentanaModal.js'
+        accesibilidad: './src/js/accesibilidad.js',
+        audio: './src/js/audio.js'
     },
     output: {
         filename: '[name].js',
-        path: path.resolve('public/js')
+        path: path.resolve(__dirname, 'public/js')
     }
 }

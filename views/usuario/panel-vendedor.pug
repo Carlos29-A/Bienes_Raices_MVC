@@ -19,68 +19,62 @@ block contenido
                     div(id="valorMensaje" class="hidden" data-show="true")
                     include ../partials/MensajeModal.pug
 
-            // Dashboard Content
+            //- Dashboard Content
             main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 ")
-                // Stats Cards
+                //- Stats Cards
                 div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8")
-                    // Propiedades Activas
+                    //- Propiedades Activas
                     div(class="bg-white overflow-hidden  rounded-lg shadow-lg")
                         div(class="p-5")
                             div(class="flex items-center")
                                 img(src="/img/propiedad.png" alt="Propiedades Activas" class="h-15 w-15")
-                                
-                                div(class="ml-5 w-0 flex-1")
-                                    dl
-                                        dt(class="text-sm font-medium text-[#101828] truncate") Propiedades Activas
-                                        dd(class="text-lg font-semibold text-gray-900")= propiedadesPublicadas.length
-
-                    // Vistas Totales
+                                div(class="ml-4")
+                                    p(class="text-sm font-medium text-[#101828] truncate") Propiedades Activas
+                                    p(class="text-lg font-semibold text-gray-900")= propiedadesPublicadas.length
+                    //- Mensajes Respondidos
                     div(class="bg-white overflow-hidden  rounded-lg shadow-lg")
                         div(class="p-5")
                             div(class="flex items-center")
                                 img(src="/img/EnviarMensaje.png" alt="Mensaje" class="h-15 w-15")
-                                div(class="ml-5 w-0 flex-1")
-                                    dl
-                                        dt(class="text-sm font-medium text-[#101828] truncate") Mensajes Respondidos
-                                        dd(class="text-lg font-semibold text-gray-900")= mensajesRespondidos.length
-
-                    // Mensajes Nuevos
+                                div(class="ml-4")
+                                    p(class="text-sm font-medium text-[#101828] truncate") Mensajes Respondidos
+                                    p(class="text-lg font-semibold text-gray-900")= mensajesRespondidos.length 
+                    //- Mensajes Nuevos
                     div(class="bg-white overflow-hidden  rounded-lg shadow-lg")
                         div(class="p-5")
                             div(class="flex items-center")
                                 img(src="/img/Mensaje.png" alt="Mensaje" class="h-15 w-15")
-                                div(class="ml-5 w-0 flex-1")
-                                    dl
-                                        dt(class="text-sm font-medium text-[#101828] truncate") Mensajes Nuevos
-                                        dd(class="text-lg font-semibold text-gray-900")= mensajes.length
+                                div(class="ml-4")
+                                    p(class="text-sm font-medium text-[#101828] truncate") Mensajes Nuevos
+                                    p(class="text-lg font-semibold text-gray-900")= mensajes.length 
 
 
-                // Mis Propiedades
+                //- Mis Propiedades
                 div(class="bg-white shadow rounded-lg mb-8 shadow-lg")
                     div(class="px-4 py-5 sm:px-6 flex justify-between items-center")
-                        h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Mis Propiedades
+                        h3(class="text-lg bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text font-bold") Mis Propiedades
                         a(class="text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200  hover:font-bold" href="/propiedades/mis-propiedades") Ver mas 
                     
                     div(class="border-t border-gray-200")
                         div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6")                        
-                            //- Solo se muestren 3 propiedades
+                            //- Solo se muestren 6 propiedades
                             each propiedad in propiedades.slice(0, 6)
-                                div(class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col h-[400px]")
-                                    // Imagen con altura fija
+                                div(class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col ")
+                                    //- Imagen con altura fija
                                     div(class="relative h-48")
                                         img(src=`/uploads/${propiedad.imagen}` alt="Casa" class="w-full h-full object-cover")
-                                        span(class=`absolute top-2 right-2 ${propiedad.publicado? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} text-xs font-semibold px-2.5 py-0.5 rounded`)= propiedad.publicado ? 'Activa' : 'Inactiva'
+                                        p(class=`absolute top-2 right-2 ${propiedad.publicado? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} text-xs font-semibold px-2.5 py-0.5 rounded`)= propiedad.publicado ? 'Activa' : 'Inactiva'
                                     
-                                    // Contenido con flex-grow para empujar los botones hacia abajo
+                                    //- Contenido con flex-grow para empujar los botones hacia abajo
                                     div(class="p-4 flex flex-col flex-grow")
-                                        // Título con altura máxima y ellipsis
-                                        h4(class="text-lg font-bold  text-[#101828] line-clamp-2 min-h-[3rem]")= propiedad.titulo
+                                        //- Título con altura máxima y ellipsis
+                                        p(class="text-lg font-bold  text-[#101828] line-clamp-2 min-h-[3rem]")= propiedad.titulo
                                         p(class="bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text font-bold my-2") $ #{propiedad.precio.toLocaleString()}
                                         
-                                        // Características
+                                        //- Características
                                         p(class="text-gray-500 text-sm") #{propiedad.habitaciones} habitaciones • #{propiedad.wc} baños • #{propiedad.estacionamiento} estacionamientos
                                         
-                                        // Botones fijos en la parte inferior
+                                        //- Botones fijos en la parte inferior
                                         div(class="mt-auto pt-4 flex space-x-2")
                                             a(href=`/propiedades/editar/${propiedad.id}` class="flex-1 bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-white py-2 px-4 rounded-md hover:bg-blue-700 text-sm text-center transition-all duration-300 cursor-pointer") Editar
                                             if propiedad.publicado
@@ -92,10 +86,10 @@ block contenido
 
                             
 
-                // Mensajes Recientes
+                //- Mensajes Recientes
                 div(class="bg-white shadow rounded-lg shadow-lg")
                     div(class="px-4 py-5 sm:px-6")
-                        h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Tus Mensajes recibidos
+                        h3(class="text-lg bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text font-bold") Tus Mensajes recibidos
                     
                     div(class="border-t border-gray-200")
                         if mensajes.length
