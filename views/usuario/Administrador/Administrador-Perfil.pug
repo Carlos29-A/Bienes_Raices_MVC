@@ -32,8 +32,6 @@ block contenido
                                     div(class="relative group")
                                         div(class="relative")
                                             img(class="h-32 w-32 rounded-full ring-4 ring-white shadow-lg" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Foto de perfil")
-                                            button(class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 shadow-lg transform transition-transform duration-200 hover:scale-110")
-                                                i(class="fas fa-camera")
                                     
                                     div(class="flex-1 text-center md:text-left")
                                         div(class="flex flex-col md:flex-row md:items-center md:justify-between")
@@ -48,25 +46,25 @@ block contenido
                                         div(class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4")
                                             div(class="bg-white rounded-lg p-4 shadow-sm")
                                                 div(class="flex items-center justify-center md:justify-start space-x-2")
-                                                    i(class="fas fa-envelope bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
+                                                    img(src="/img/Mensaje.png" alt="Email" class="h-8 w-8")
                                                     span(class="text-gray-600")= usuario.email
                                             div(class="bg-white rounded-lg p-4 shadow-sm")
                                                 div(class="flex items-center justify-center md:justify-start space-x-2")
-                                                    i(class="fas fa-phone bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
+                                                    img(src="/img/Telefono.png" alt="Telefono" class="h-8 w-8")
                                                     span(class="text-gray-600")= usuario.telefono || 'No especificado'
                                             div(class="bg-white rounded-lg p-4 shadow-sm")
                                                 div(class="flex items-center justify-center md:justify-start space-x-2")
-                                                    i(class="fas fa-user-shield bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
+                                                    img(src="/img/usuarios.png" alt="Verificado" class="h-8 w-8")
                                                     span(class="text-gray-600") Administrador
 
-                            // Formulario de Edición
+                            //- Formulario de Edición    
                             form(action="" method="POST" class="px-4 py-5 sm:p-6 space-y-8 divide-y divide-gray-200" novalidate)
                                 input(type="hidden" name="_csrf" value=csrfToken)
                                 
-                                // Información Personal
+                                //- Información Personal
                                 div(class="space-y-6")
                                     div
-                                        h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Información Personal
+                                        h3(class="text-lg font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Información Personal
                                         p(class="mt-1 text-sm text-gray-500") Actualiza tu información personal.
                                     div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
                                         div(class="sm:col-span-3")
@@ -109,10 +107,10 @@ block contenido
                                                 if edad
                                                     p(class="text-red-500 text-sm")= edad.msg
 
-                                // Cambiar Contraseña
+                                //- Cambiar Contraseña
                                 div(class="pt-8")
                                     div
-                                        h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Cambiar Contraseña
+                                        h3(class="text-lg font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Cambiar Contraseña
                                         p(class="mt-1 text-sm text-gray-500") Actualiza tu contraseña de acceso.
                                     div(class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
                                         div(class="sm:col-span-4")

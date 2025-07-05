@@ -103,47 +103,72 @@ const panelAdministradorPropiedades = async (req, res) => {
 }
 
 const panelAdministradorMensajes = async (req, res) => {
+    const { estado, remitente, destinatario } = req.query
 
-    const { estado, tipo } = req.query
+    try {
+        // Construir el objeto de filtros base
+        const where = {}
+        
+        // Aplicar filtro de estado
+        if(estado === 'leido') where.leido = true
+        if(estado === 'no-leido') where.leido = false
 
-    const filtro = {}
+        // Construir la consulta base
+        const queryOptions = {
+            where,
+            include: [
+                {
+                    model: Usuario,
+                    as: 'remitenteRelacion',
+                    required: false // Hace el JOIN LEFT en lugar de INNER
+                },
+                {
+                    model: Usuario,
+                    as: 'destinatarioRelacion',
+                    required: false // Hace el JOIN LEFT en lugar de INNER
+                },
+                {
+                    model: Propiedad,
+                    as: 'propiedadRelacion',
+                    include: [
+                        {
+                            model: Categoria,
+                            as: 'categoriaRelacion'
+                        }
+                    ]
+                }
+            ],
+            order: [['createdAt', 'DESC']]
+        }
 
-    if(estado) filtro.leido = estado
-    if(tipo) filtro.tipo = tipo
-
-    const mensajes = await Mensaje.findAll({
-        where: filtro.estado === 'leido' ? { leido: true } : { leido: false },
-        include: [
-            {
-                model: Usuario,
-                as: 'remitenteRelacion',
-                where: filtro.tipo === 'vendedor' ? { tipo: 1 } : { tipo: 2 }
-            },
-            {
-                model: Usuario,
-                as: 'destinatarioRelacion',
-                where: filtro.tipo === 'vendedor' ? { tipo: 1 } : { tipo: 2 }
-            },
-            {
-                model: Propiedad,
-                as: 'propiedadRelacion',
-                include: [
-                    {
-                        model: Categoria,
-                        as: 'categoriaRelacion'
-                    },
-                ]
+        // Aplicar filtros de nombre si existen
+        if(remitente) {
+            queryOptions.include[0].where = {
+                nombre: { [Op.like]: `%${remitente}%` }
             }
-        ]
-    })
+            queryOptions.include[0].required = true // Hace el JOIN INNER cuando hay filtro
+        }
+        if(destinatario) {
+            queryOptions.include[1].where = {
+                nombre: { [Op.like]: `%${destinatario}%` }
+            }
+            queryOptions.include[1].required = true // Hace el JOIN INNER cuando hay filtro
+        }
 
-    res.render('usuario/Administrador/Administrador-Mensajes', {
-        titulo: 'Administrar Mensajes',
-        usuario: req.usuario,
-        mensajes,
-        csrfToken: req.csrfToken(),
-        pagina: 'Administrar Mensajes',
-    })
+        const mensajes = await Mensaje.findAll(queryOptions)
+
+        res.render('usuario/Administrador/Administrador-Mensajes', {
+            titulo: 'Administrar Mensajes',
+            usuario: req.usuario,
+            mensajes,
+            csrfToken: req.csrfToken(),
+            pagina: 'Administrar Mensajes',
+            filtros: { estado, remitente, destinatario } // Pasamos los filtros a la vista
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: 'Error al buscar mensajes' })
+    }
 }
 
 const panelAdministradorPerfil = async (req, res) => {
@@ -850,19 +875,84 @@ const eliminarMensajeAdministrador = async (req, res) => {
 const verMensajeAdministrador = async (req, res) => {
     const { id } = req.params
 
-    const mensaje = await Mensaje.findByPk(id)
+    try {
+        // Obtener el mensaje principal con sus relaciones
+        const mensaje = await Mensaje.findOne({
+            where: { id },
+            include: [
+                {
+                    model: Usuario,
+                    as: 'remitenteRelacion'
+                },
+                {
+                    model: Usuario,
+                    as: 'destinatarioRelacion'
+                },
+                {
+                    model: Propiedad,
+                    as: 'propiedadRelacion',
+                    include: [
+                        {
+                            model: Categoria,
+                            as: 'categoriaRelacion'
+                        }
+                    ]
+                }
+            ]
+        })
 
-    if(!mensaje){
-        return res.redirect('/auth/administrador/mensajes')
+        if (!mensaje) {
+            return res.redirect('/auth/administrador/mensajes')
+        }
+
+        // Obtener todas las respuestas relacionadas con este mensaje
+        const respuestas = await Mensaje.findAll({
+            where: { respuestaId: id },
+            include: [
+                {
+                    model: Usuario,
+                    as: 'remitenteRelacion'
+                },
+                {
+                    model: Usuario,
+                    as: 'destinatarioRelacion'
+                }
+            ],
+            order: [['createdAt', 'ASC']]
+        })
+
+        // Ver el mensaje original
+        const mensajeOriginal = await Mensaje.findOne({
+            where: { id: mensaje.respuestaId },
+            include: [
+                {
+                    model: Usuario,
+                    as: 'remitenteRelacion'
+                },
+                {
+                    model: Usuario,
+                    as: 'destinatarioRelacion'
+                },
+                {
+                    model: Propiedad,
+                    as: 'propiedadRelacion'
+                }
+            ]
+        })
+
+        res.render('usuario/Administrador/Administrador-Mensajes-Ver', {
+            titulo: 'Ver Mensaje',
+            usuario: req.usuario,
+            mensaje,
+            respuestas,
+            mensajeOriginal,
+            csrfToken: req.csrfToken(),
+            pagina: 'Ver Mensaje'
+        })
+    } catch (error) {
+        console.log(error)
+        res.redirect('/auth/administrador/mensajes')
     }
-
-    res.render('usuario/Administrador/Administrador-Mensajes-Ver', {
-        titulo: 'Ver Mensaje',
-        usuario: req.usuario,
-        mensaje,
-        csrfToken: req.csrfToken(),
-        pagina: 'Ver Mensaje'
-    })
 }
 
 

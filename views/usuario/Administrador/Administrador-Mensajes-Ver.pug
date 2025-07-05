@@ -1,0 +1,106 @@
+extends ../../layout/index.pug
+
+block contenido
+    div(class="min-h-screen bg-gray-100 flex")
+        include ./Administrador-Sidebar/administradorSidebar.pug
+
+        //- Contenido Principal
+        div(class="flex-1 flex flex-col ml-64")
+            //- Encabezado
+            header(class="bg-white border-b border-gray-200 px-8 py-6 shadow-sm")
+                div(class="flex items-center justify-between")
+                    div(class="flex items-center space-x-4")
+                        img(src="/img/Mensaje.png" alt="Mensajes" class="w-12 h-12")
+                        div
+                            h1(class="text-2xl font-bold text-[#FF6F17]") Detalles del Mensaje
+                            p(class="text-gray-600") Conversación completa
+
+            //- Contenedor Principal
+            div(class="flex-1 p-8 bg-gray-100")
+                //- Información de la Propiedad
+                div(class="bg-white rounded-xl shadow-sm overflow-hidden mb-8")
+                    div(class="flex items-center gap-6 p-6 border-b border-gray-100")
+                        img(
+                            src=`/uploads/${mensaje.propiedadRelacion.imagen}`
+                            alt=mensaje.propiedadRelacion.titulo
+                            class="w-32 h-32 object-cover rounded-lg border border-gray-200"
+                        )
+                        div(class="flex-1")
+                            span(class="text-sm font-semibold text-[#FF6F17] block mb-1")= mensaje.propiedadRelacion.categoriaRelacion.nombre
+                            h2(class="text-xl font-bold text-gray-900 mb-2")= mensaje.propiedadRelacion.titulo
+                            div(class="flex gap-4 text-sm text-gray-500")
+                                span(class="flex items-center gap-1")
+                                    i(class="fas fa-map-marker-alt")
+                                    = mensaje.propiedadRelacion.calle
+                                span(class="flex items-center gap-1")
+                                    i(class="fas fa-tag")
+                                    = `$ ${mensaje.propiedadRelacion.precio.toLocaleString()}`
+
+                //- Hilo de Mensajes
+
+                if mensaje.respuestaId !== null
+                    //- Imprimir el mensaje original
+                    div(class="bg-white rounded-xl shadow-sm overflow-hidden")
+                        //- Encabezado del Mensaje
+                        div(class="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50")
+                            div(class="flex items-center gap-3")
+                                img(src="/img/avatar.png" alt=mensajeOriginal.remitenteRelacion.nombre class="w-10 h-10 rounded-full border border-gray-200")
+                                div
+                                    p(class="font-semibold text-gray-900")= mensajeOriginal.remitenteRelacion.nombre
+                                    p(class="text-sm text-gray-500")= mensajeOriginal.remitenteRelacion.email
+                            div(class="flex items-center gap-2")
+                                span(class=`px-3 py-1 rounded-full text-sm font-medium ${mensajeOriginal.remitenteRelacion.tipo.toString() === '1' ? 'bg-orange-50 text-[#FF6F17]' : 'bg-blue-50 text-blue-700'}`)
+                                    = mensajeOriginal.remitenteRelacion.tipo.toString() === '1' ? 'Vendedor' : 'Comprador'
+                                span(class="text-sm text-gray-400")= new Date(mensajeOriginal.createdAt).toLocaleDateString()
+
+                        //- Contenido del Mensaje
+                        div(class="p-6")
+                            p(class="text-gray-700 whitespace-pre-line leading-relaxed")= mensajeOriginal.mensaje
+
+                div(class="space-y-6")
+                    //- Mensaje Original
+                    div(class="bg-white rounded-xl shadow-sm overflow-hidden")
+                        //- Encabezado del Mensaje
+                        div(class="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50")
+                            div(class="flex items-center gap-3")
+                                img(src="/img/avatar.png" alt=mensaje.remitenteRelacion.nombre class="w-10 h-10 rounded-full border border-gray-200")
+                                div
+                                    p(class="font-semibold text-gray-900")= mensaje.remitenteRelacion.nombre
+                                    p(class="text-sm text-gray-500")= mensaje.remitenteRelacion.email
+                            div(class="flex items-center gap-2")
+                                span(class=`px-3 py-1 rounded-full text-sm font-medium ${mensaje.remitenteRelacion.tipo.toString() === '1' ? 'bg-orange-50 text-[#FF6F17]' : 'bg-blue-50 text-blue-700'}`)
+                                    = mensaje.remitenteRelacion.tipo.toString() === '1' ? 'Vendedor' : 'Comprador'
+                                span(class="text-sm text-gray-400")= new Date(mensaje.createdAt).toLocaleDateString()
+
+                        //- Contenido del Mensaje
+                        div(class="p-6")
+                            p(class="text-gray-700 whitespace-pre-line leading-relaxed")= mensaje.mensaje
+
+                    //- Respuestas (si existen)
+                    if respuestas && respuestas.length > 0
+                        each respuesta in respuestas
+                            div(class="bg-white rounded-xl shadow-sm overflow-hidden ml-12 relative before:content-[''] before:absolute before:w-0.5 before:h-6 before:bg-gray-200 before:-top-6 before:left-6")
+                                //- Encabezado de la Respuesta
+                                div(class="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50")
+                                    div(class="flex items-center gap-3")
+                                        img(src="/img/avatar.png" alt=respuesta.remitenteRelacion.nombre class="w-10 h-10 rounded-full border border-gray-200")
+                                        div
+                                            p(class="font-semibold text-gray-900")= respuesta.remitenteRelacion.nombre
+                                            p(class="text-sm text-gray-500")= respuesta.remitenteRelacion.email
+                                    div(class="flex items-center gap-2")
+                                        span(class=`px-3 py-1 rounded-full text-sm font-medium ${respuesta.remitenteRelacion.tipo.toString() === '1' ? 'bg-orange-50 text-[#FF6F17]' : 'bg-blue-50 text-blue-700'}`)
+                                            = respuesta.remitenteRelacion.tipo.toString() === '1' ? 'Vendedor' : 'Comprador'
+                                        span(class="text-sm text-gray-400")= new Date(respuesta.createdAt).toLocaleDateString()
+
+                                //- Contenido de la Respuesta
+                                div(class="p-6")
+                                    p(class="text-gray-700 whitespace-pre-line leading-relaxed")= respuesta.mensaje
+
+                //- Botones de Acción
+                div(class="mt-8 flex justify-end gap-4")
+                    a(
+                        href="/auth/administrador/mensajes"
+                        class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 inline-flex items-center gap-2 font-medium"
+                    )
+                        i(class="fas fa-arrow-left")
+                        | Volver

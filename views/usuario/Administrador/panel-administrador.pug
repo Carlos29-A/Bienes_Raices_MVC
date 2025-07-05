@@ -72,11 +72,11 @@ block contenido
                                             p(class="font-medium text-gray-900")= comprador.nombre
                                             p(class="text-sm text-gray-500")= comprador.email
 
-                //- Sección de Propiedades Destacadas
+                //- Sección de Propiedades 
                 div(class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow duration-200")
                     h2(class="text-xl font-bold text-[#FF6819] mb-4 flex items-center")
                         img(src="/img/propiedad.png" alt="Propiedades" class="w-8 h-8 mr-2")
-                        | Propiedades Destacadas
+                        | Propiedades 
                     div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
                         each propiedad in propiedades
                             div(class="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200")
@@ -91,8 +91,6 @@ block contenido
                                     p(class="text-gray-600 text-sm mb-2")= propiedad.categoriaRelacion.nombre
                                     div(class="flex items-center text-sm text-gray-500")
                                         img(src="/img/ubicacion.png" alt="Ubicación" class="w-4 h-4 mr-1")
-                                        = propiedad.calle
+                                        p= propiedad.calle
 
 block scripts
-    script.
-        // Aquí puedes agregar cualquier script necesario

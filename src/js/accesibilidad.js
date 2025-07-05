@@ -8,7 +8,14 @@ const tamanos = {
         'p': '1rem',
         'button': '1rem',
         'input': '1rem',
-        'textarea': '1rem'
+        'textarea': '1rem',
+        'a': '1rem',
+        'span': '1rem',
+        'label': '1rem',
+        'select': '1rem',
+        'option': '1rem',
+        'img': '1rem'
+
     },
     1: {
         'body': '18px',
@@ -18,7 +25,12 @@ const tamanos = {
         'p': '1.125rem',
         'button': '1.125rem',
         'input': '1.125rem',
-        'textarea': '1.125rem'
+        'textarea': '1.125rem', 
+        'a': '1.125rem',
+        'span': '1.125rem',
+        'label': '1.125rem',
+        'select': '1.125rem',
+        'option': '1.125rem',
     },
     2: {
         'body': '20px',
@@ -28,7 +40,12 @@ const tamanos = {
         'p': '1.25rem',
         'button': '1.25rem',
         'input': '1.25rem',
-        'textarea': '1.25rem'
+        'textarea': '1.25rem',
+        'a': '1.25rem',
+        'span': '1.25rem',
+        'label': '1.25rem',
+        'select': '1.25rem',
+        'option': '1.25rem',
     },
     3: {
         'body': '22px',
@@ -38,7 +55,12 @@ const tamanos = {
         'p': '1.375rem',
         'button': '1.375rem',
         'input': '1.375rem',
-        'textarea': '1.375rem'
+        'textarea': '1.375rem',
+        'a': '1.375rem',
+        'span': '1.375rem',
+        'label': '1.375rem',
+        'select': '1.375rem',
+        'option': '1.375rem',
     }
 };
 
@@ -58,7 +80,11 @@ function cambiarTamanoLetra(index) {
     document.querySelectorAll('button').forEach(el => el.style.fontSize = tamanos[index].button);
     document.querySelectorAll('input').forEach(el => el.style.fontSize = tamanos[index].input);
     document.querySelectorAll('textarea').forEach(el => el.style.fontSize = tamanos[index].textarea);
-
+    document.querySelectorAll('a').forEach(el => el.style.fontSize = tamanos[index].a);
+    document.querySelectorAll('span').forEach(el => el.style.fontSize = tamanos[index].span);
+    document.querySelectorAll('label').forEach(el => el.style.fontSize = tamanos[index].label);
+    document.querySelectorAll('select').forEach(el => el.style.fontSize = tamanos[index].select);
+    document.querySelectorAll('option').forEach(el => el.style.fontSize = tamanos[index].option);
     // Actualizar botones activos
     document.querySelectorAll('#menuAccesibilidad button[data-size]').forEach((btn, i) => {
         const isActive = i.toString() === index.toString();

@@ -148,6 +148,7 @@ block contenido
                                                 i(class="fas fa-save mr-2")
                                                 | Guardar Cambios
 
+        //- Perfil del Comprador
         else
             div(class="min-h-screen flex flex-col bg-gray-100")
                 include ./comprador-Sidebar/compradorSidebar.pug
@@ -158,7 +159,7 @@ block contenido
                             h1(class="text-3xl font-bold text-[#FF6819]") Perfil
                             p(class="text-gray-600") Gestiona y organiza tu perfil
                     
-                    //- Contenido del Perfils
+                    //- Contenido del Perfil
                     main(class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8")
                         if mensajeFlash
                             div(id="valorMensaje" class="hidden" data-show="true")
@@ -199,14 +200,14 @@ block contenido
                                                         i(class="fas fa-user-shield bg-gradient-to-r from-[#FF641A] to-[#B08262] text-transparent bg-clip-text")
                                                         span(class="text-gray-600")= usuario.tipo.toString() === '1' ? 'Cuenta Verificada' : 'Cuenta Básica'
 
-                                // Formulario de Edición
+                                //- Formulario de Edición
                                 form(action="" method="POST" class="px-4 py-5 sm:p-6 space-y-8 divide-y divide-gray-200" novalidate)
                                     input(type="hidden" name="_csrf" value=csrfToken)
                                     
-                                    // Información Personal
+                                    //- Información Personal
                                     div(class="space-y-6")
                                         div
-                                            h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Información Personal
+                                            h3(class="text-lg font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Información Personal
                                             p(class="mt-1 text-sm text-gray-500") Actualiza tu información personal.
 
                                         div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
@@ -250,10 +251,10 @@ block contenido
                                                     if edad
                                                         p(class="text-red-500 text-sm")= edad.msg
 
-                                    // Cambiar Contraseña
+                                    //- Cambiar Contraseña
                                     div(class="pt-8")
                                         div
-                                            h3(class="text-lg leading-6 font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Cambiar Contraseña
+                                            h3(class="text-lg font-medium bg-gradient-to-r from-[#FF641A] to-[#FF9F00] text-transparent bg-clip-text") Cambiar Contraseña
                                             p(class="mt-1 text-sm text-gray-500") Actualiza tu contraseña de acceso.
                                         div(class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
                                             div(class="sm:col-span-4")
@@ -280,7 +281,7 @@ block contenido
                                                     if password_confirmar
                                                         p(class="text-red-500 text-sm")= password_confirmar.msg
 
-                                    // Botones de Acción
+                                    //- Botones de Acción
                                     div(class="pt-8")
                                         div(class="flex justify-end space-x-4")
                                             a(href=usuario.tipo.toString() === '1' ? '/auth/vendedor/panel' : '/auth/comprador/panel' class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 cursor-pointer")

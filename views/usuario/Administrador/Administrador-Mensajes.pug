@@ -29,14 +29,29 @@ block contenido
                     //- Filtros
                     form(action="/auth/administrador/mensajes" method="GET")
                         div(class="flex gap-4")
-                            select(name="estado" class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
-                                option(value="") Todos los estados
-                                option(value="leido") Leídos
-                                option(value="no-leido") No leídos
-                            select(name="tipo" class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
-                                option(value="") Todos los tipos
-                                option(value="vendedor") Vendedores
-                                option(value="comprador") Compradores
+                            div(class="flex flex-col gap-2")
+                                label(for="estado" class="text-gray-600") Estado
+                                select(name="estado" class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
+                                    option(value="") Todos los estados
+                                    option(value="leido" selected=filtros && filtros.estado === 'leido') Leídos
+                                    option(value="no-leido" selected=filtros && filtros.estado === 'no-leido') No leídos
+                            div(class="flex flex-col gap-2")
+                                label(for="remitente" class="text-gray-600") Remitente
+                                input(
+                                    type="text" 
+                                    name="remitente" 
+                                    value=filtros && filtros.remitente
+                                    class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white"
+                                )
+                            div(class="flex flex-col gap-2")
+                                label(for="destinatario" class="text-gray-600") Destinatario
+                                input(
+                                    type="text" 
+                                    name="destinatario" 
+                                    value=filtros && filtros.destinatario
+                                    class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white"
+                                )
+                            
                             button(type="submit" class="px-4 py-2 bg-[#FF6F17] text-white rounded-lg hover:bg-[#F99E00] transition-colors duration-200 cursor-pointer")
                                 i(class="fas fa-search mr-2")
                                 | Buscar
@@ -105,7 +120,7 @@ block contenido
                                 //- Acciones minimalistas
                                 div(class="flex justify-end gap-3 px-8 pb-6")
                                     a(
-                                        href=`/mensajes/ver/${mensaje.id}`
+                                        href=`/auth/administrador/mensajes/ver/${mensaje.id}`
                                         class="inline-flex items-center px-5 py-2 bg-[#FF6F17] text-white text-base font-semibold rounded-md hover:bg-[#F99E00] transition-colors duration-200 focus:outline-none"
                                     )
                                         i(class="fas fa-eye mr-2")
