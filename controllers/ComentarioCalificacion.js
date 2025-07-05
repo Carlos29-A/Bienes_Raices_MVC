@@ -82,7 +82,6 @@ const CrearComentarioCalificacionPost = async (req, res) => {
         res.redirect(`/comentario-calificacion/crear-comentario-calificacion/${evaluadoId}`)
     }
 }
-
 const crearComentarioCalificacion = async (req, res) => {
 
     const { id } = req.params
@@ -137,8 +136,6 @@ const crearComentarioCalificacion = async (req, res) => {
         csrfToken: req.csrfToken()
     })
 }
-
-
 const editarComentarioCalificacion = async (req, res) => {
 
     const { id } = req.params

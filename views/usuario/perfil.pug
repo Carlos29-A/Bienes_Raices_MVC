@@ -2,102 +2,130 @@ extends ../layout/index.pug
 
 block styles
 block contenido
-    div(class="min-h-screen bg-gray-100")
+    div(class="min-h-screen bg-gray-50")
         include ../usuario/comprador-Sidebar/compradorSidebar.pug
         
         //- Contenido Principal
-        main(class="flex-1 p-6 ")
-
+        main(class="flex-1 p-6")
             //- Mensajes de Exito
             if mensajesFlash.length > 0
-                //- tener un valor que diga que si hay mensajes
                 include ../partials/MensajeModal.pug
                 div(id="valorMensaje" class="hidden" data-show="true")
                 
             //- Contenedor Principal
             div(class="max-w-7xl mx-auto")
                 //- Sección de Perfil
-                div(class="bg-white rounded-xl shadow-sm overflow-hidden mb-8")
+                div(class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8")
                     //- Cabecera del Perfil
-                    div(class="relative h-48 bg-gradient-to-r from-[#FF6819] to-[#FF9F00]")
-                        div(class="absolute -bottom-16 left-8")
-                            img(src="/img/avatar.png" alt="Foto de Perfil" class="w-32 h-32 rounded-full border-4 border-white shadow-lg")
+                    div(class="relative h-64 bg-cover bg-center bg-no-repeat" style="background-image: url('/img/FondoPerfil.jpg');")
+                        //- Patrón decorativo
+                        div(class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23FFFFFF\" fill-opacity=\"1\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');")
+                        div(class="absolute -bottom-16 left-8 md:left-12")
+                            img(src="/img/avatar.png" alt="Foto de Perfil" class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-xl")
                     
                     //- Información del Perfil
-                    div(class="pt-20 pb-8 px-8")
-                        div(class="flex justify-between items-start")
-                            div
-                                h1(class="text-3xl font-bold text-gray-900")= usuario.nombre
-                                p(class="text-gray-600 mt-1")= usuario.email
-                                div(class="flex items-center mt-2 space-x-2")
-                                    span(class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium")= usuario.tipo.toString() === '1' ? 'Vendedor' : 'Comprador'
-                                    span(class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium") Miembro desde #{usuario.createdAt.toLocaleDateString()}
+                    div(class="pt-24 md:pt-28 pb-8 px-8")
+                        div(class="flex flex-col md:flex-row justify-between items-start md:items-center")
+                            div(class="mb-6 md:mb-0")
+                                h1(class="text-3xl md:text-4xl font-bold text-gray-900 mb-2")= usuario.nombre
+                                p(class="text-gray-600")= usuario.email
+                                div(class="flex flex-wrap gap-3 mt-3")
+                                    span(class="px-4 py-1.5 bg-gradient-to-r from-[#FF6819] to-[#FF9F00] text-white rounded-full text-sm font-medium")= usuario.tipo.toString() === '1' ? 'Vendedor' : 'Comprador'
+                                    span(class="px-4 py-1.5 bg-blue-100 text-blue-800 rounded-full text-sm font-medium") Miembro desde #{usuario.createdAt.toLocaleDateString()}
                             
                             //- Estadísticas
-                            div(class="grid grid-cols-3 gap-6 text-center")
-                                div
-                                    p(class="text-2xl font-bold text-[#FF6819]")= propiedades.length
-                                    p(class="text-sm text-gray-600") Propiedades
-                                div
-                                    p(class="text-2xl font-bold text-[#FF6819]")= propiedades.length
-                                    p(class="text-sm text-gray-600") Ventas
+                            div(class="bg-gray-50 rounded-xl p-6 w-full md:w-auto")
+                                div(class="grid grid-cols-2 gap-6 text-center")
+                                    div
+                                        p(class="text-3xl font-bold text-[#FF6819]")= propiedades.length
+                                        p(class="text-sm text-gray-600") Propiedades
+                                    div
+                                        p(class="text-3xl font-bold text-[#FF6819]")= propiedades.length
+                                        p(class="text-sm text-gray-600") Ventas
 
-                        //- Información de Contacto
-                        div(class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8")
-                            div(class="space-y-4")
-                                h3(class="text-lg font-semibold text-gray-900") Información de Contacto
-                                div(class="space-y-3")
+                        //- Información de Contacto y Horarios
+                        div(class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12")
+                            //- Información de Contacto
+                            div(class="space-y-6")
+                                h3(class="text-xl font-semibold text-gray-900 flex items-center")
+                                    i(class="fas fa-address-card text-[#FF6819] mr-3")
+                                    | Información de Contacto
+                                div(class="space-y-4 bg-gray-50 rounded-xl p-6")
                                     div(class="flex items-center space-x-3")
-                                        i(class="fas fa-phone text-[#FF6819]")
+                                        div(class="w-10 h-10 bg-[#FF6819]/10 rounded-full flex items-center justify-center")
+                                            i(class="fas fa-phone text-[#FF6819]")
                                         span(class="text-gray-600")= usuario.telefono
                                     div(class="flex items-center space-x-3")
-                                        i(class="fas fa-envelope text-[#FF6819]")
+                                        div(class="w-10 h-10 bg-[#FF6819]/10 rounded-full flex items-center justify-center")
+                                            i(class="fas fa-envelope text-[#FF6819]")
                                         span(class="text-gray-600")= usuario.email
                                     div(class="flex items-center space-x-3")
-                                        i(class="fas fa-map-marker-alt text-[#FF6819]")
+                                        div(class="w-10 h-10 bg-[#FF6819]/10 rounded-full flex items-center justify-center")
+                                            i(class="fas fa-map-marker-alt text-[#FF6819]")
                                         span(class="text-gray-600") Trujillo, Perú
                             
                             //- Horario de Atención
-                            div(class="space-y-4")
-                                h3(class="text-lg font-semibold text-gray-900") Horario de Atención
-                                div(class="space-y-2")
-                                    div(class="flex justify-between")
+                            div(class="space-y-6")
+                                h3(class="text-xl font-semibold text-gray-900 flex items-center")
+                                    i(class="fas fa-clock text-[#FF6819] mr-3")
+                                    | Horario de Atención
+                                div(class="space-y-4 bg-gray-50 rounded-xl p-6")
+                                    div(class="flex justify-between items-center")
                                         span(class="text-gray-600") Lunes - Viernes
                                         span(class="text-gray-900 font-medium") 9:00 AM - 5:00 PM
-                                    div(class="flex justify-between")
+                                    div(class="flex justify-between items-center border-t border-gray-200 pt-4")
                                         span(class="text-gray-600") Sábados
                                         span(class="text-gray-900 font-medium") 9:00 AM - 1:00 PM
-                                    div(class="flex justify-between")
+                                    div(class="flex justify-between items-center border-t border-gray-200 pt-4")
                                         span(class="text-gray-600") Domingos
                                         span(class="text-gray-900 font-medium") Cerrado
 
-                //- Sección de Propiedades Destacadas
-                div(class="bg-white rounded-xl shadow-sm p-8 mb-8")
-                    h2(class="text-2xl font-bold text-gray-900 mb-6") Propiedades
+                //- Sección de Propiedades
+                div(class="bg-white rounded-2xl shadow-lg p-8 mb-8")
+                    h2(class="text-2xl font-bold text-gray-900 mb-6 flex items-center")
+                        i(class="fas fa-home text-[#FF6819] mr-3")
+                        | Mis Propiedades
                     div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")
                         each propiedad in propiedades
-                            //- Propiedad 1
-                            div(class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300")
-                                img(src=`/uploads/${propiedad.imagen}` alt="Propiedad" class="w-full h-48 object-cover")
-                                div(class="p-4")
-                                    h3(class="text-lg font-semibold text-gray-900")= propiedad.titulo
-                                    p(class="text-[#FF6819] font-bold mt-1") $ #{propiedad.precio.toLocaleString()}
-                                    div(class="flex items-center justify-between mt-2")
-                                        span(class="text-gray-600 text-sm")= propiedad.habitaciones + ' Hab | ' + propiedad.wc + ' Baños | ' + propiedad.estacionamiento + ' Est'
-                                        a(href=`/propiedades/${propiedad.id}` class="text-[#FF6819] hover:text-[#E55A0F]") Ver Detalles
+                            div(class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1")
+                                //- Imagen con Badge de Precio
+                                div(class="relative")
+                                    img(src=`/uploads/${propiedad.imagen}` alt=propiedad.titulo class="w-full h-48 object-cover")
+                                    div(class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full shadow-md")
+                                        span(class="text-[#FF6819] font-bold") $ #{propiedad.precio.toLocaleString()}
+                                
+                                div(class="p-6")
+                                    h3(class="text-xl font-semibold text-gray-900 mb-2")= propiedad.titulo
+                                    //- Características
+                                    div(class="grid grid-cols-3 gap-4 mb-4 text-center")
+                                        div(class="flex flex-col items-center")
+                                            i(class="fas fa-bed text-[#FF6819] mb-1")
+                                            span(class="text-sm text-gray-600") #{propiedad.habitaciones} Hab
+                                        div(class="flex flex-col items-center")
+                                            i(class="fas fa-bath text-[#FF6819] mb-1")
+                                            span(class="text-sm text-gray-600") #{propiedad.wc} Baños
+                                        div(class="flex flex-col items-center")
+                                            i(class="fas fa-car text-[#FF6819] mb-1")
+                                            span(class="text-sm text-gray-600") #{propiedad.estacionamiento} Est
+                                    
+                                    a(href=`/propiedades/${propiedad.id}` class="block w-full text-center bg-gradient-to-r from-[#FF6819] to-[#FF9F00] text-white py-2 rounded-lg mt-4 hover:from-[#E55A0F] hover:to-[#FF8F17] transition-all duration-300") Ver Detalles
 
                 //- Sección de Calificaciones y Comentarios
-                div(class="bg-white rounded-xl shadow-sm p-8")
-                    h2(class="text-2xl font-bold text-gray-900 mb-6") Calificaciones y Comentarios
+                div(class="bg-white rounded-2xl shadow-lg p-8")
+                    h2(class="text-2xl font-bold text-gray-900 mb-6 flex items-center")
+                        i(class="fas fa-star text-[#FF6819] mr-3")
+                        | Calificaciones y Comentarios
                     
                     //- Formulario de Calificación
-                    div(class="bg-gray-50 rounded-lg p-6 mb-8")
-                        h3(class="text-lg font-semibold text-gray-900 mb-4") Deja tu Calificación                
-                        form(action=`/comentario-calificacion/crear-comentario-calificacion/${usuario.id}` method="POST" novalidate)
+                    div(class="bg-gray-50 rounded-xl p-8 mb-8")
+                        h3(class="text-xl font-semibold text-gray-900 mb-6 flex items-center")
+                            i(class="fas fa-pen text-[#FF6819] mr-3")
+                            | Deja tu Calificación
+                        form(action=`/comentario-calificacion/crear-comentario-calificacion/${usuario.id}` method="POST" novalidate class="space-y-6")
                             input(type="hidden" name="_csrf" value=csrfToken)
                             
                             //- Contenedor de estrellas con radios
-                            div(class="mb-4")
+                            div(class="mb-6")
                                 label(for="calificacion" class="block text-sm font-medium text-gray-700 mb-2") Calificación
                                 div(class="flex items-center space-x-1" id="contenedor-estrellas")
                                     each i in [1,2,3,4,5]
@@ -118,65 +146,66 @@ block contenido
                                 
                             -const calificacion = errores?.find(error => error.path === 'calificacion')
                                 if calificacion
-                                    p(class="text-red-500 text-sm")= calificacion.msg
+                                    p(class="text-red-500 text-sm mt-1")= calificacion.msg
+
                             //- Comentario
-                            div(class="mb-4")
+                            div(class="mb-6")
                                 label(for="comentario" class="block text-sm font-medium text-gray-700 mb-2") Comentario
                                 textarea(
                                     id="comentario"
                                     name="comentario"
-                                    rows="3"
-                                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FF6819] focus:ring-[#FF6819]"
+                                    rows="4"
+                                    class="w-full rounded-xl border-gray-200 shadow-sm focus:border-[#FF6819] focus:ring-[#FF6819] resize-none"
                                     placeholder="Cuéntanos tu experiencia..."
                                     required
                                 )
                                 -const comentario = errores?.find(error => error.path === 'comentario')
                                     if comentario
-                                        p(class="text-red-500 text-sm")= comentario.msg
+                                        p(class="text-red-500 text-sm mt-1")= comentario.msg
+
                             button(
                                 type="submit"
-                                class="w-full bg-[#FF6819] text-white px-4 py-2 rounded-lg hover:bg-[#E55A0F] transition-colors duration-300 cursor-pointer"
-                            ) Enviar Calificación
+                                class="w-full bg-gradient-to-r from-[#FF6819] to-[#FF9F00] text-white px-6 py-3 rounded-xl font-medium hover:from-[#E55A0F] hover:to-[#FF8F17] transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center cursor-pointer"
+                            )
+                                i(class="fas fa-paper-plane mr-2")
+                                | Enviar Calificación
 
                     //- Lista de Calificaciones
-                    div(class="space-y-6")
+                    div(class="space-y-8")
                         each comentario in comentarios
-                            //- Calificación
-                            div(class="border-b border-gray-200 pb-6")
+                            div(class="bg-gray-50 rounded-xl p-6")
                                 //- Header con información del usuario y acciones
-                                div(class="flex items-center justify-between mb-3")
-                                    div(class="flex items-center space-x-3")
-                                        img(src="/img/avatar.png" alt="Usuario" class="w-10 h-10 rounded-full")
+                                div(class="flex items-start justify-between mb-4")
+                                    div(class="flex items-center space-x-4")
+                                        img(src="/img/avatar.png" alt="Usuario" class="w-12 h-12 rounded-full border-2 border-white shadow-md")
                                         div
                                             h4(class="font-semibold text-gray-900")= comentario.evaluadorRelacion.nombre
-                                            p(class="text-sm text-gray-500") Hace #{comentario.createdAt.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}  
-                                    //- Acciones (Editar y Eliminar)
+                                            p(class="text-sm text-gray-500") #{comentario.createdAt.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                    
                                     if comentario.evaluadorId === evaluador.id
-                                        div(class="flex items-center space-x-3")
+                                        div(class="flex items-center space-x-2")
                                             a(
                                                 href=`/comentario-calificacion/editar-comentario-calificacion/${comentario.id}` 
-                                                class="text-[#FF6819] hover:text-[#E55A0F] text-sm font-medium transition-colors duration-200"
+                                                class="p-2 text-[#FF6819] hover:bg-[#FF6819]/10 rounded-full transition-colors duration-200"
                                             )
-                                                i(class="fas fa-edit mr-1")
-                                                | Editar
+                                                i(class="fas fa-edit")
                                             button(
-                                                class="text-red-500 hover:text-red-700 text-sm font-medium transition-colors duration-200 cursor-pointer" 
+                                                class="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors duration-200" 
                                                 onclick=`abrirModalEliminarMensaje(${comentario.id}, 'Eliminar Comentario', '¿Estás seguro de querer eliminar este comentario?', '/comentario-calificacion/eliminar-comentario-calificacion/${comentario.id}')`
                                                 type="button"
                                             )
-                                                i(class="fas fa-trash mr-1")
-                                                | Eliminar
+                                                i(class="fas fa-trash")
                                             include ../partials/MensajeEliminar.pug
                                 
                                 //- Calificación con estrellas
                                 div(class="flex items-center mb-3")
-                                    each i in [1,2,3,4,5]
-                                        i(class=`fas fa-star text-lg ${i <= comentario.calificacion ? 'text-[#FF6819]' : 'text-gray-300'}`)
+                                    div(class="flex")
+                                        each i in [1,2,3,4,5]
+                                            i(class=`fas fa-star text-lg ${i <= comentario.calificacion ? 'text-[#FF6819]' : 'text-gray-300'} mr-1`)
                                     span(class="ml-2 text-sm text-gray-600") #{comentario.calificacion} de 5 estrellas
                                 
                                 //- Comentario
                                 p(class="text-gray-600 leading-relaxed")= comentario.comentario
-
 
     include ../layout/footer.pug
 
@@ -191,7 +220,6 @@ block scripts
             const inputs = contenedorEstrellas.querySelectorAll('input[type="radio"]');
             let ratingSeleccionado = 0;
 
-            // Función para actualizar las estrellas
             function actualizarEstrellas(rating) {
                 labels.forEach((label, index) => {
                     const ratingLabel = parseInt(label.dataset.rating);
@@ -205,28 +233,23 @@ block scripts
                 });
             }
 
-            // Event listener para cada label
             labels.forEach(label => {
                 const rating = parseInt(label.dataset.rating);
                 
-                // Click en la estrella
                 label.addEventListener('click', function() {
                     ratingSeleccionado = rating;
                     actualizarEstrellas(rating);
                 });
 
-                // Hover sobre la estrella
                 label.addEventListener('mouseenter', function() {
                     actualizarEstrellas(rating);
                 });
 
-                // Salir del hover
                 label.addEventListener('mouseleave', function() {
                     actualizarEstrellas(ratingSeleccionado);
                 });
             });
 
-            // Event listener para los inputs (por si acaso)
             inputs.forEach(input => {
                 input.addEventListener('change', function() {
                     ratingSeleccionado = parseInt(this.value);

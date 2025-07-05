@@ -135,7 +135,7 @@ const obtenerMensajesComprador = async (req, res) => {
     // Mostrar mensajes Recibidos
     const mensajesRecibidos = mensajes.filter(mensaje => mensaje.destinatarioId === id)
     // Mostrar mensajes Respondidos
-    const mensajesRespondidos = mensajes.filter(mensaje => mensaje.respuestaId !== null)
+    const mensajesRespondidos = mensajes.filter(mensaje => mensaje.respuestaId !== null && mensaje.remitenteId === id)
 
     res.render('mensajes/mensajesComprador', {
         titulo: 'Mensajes',

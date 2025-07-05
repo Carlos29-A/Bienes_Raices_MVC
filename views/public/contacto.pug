@@ -15,6 +15,11 @@ block contenido
     //- Contenido Principal
     section(class="py-12 bg-gray-50")
         div(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8")
+            //- Mensajes de Flash
+            if mensajesFlash.length > 0
+                div(id="valorMensaje" class="hidden" data-show="true")
+                include ../partials/MensajeModal.pug
+
             //- Categorías de Ayuda Rápida
             div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12")
                 //- Soporte Técnico
@@ -31,7 +36,7 @@ block contenido
                     h3(class="text-lg font-semibold text-gray-900 mb-2") Reportar Contenido
                     p(class="text-gray-600 text-sm") Anuncios sospechosos, contenido inapropiado o posibles estafas.
 
-                //- Preguntas Frecuentes
+                //- Consultas Generales
                 div(class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300")
                     div(class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4")
                         i(class="fas fa-question-circle text-green-600 text-xl")
@@ -49,7 +54,14 @@ block contenido
                 //- Formulario de Contacto
                 div(class="bg-white p-8 rounded-2xl shadow-lg")
                     h2(class="text-2xl font-bold text-gray-900 mb-6") Envíanos tu consulta
-                    form(action="/contacto" method="POST" class="space-y-6")
+                    
+                    form(
+                        action="/contacto"
+                        method="POST"
+                        class="space-y-6"
+                    )
+                        input(type="hidden" name="_csrf" value=csrfToken)
+                        
                         //- Tipo de Usuario
                         div
                             label(for="tipo_usuario" class="block text-sm font-medium text-gray-700 mb-1") ¿Eres usuario registrado?
@@ -74,7 +86,7 @@ block contenido
                                 required
                             )
                         
-                        //- Categoría del Asunto
+                        //- Categoría
                         div
                             label(for="categoria" class="block text-sm font-medium text-gray-700 mb-1") Categoría
                             select(
@@ -102,6 +114,7 @@ block contenido
                                 placeholder="Describe brevemente tu consulta"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6819] focus:border-transparent"
                                 required
+                                minlength="5"
                             )
                         
                         //- Mensaje
@@ -114,30 +127,18 @@ block contenido
                                 placeholder="Describe detalladamente tu consulta, incluyendo cualquier mensaje de error si es relevante"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6819] focus:border-transparent resize-none"
                                 required
+                                minlength="20"
                             )
-                        
-                        //- Archivos Adjuntos
-                        div
-                            label(for="adjuntos" class="block text-sm font-medium text-gray-700 mb-1") Archivos Adjuntos (opcional)
-                            input(
-                                type="file"
-                                id="adjuntos"
-                                name="adjuntos"
-                                multiple
-                                accept="image/*,.pdf"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF6819] focus:border-transparent"
-                            )
-                            p(class="mt-1 text-sm text-gray-500") Puedes adjuntar capturas de pantalla o documentos relevantes (máx. 5MB)
                         
                         //- Botón de envío
                         button(
                             type="submit"
-                            class="w-full bg-gradient-to-r from-[#FF6819] to-[#FF8F17] text-white px-6 py-3 rounded-lg font-medium hover:from-[#E55A0F] hover:to-[#FF6819] transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center"
+                            class="w-full bg-gradient-to-r from-[#FF6819] to-[#FF8F17] text-white px-6 py-3 rounded-lg font-medium hover:from-[#E55A0F] hover:to-[#FF6819] transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center cursor-pointer"
                         )
                             i(class="fas fa-paper-plane mr-2")
                             | Enviar consulta
 
-                //- Información de Contacto y FAQ
+                //- Información de Contacto
                 div(class="space-y-8")
                     //- Tarjeta de Información
                     div(class="bg-white p-8 rounded-2xl shadow-lg")
@@ -201,13 +202,14 @@ block contenido
 block scripts
     script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
     script.
-        // Inicializar el mapa
-        const map = L.map('mapa-contacto').setView([51.505, -0.09], 13);
+        // Inicializar el mapa con las coordenadas de Trujillo, Perú
+        const map = L.map('mapa-contacto').setView([-8.1121, -79.0289], 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
         
-        // Agregar marcador
-        L.marker([51.505, -0.09]).addTo(map)
-            .bindPopup('InmoElegante<br>Av. Principal #123')
+        // Agregar marcador en la ubicación de la empresa
+        L.marker([-8.1121, -79.0289]).addTo(map)
+            .bindPopup('Bienes Raíces<br>Av. Arequipa 123, Trujillo, Perú')
             .openPopup();
+    script(src="/js/agregarVentanaModal.js")

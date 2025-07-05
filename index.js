@@ -21,7 +21,6 @@ dotenv.config()
 // Configuración de la aplicación
 const app = express()
 
-
 try {
     await db.authenticate()
     await db.sync()
@@ -29,6 +28,11 @@ try {
 } catch (error) {
     console.log(error)
 }
+
+// Middleware
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 // Configuración de Session
 app.use(session({
@@ -40,11 +44,7 @@ app.use(session({
 // Configuración de Flash Messages
 app.use(flash())
 
-// Middleware
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-app.use(cookieParser())
+// Habilitar CSRF después de cookie-parser y session
 app.use(csrf({ cookie: true }))
 
 // Middleware para variables locales
@@ -52,6 +52,7 @@ app.use((req, res, next) => {
     // Variables locales para mensajes flash
     res.locals.mensajesFlash = req.flash('mensajeFlash')
     res.locals.tipoFlash = req.flash('tipoFlash')[0]
+    res.locals.csrfToken = req.csrfToken() // Hacer disponible el token CSRF globalmente
     next()
 })
 
@@ -99,6 +100,7 @@ app.use('/mensajes', mensajeRouter)
 app.use('/api', apiRoute)
 app.use('/comentario-calificacion', comentarioCalificacionRouter)
 app.use('/', publicoRoute)
+
 // Puerto
 const port = process.env.PORT || 3000
 app.listen(port, () => {

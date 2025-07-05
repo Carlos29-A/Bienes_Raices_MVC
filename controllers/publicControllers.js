@@ -1,6 +1,11 @@
 // Pagina principal
-import { Propiedad, Categoria, Usuario } from '../models/index.js'
+import { Propiedad, Categoria, Usuario, ComentarioCalificacion } from '../models/index.js'
 import { Op } from 'sequelize'
+import Contacto from '../models/Contacto.js'
+import { emailContacto } from '../helpers/email.js'
+import multer from 'multer'
+import path from 'path'
+import fs from 'fs'
 
 const paginaPrincipal = async function(req, res) {
     try {
@@ -111,13 +116,13 @@ const buscarPropiedades = async function(req, res){
 }
 
 // Contacto
-const contacto  = async function(req, res) {
+const contacto = (req, res) => {
     res.render('public/contacto', {
-        titulo: 'Contacto',
-        pagina: 'contacto',
-        ruta: '/contacto'
+        pagina: 'Contacto',
+        csrfToken: req.csrfToken()
     })
 }
+
 // Ver propiedad
 const verPropiedad = async function(req, res) {
     const { id } = req.params
@@ -144,13 +149,125 @@ const verPropiedad = async function(req, res) {
     })
 }
 
+const enviarContacto = async (req, res) => {
+    const { tipo_usuario, email, categoria, asunto, mensaje } = req.body
+
+    // Validaciones
+    const errores = []
+
+    if (!tipo_usuario) {
+        errores.push('El tipo de usuario es obligatorio')
+    }
+
+    if (!email) {
+        errores.push('El email es obligatorio')
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errores.push('El email no es válido')
+    }
+
+    if (!categoria) {
+        errores.push('La categoría es obligatoria')
+    }
+
+    if (!asunto) {
+        errores.push('El asunto es obligatorio')
+    } else if (asunto.length < 5) {
+        errores.push('El asunto debe tener al menos 5 caracteres')
+    }
+
+    if (!mensaje) {
+        errores.push('El mensaje es obligatorio')
+    } else if (mensaje.length < 20) {
+        errores.push('El mensaje debe tener al menos 20 caracteres')
+    }
+
+    // Si hay errores
+    if (errores.length > 0) {
+        // Mostrar errores
+        req.flash('error', errores)
+        return res.redirect('/contacto')
+    }
+
+    try {
+        // Crear el registro en la base de datos
+        const contacto = await Contacto.create({
+            tipo_usuario,
+            email,
+            categoria,
+            asunto,
+            mensaje
+        })
+
+        // Enviar email
+        await emailContacto({
+            email,
+            asunto,
+            mensaje,
+            tipo: categoria
+        })
+
+        // Mensaje de éxito
+        req.flash('mensajeFlash', 'Consulta enviada correctamente')
+        req.flash('tipoFlash', 'success')
+        res.redirect('/contacto')
+
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+// Ver perfil vendedor
+const verPerfilVendedor = async (req, res) => {
+    const { id } = req.params;
+
+    const usuario = await Usuario.findByPk(id)
+
+    if (!usuario) {
+        return res.redirect('/buscarPropiedades')
+    }
+    // obtener las propiedades del usuario
+    const propiedades = await Propiedad.findAll({
+        where: {
+            usuarioId: id
+        }
+    })
+    // Obtener los comentarios del usuario
+    const comentarios = await ComentarioCalificacion.findAll({
+        where: {
+            evaluadoId: id
+        },
+        include: [
+            {
+                model: Usuario,
+                as: 'evaluadorRelacion',
+                attributes: ['id', 'nombre', 'email']
+            },
+            {
+                model : Usuario,
+                as: 'evaluadoRelacion',
+                attributes: ['id', 'nombre', 'email']
+            }
+        ]
+    })
+
+    return res.render('public/perfilVendedor', {
+        titulo: 'Ver Perfil Vendedor',
+        pagina: 'verPerfilVendedor',
+        ruta: '/buscarPropiedades',
+        usuario,
+        propiedades,
+        comentarios
+    })
+}
 
 export {
     paginaPrincipal,
     nosotros,
     contacto,
     buscarPropiedades,
-    verPropiedad
+    verPropiedad,
+    enviarContacto,
+    verPerfilVendedor
 }
 
 
