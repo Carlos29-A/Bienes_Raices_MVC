@@ -18,7 +18,8 @@ export default {
         filtrosAdmin: './src/js/filtrosAdmin.js',
         accesibilidad: './src/js/accesibilidad.js',
         audio: './src/js/audio.js',
-        agregarVentanaModal: './src/js/agregarVentanaModal.js'
+        agregarVentanaModal: './src/js/agregarVentanaModal.js',
+        notificaciones: './src/js/notificaciones.js'
     },
     output: {
         filename: '[name].js',

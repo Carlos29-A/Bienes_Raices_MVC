@@ -50,7 +50,8 @@ const panelAdministrador = async (req, res) => {
         mensajes,
         propiedadesActivas,
         csrfToken: req.csrfToken(),
-        pagina: 'Panel de Administrador'
+        pagina: 'Panel de Administrador',
+        ruta: '/auth/administrador/panel'
     })
 }
 
@@ -74,7 +75,8 @@ const panelAdministradorUsuarios = async (req, res) => {
         usuario: req.usuario,
         usuarios,
         csrfToken: req.csrfToken(),
-        pagina: 'Administrar Usuarios'
+        pagina: 'Administrar Usuarios',
+        ruta: '/auth/administrador/usuarios'
     })
 }
 
@@ -98,7 +100,8 @@ const panelAdministradorPropiedades = async (req, res) => {
         usuario: req.usuario,
         propiedades,
         csrfToken: req.csrfToken(),
-        pagina: 'Administrar Propiedades'
+        pagina: 'Administrar Propiedades',
+        ruta: '/auth/administrador/propiedades'
     })
 }
 
@@ -163,7 +166,8 @@ const panelAdministradorMensajes = async (req, res) => {
             mensajes,
             csrfToken: req.csrfToken(),
             pagina: 'Administrar Mensajes',
-            filtros: { estado, remitente, destinatario } // Pasamos los filtros a la vista
+            filtros: { estado, remitente, destinatario }, // Pasamos los filtros a la vista
+            ruta: '/auth/administrador/mensajes'
         })
     } catch (error) {
         console.log(error)
@@ -180,6 +184,7 @@ const panelAdministradorPerfil = async (req, res) => {
         usuario: administrador,
         csrfToken: req.csrfToken(),
         pagina: 'Perfil de Administrador',
+        ruta: '/auth/administrador/perfil'
     })
 }
 
@@ -218,7 +223,8 @@ const editarPerfilAdministradorPost = async (req, res) => {
             usuario: administrador,
             errores: errores.array(),
             csrfToken: req.csrfToken(),
-            pagina: 'Editar Perfil'
+            pagina: 'Editar Perfil',
+            ruta: '/auth/administrador/perfil'
         })
     }
 
@@ -233,7 +239,8 @@ const editarPerfilAdministradorPost = async (req, res) => {
             usuario: administrador,
             errores: [{ msg: 'La contraseña actual no es correcta', path: 'password_actual' }],
             csrfToken: req.csrfToken(),
-            pagina: 'Editar Perfil'
+            pagina: 'Editar Perfil',
+            ruta: '/auth/administrador/perfil'
         })
     }
 
@@ -244,7 +251,8 @@ const editarPerfilAdministradorPost = async (req, res) => {
             usuario: administrador,
             errores: [{ msg: 'La contraseña nueva y la contraseña de confirmación no coinciden', path: 'password_confirmar' }],
             csrfToken: req.csrfToken(),
-            pagina: 'Editar Perfil'
+            pagina: 'Editar Perfil',
+            ruta: '/auth/administrador/perfil'
         })
     }
 
@@ -286,7 +294,8 @@ const crearUsuarioAdministrador = async (req, res) => {
         mensajes,
         categorias,
         csrfToken: req.csrfToken(),
-        pagina: 'Crear Usuario'
+        pagina: 'Crear Usuario',
+        ruta: '/auth/administrador/usuarios'
     })
 }
 
@@ -301,7 +310,8 @@ const crearUsuarioAdministradorPost = async (req, res) => {
             errores: errores.array(),
             oldData: req.body,
             usuario: req.usuario,
-            pagina: 'Crear Usuario'
+            pagina: 'Crear Usuario',
+            ruta: '/auth/administrador/usuarios'
         })
     }
 
@@ -315,7 +325,8 @@ const crearUsuarioAdministradorPost = async (req, res) => {
             errores: [{ msg: 'El usuario ya existe' }],
             oldData: req.body,
             usuario: req.usuario,
-            pagina: 'Crear Usuario'
+            pagina: 'Crear Usuario',
+            ruta: '/auth/administrador/usuarios'
         })
     }
 
@@ -349,7 +360,8 @@ const editarUsuarioAdministrador = async (req, res) => {
         usuario: req.usuario,
         usuarioEditar: usuario,
         csrfToken: req.csrfToken(),
-        pagina: 'Editar Usuario'
+        pagina: 'Editar Usuario',
+        ruta: '/auth/administrador/usuarios'
     })
 }
 const editarUsuarioAdministradorPost = async (req, res) => {
@@ -367,7 +379,9 @@ const editarUsuarioAdministradorPost = async (req, res) => {
                 usuario: administrador,
                 usuarioEditar: usuario,
                 errores: errores.array(),
-                csrfToken: req.csrfToken()
+                csrfToken: req.csrfToken(),
+                pagina: 'Editar Usuario',
+                ruta: '/auth/administrador/usuarios'
             })
         }else{
             // Recoger los datos del formulario
@@ -382,7 +396,9 @@ const editarUsuarioAdministradorPost = async (req, res) => {
                     usuario: administrador,
                     usuarioEditar: usuario,
                     errores: [{ msg: 'El usuario ya existe', path: 'email' }],
-                    csrfToken: req.csrfToken()
+                    csrfToken: req.csrfToken(),
+                    pagina: 'Editar Usuario',
+                    ruta: '/auth/administrador/usuarios'
                 })
             }
             // Actualizar los datos del usuario
@@ -403,7 +419,7 @@ const editarUsuarioAdministradorPost = async (req, res) => {
                 console.log(error)
             }
         }
-    }
+}
 
 
 
@@ -458,7 +474,8 @@ const crearPropiedadAdministrador = async (req, res) => {
         categorias,
         csrfToken: req.csrfToken(),
         oldInfo: '',
-        pagina: 'Crear Propiedad'
+        pagina: 'Crear Propiedad',
+        ruta: '/auth/administrador/propiedades'
     })
 }
 
@@ -480,7 +497,8 @@ const crearPropiedadAdministradorPost = async (req, res) => {
             oldInfo: req.body,
             usuario: req.usuario,
             categorias,
-            pagina: 'Crear Propiedad'
+            pagina: 'Crear Propiedad',
+            ruta: '/auth/administrador/propiedades'
         })
     }
 
@@ -523,7 +541,8 @@ const agregarImagenAdministradorPropiedad = async (req, res) => {
         usuario: req.usuario,
         propiedad,
         csrfToken: req.csrfToken(),
-        pagina: 'Agregar Imagen'
+        pagina: 'Agregar Imagen',
+        ruta: '/auth/administrador/propiedades'
     })
 }
 
@@ -542,7 +561,9 @@ const subirImagenAdministradorPropiedad = async (req, res, next) => {
             usuario: req.usuario,
             propiedad,
             errores: [{ msg: 'Debes subir una imagen' }],
-            csrfToken: req.csrfToken()
+            csrfToken: req.csrfToken(),
+            pagina: 'Agregar Imagen',
+            ruta: '/auth/administrador/propiedades'
         })
     }
 
@@ -578,7 +599,8 @@ const editarPropiedadAdministrador = async (req, res) => {
             usuario: req.usuario,
             propiedad,
             csrfToken: req.csrfToken(),
-            pagina: 'Editar Propiedad'
+            pagina: 'Editar Propiedad',
+            ruta: '/auth/administrador/propiedades'
         })
         
     }).catch(error => {
@@ -620,7 +642,8 @@ const editarPropiedadAdministradorPost = async (req, res) => {
                 propiedad,
                 errores: errores,
                 csrfToken: req.csrfToken(),
-                pagina: 'Editar Propiedad'
+                pagina: 'Editar Propiedad',
+                ruta: '/auth/administrador/propiedades'
             })
         }
 
@@ -695,7 +718,8 @@ const panelAdministradorCategorias = async (req, res) => {
         usuario: req.usuario,
         categorias,
         csrfToken: req.csrfToken(),
-        pagina: 'Administrar Categorías'
+        pagina: 'Administrar Categorías',
+        ruta: '/auth/administrador/categorias'
     })
 }
 
@@ -705,7 +729,8 @@ const crearCategoriaAdministrador = async (req, res) => {
         titulo: 'Crear Categoría',
         usuario: req.usuario,
         csrfToken: req.csrfToken(),
-        pagina: 'Crear Categoría'
+        pagina: 'Crear Categoría',
+        ruta: '/auth/administrador/categorias'
     })
 }
 
@@ -723,7 +748,8 @@ const crearCategoriaAdministradorPost = async (req, res) => {
             errores: errores.array(),
             oldData: req.body,
             usuario: req.usuario,
-            pagina: 'Crear Categoría'
+            pagina: 'Crear Categoría',
+            ruta: '/auth/administrador/categorias'
         })
     }
 
@@ -737,7 +763,8 @@ const crearCategoriaAdministradorPost = async (req, res) => {
             ModalError: [{ msg: 'La categoría ya existe' }],
             oldData: req.body,
             usuario: req.usuario,
-            pagina: 'Crear Categoría'
+            pagina: 'Crear Categoría',
+            ruta: '/auth/administrador/categorias'
         })
     }
 
@@ -785,7 +812,8 @@ const editarCategoriaAdministrador = async (req, res) => {
         usuario: req.usuario,
         categoria,
         csrfToken: req.csrfToken(),
-        pagina: 'Editar Categoría'
+        pagina: 'Editar Categoría',
+        ruta: '/auth/administrador/categorias'
     })
 }
 
@@ -808,7 +836,8 @@ const editarCategoriaAdministradorPost = async (req, res) => {
             oldData: req.body,
             usuario: req.usuario,
             categoria,
-            pagina: 'Editar Categoría'
+            pagina: 'Editar Categoría',
+            ruta: '/auth/administrador/categorias'
         })
     }
 
@@ -834,7 +863,8 @@ const editarCategoriaAdministradorPost = async (req, res) => {
             oldData: req.body,
             usuario: req.usuario,
             categoria,
-            pagina: 'Editar Categoría'
+            pagina: 'Editar Categoría',
+            ruta: '/auth/administrador/categorias'
         })
     }
 
@@ -847,8 +877,6 @@ const editarCategoriaAdministradorPost = async (req, res) => {
     req.flash('tipoFlash', 'success')
     res.redirect('/auth/administrador/categorias')
 }
-
-
 
 // Acciones del administrador con respecto a los mensajes
 
@@ -947,7 +975,8 @@ const verMensajeAdministrador = async (req, res) => {
             respuestas,
             mensajeOriginal,
             csrfToken: req.csrfToken(),
-            pagina: 'Ver Mensaje'
+            pagina: 'Ver Mensaje',
+            ruta: '/auth/administrador/mensajes'
         })
     } catch (error) {
         console.log(error)

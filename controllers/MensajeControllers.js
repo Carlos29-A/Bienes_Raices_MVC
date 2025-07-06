@@ -376,26 +376,14 @@ const eliminarMensaje = async (req, res) => {
 }
 
 const verMensaje = async (req, res) => {
-    const { id } = req.usuario
-    const { id: mensajeId } = req.params
+    const { id } = req.params
+    const usuario = req.usuario
 
-    // Verificar si el usuario existe
-    const usuario = await Usuario.findByPk(id)
-    if(!usuario) {
-        return res.redirect('/auth/login')
-    }
-
-    // Obtener el mensaje con sus relaciones
-    const mensaje = await Mensaje.findByPk(mensajeId, {
+    const mensaje = await Mensaje.findByPk(id, {
         include: [
             {
                 model: Usuario,
                 as: "remitenteRelacion",
-                attributes: ['nombre', 'email', 'tipo']
-            },
-            {
-                model: Usuario,
-                as: "destinatarioRelacion",
                 attributes: ['nombre', 'email', 'tipo']
             },
             {
@@ -407,35 +395,39 @@ const verMensaje = async (req, res) => {
                         as: "categoriaRelacion"
                     }
                 ]
+            },
+            {
+                model: Usuario,
+                as: "destinatarioRelacion",
+                attributes: ['nombre', 'email', 'tipo']
             }
         ]
     })
 
-    // Verificar si el mensaje existe
-    if(!mensaje) {
-        return res.redirect('/auth/login')
+    if (!mensaje) {
+        return res.redirect('/404')
     }
 
-    // Verificar si el usuario tiene permiso para ver el mensaje
-    if(mensaje.remitenteId !== id && mensaje.destinatarioId !== id) {
-        return res.redirect('/auth/login')
+    // Verificar que el usuario sea parte del mensaje
+    if (mensaje.remitenteId !== usuario.id && mensaje.destinatarioId !== usuario.id) {
+        return res.redirect('/404')
     }
 
-    // Marcar el mensaje como leído si el usuario es el destinatario
-    if(mensaje.destinatarioId === id && !mensaje.leido) {
+    // Marcar el mensaje como leído si el usuario actual es el destinatario
+    if (mensaje.destinatarioId === usuario.id && !mensaje.leido) {
         mensaje.leido = true
         await mensaje.save()
     }
 
     // Determinar la ruta para el sidebar
-    const ruta = usuario.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener'
+    const ruta = usuario.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener/comprador'
 
     res.render('mensajes/verMensaje', {
+        pagina: 'Ver Mensaje',
+        csrfToken: req.csrfToken(),
         mensaje,
         usuario,
-        csrfToken: req.csrfToken(),
-        ruta,
-        pagina : 'Mensajes'
+        ruta
     })
 }
 
@@ -704,6 +696,24 @@ const responderMensajeCompradorPost = async (req, res) => {
     
 }
 
+// Nuevo endpoint para obtener el conteo de mensajes no leídos
+const obtenerMensajesNoLeidos = async (req, res) => {
+    try {
+        const { id } = req.usuario
+        
+        const cantidadNoLeidos = await Mensaje.count({
+            where: {
+                destinatarioId: id,
+                leido: false
+            }
+        })
+
+        return res.json({ cantidadNoLeidos })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ error: 'Error al obtener mensajes no leídos' })
+    }
+}
 
 export {
     enviarMensaje,
@@ -717,5 +727,6 @@ export {
     responderMensaje,
     responderMensajePost,
     responderMensajeComprador,
-    responderMensajeCompradorPost
+    responderMensajeCompradorPost,
+    obtenerMensajesNoLeidos
 }

@@ -1,6 +1,6 @@
 import express from 'express'
 import  { protegerRuta, validarVendedor, validarComprador } from '../middlewares/protegerRuta.js'
-import { enviarMensaje, obtenerMensajesComprador, eliminarMensaje, enviarMensajePost, editarMensaje, editarMensajePost, obtenerMensajesVendedor, verMensaje, responderMensaje, responderMensajePost, responderMensajeComprador, responderMensajeCompradorPost } from '../controllers/MensajeControllers.js'
+import { enviarMensaje, obtenerMensajesComprador, eliminarMensaje, enviarMensajePost, editarMensaje, editarMensajePost, obtenerMensajesVendedor, verMensaje, responderMensaje, responderMensajePost, responderMensajeComprador, responderMensajeCompradorPost, obtenerMensajesNoLeidos } from '../controllers/MensajeControllers.js'
 
 const router = express.Router()
 
@@ -21,13 +21,12 @@ router.post('/responder/:id', protegerRuta, responderMensajePost)
 router.get('/responder/comprador/:id', protegerRuta, responderMensajeComprador)
 router.post('/responder/comprador/:id', protegerRuta, responderMensajeCompradorPost)
 
-
+// Nueva ruta para obtener mensajes no leídos
+router.get('/no-leidos', protegerRuta, obtenerMensajesNoLeidos)
 
 // Editar mensaje
 router.get('/editar/:id', protegerRuta, editarMensaje)
 router.post('/editar/:id', protegerRuta, editarMensajePost)
 router.post('/eliminar/:id', protegerRuta, eliminarMensaje)
-
-
 
 export default router

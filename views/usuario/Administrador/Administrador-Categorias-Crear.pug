@@ -5,15 +5,14 @@ block contenido
         include ./Administrador-Sidebar/administradorSidebar.pug
 
         //- Contenido Principal
-        main(class="flex-1 ml-64")
+        main(class="flex-1 pl-60")
             //- Encabezado
             header(class="bg-white border-b border-gray-200 px-8 py-6 shadow-sm sticky top-0 z-40")
-                div(class="flex items-center justify-between")
-                    div(class="flex items-center space-x-4")
-                        img(src="/img/categoria.png" alt="Categorías" class="w-12 h-12")
-                        div
-                            h1(class="text-2xl font-bold text-[#FF6819]") Nueva Categoría
-                            p(class="text-gray-600") Registra una nueva categoría de propiedades
+                div(class="flex justify-start  items-center space-x-4 max-w-3xl mx-auto")
+                    img(src="/img/categorias.png" alt="Categorías" class="w-12 h-12")
+                    div
+                        h1(class="text-2xl font-bold text-[#FF6819]") Nueva Categoría
+                        p(class="text-gray-600") Registra una nueva categoría de propiedades
             //- Contenedor Principal
             div(class="p-8 bg-gray-100")
                 //- Formulario

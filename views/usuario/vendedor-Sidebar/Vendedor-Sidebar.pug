@@ -1,24 +1,65 @@
 // Sidebar
-aside(class="fixed top-0 left-0 h-screen bg-gray-800 text-white w-64 space-y-6 py-7 px-2 z-50")
-    div(class="flex items-center space-x-2 px-4")
-        span(class="text-2xl font-extrabold") InmoElegante
+aside(class="fixed top-0 left-0 h-screen bg-gray-800 text-white w-64 space-y-6 py-7 px-2 z-50 transform transition-transform duration-300" id="sidebar")
+    // Botón de toggle
+    button(
+        class="absolute -right-7 top-0 bg-gray-800 text-white p-2 rounded-r-lg cursor-pointer"
+        id="sidebarToggle"
+    )
+        i(class="fas fa-bars")
+
+    div(class="flex items-center space-x-2 px-4 mb-6")
+        img(src="/img/Logo.png" alt="Logo" class="w-40")
     
-    nav
-        a(href="/auth/vendedor/panel" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/vendedor/panel' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
-            img(src="/img/hogar.png", alt="Inicio" class="w-10 h-10 ml-2")
-            p(class="ml-6") Inicio
-        a(href="/propiedades/crearPropiedad" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/propiedades/crearPropiedad' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
-            img(src="/img/agregarPropiedad.png" alt="Publicar Propiedad" class="w-15 h-15 mr-2") 
-            | Publicar Propiedad
-        a(href="/propiedades/mis-propiedades" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/propiedades/mis-propiedades' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
-            img(src="/img/propiedad.png", alt="Mis Propiedades" class="w-15 h-15 mr-2")
-            | Mis Propiedades
-        a(href="/mensajes/obtener/vendedor" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/mensajes/obtener/vendedor' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
-            img(src="/img/Mensaje.png", alt="Mensajes" class="w-15 h-15 mr-2")
-            | Mensajes
-        a(href="/auth/editar-perfil" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/editar-perfil' ? 'bg-gray-900 text-white' : 'hover:bg-gray-700 hover:text-white'}`)
-            img(src="/img/usuarios.png", alt="Mi Perfil" class="w-15 h-15 mr-2")
-            | Mi Perfil
-        a(href="/auth/cerrar-sesion" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white")
-            img(src="/img/cerrar-sesion.png", alt="Cerrar Sesión" class="w-12 h-12 ml-2")
-            p(class="ml-3") Cerrar Sesión
+    nav(class="space-y-2")
+        a(href="/auth/vendedor/panel" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/vendedor/panel' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`)
+            div(class="w-12 flex justify-center")
+                img(src="/img/hogar.png", alt="Inicio" class="w-10 h-10")
+            span(class="ml-3") Inicio
+        a(href="/propiedades/crearPropiedad" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/propiedades/crearPropiedad' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`)
+            div(class="w-12 flex justify-center")
+                img(src="/img/agregarPropiedad.png" alt="Publicar Propiedad" class="w-15 h-15") 
+            span(class="ml-3") Publicar Propiedad
+        a(href="/propiedades/mis-propiedades" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/propiedades/mis-propiedades' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`)
+            div(class="w-12 flex justify-center")
+                img(src="/img/propiedad.png", alt="Mis Propiedades" class="w-15 h-15")
+            span(class="ml-3") Mis Propiedades
+        a(href="/mensajes/obtener/vendedor" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/mensajes/obtener/vendedor' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`)
+            div(class="w-12 flex justify-center")
+                div(id="icono-mensajes" class="relative")
+                    img(src="/img/Mensaje.png" alt="Mensaje" class="w-15 h-15")
+            span(class="ml-3") Mensajes
+        a(href="/auth/editar-perfil" class=`flex items-center py-2.5 px-4 rounded transition duration-200 ${ruta === '/auth/editar-perfil' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`)
+            div(class="w-12 flex justify-center")
+                img(src="/img/usuarios.png", alt="Mi Perfil" class="w-15 h-15")
+            span(class="ml-3") Mi Perfil
+        a(href="/auth/cerrar-sesion" class="flex items-center py-2.5 px-4 rounded transition duration-200 text-gray-300 hover:bg-red-600 hover:text-white")
+            div(class="w-12 flex justify-center")
+                img(src="/img/cerrar-sesion.png", alt="Cerrar Sesión" class="w-12 h-12")
+            span(class="ml-3") Cerrar Sesión
+
+script.
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const mainContent = document.querySelector('.pl-60');
+        let isOpen = true;
+
+        function toggleSidebar() {
+            if (isOpen) {
+                sidebar.style.transform = 'translateX(-100%)';
+                if (mainContent) {
+                    mainContent.classList.remove('pl-60');
+                    mainContent.classList.add('pl-0');
+                }
+            } else {
+                sidebar.style.transform = 'translateX(0)';
+                if (mainContent) {
+                    mainContent.classList.remove('pl-0');
+                    mainContent.classList.add('pl-60');
+                }
+            }
+            isOpen = !isOpen;
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+    });

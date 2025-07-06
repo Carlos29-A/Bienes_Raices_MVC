@@ -1,5 +1,12 @@
 // Sidebar
-aside(class="fixed top-0 left-0 h-screen bg-gray-800 text-white w-64 space-y-6 py-7 px-2 z-50")
+aside(class="fixed top-0 left-0 h-screen bg-gray-800 text-white w-64 space-y-6 py-7 px-2 z-50 transform transition-transform duration-300" id="sidebar")
+    // Botón de toggle
+    button(
+        class="absolute -right-7 top-0 bg-gray-800 text-white p-2 rounded-r-lg"
+        id="sidebarToggle"
+    )
+        i(class="fas fa-bars")
+
     // Logo y Título
     div(class="flex items-center space-x-2 px-4")
         div(class="bg-[#FF6819] p-2 rounded-lg shadow-sm")
@@ -75,3 +82,30 @@ aside(class="fixed top-0 left-0 h-screen bg-gray-800 text-white w-64 space-y-6 p
         )
             img(src="/img/cerrar-sesion.png", alt="Cerrar Sesión" class="w-12 h-12 ml-2")
             p(class="ml-3") Cerrar Sesión
+
+script.
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const mainContent = document.querySelector('.pl-60');
+        let isOpen = true;
+
+        function toggleSidebar() {
+            if (isOpen) {
+                sidebar.style.transform = 'translateX(-100%)';
+                if (mainContent) {
+                    mainContent.classList.remove('pl-60');
+                    mainContent.classList.add('pl-0');
+                }
+            } else {
+                sidebar.style.transform = 'translateX(0)';
+                if (mainContent) {
+                    mainContent.classList.remove('pl-0');
+                    mainContent.classList.add('pl-60');
+                }
+            }
+            isOpen = !isOpen;
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+    });

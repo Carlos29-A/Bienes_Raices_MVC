@@ -5,7 +5,7 @@ block contenido
         include ./Administrador-Sidebar/administradorSidebar.pug
 
         //- Contenido Principal
-        div(class="flex-1 flex flex-col ml-64")
+        div(class="flex-1 flex flex-col pl-60")
             //- Encabezado
             header(class="bg-white border-b border-gray-200 px-8 py-6 shadow-sm")
                 div(class="flex items-center justify-between")
@@ -25,36 +25,50 @@ block contenido
             //- Contenedor Principal
             div(class="flex-1 p-8 bg-gray-100")
                 //- Barra de Acciones
-                div(class="mb-6 flex justify-between items-center")
-                    //- Filtros
-                    form(action="/auth/administrador/mensajes" method="GET")
-                        div(class="flex gap-4")
+                div(class="mb-8")
+                    form(action="/auth/administrador/mensajes" method="GET" class="bg-white p-6 rounded-lg shadow-md")
+                        div(class="grid grid-cols-1 md:grid-cols-4 gap-6")
                             div(class="flex flex-col gap-2")
-                                label(for="estado" class="text-gray-600") Estado
-                                select(name="estado" class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white")
-                                    option(value="") Todos los estados
-                                    option(value="leido" selected=filtros && filtros.estado === 'leido') Leídos
-                                    option(value="no-leido" selected=filtros && filtros.estado === 'no-leido') No leídos
-                            div(class="flex flex-col gap-2")
-                                label(for="remitente" class="text-gray-600") Remitente
-                                input(
-                                    type="text" 
-                                    name="remitente" 
-                                    value=filtros && filtros.remitente
-                                    class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white"
+                                label(for="estado" class="text-gray-700 font-medium") Estado
+                                select(
+                                    name="estado" 
+                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent transition-all duration-200 bg-white shadow-sm"
                                 )
-                            div(class="flex flex-col gap-2")
-                                label(for="destinatario" class="text-gray-600") Destinatario
-                                input(
-                                    type="text" 
-                                    name="destinatario" 
-                                    value=filtros && filtros.destinatario
-                                    class="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent appearance-none bg-white"
-                                )
+                                    option(value="" class="text-gray-600") Todos los estados
+                                    option(value="leido" selected=filtros && filtros.estado === 'leido' class="text-gray-600") Leídos
+                                    option(value="no-leido" selected=filtros && filtros.estado === 'no-leido' class="text-gray-600") No leídos
                             
-                            button(type="submit" class="px-4 py-2 bg-[#FF6F17] text-white rounded-lg hover:bg-[#F99E00] transition-colors duration-200 cursor-pointer")
-                                i(class="fas fa-search mr-2")
-                                | Buscar
+                            div(class="flex flex-col gap-2")
+                                label(for="remitente" class="text-gray-700 font-medium") Remitente
+                                div(class="relative")
+                                    i(class="fas fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400")
+                                    input(
+                                        type="text" 
+                                        name="remitente" 
+                                        value=filtros && filtros.remitente
+                                        placeholder="Buscar por remitente..."
+                                        class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent transition-all duration-200 shadow-sm"
+                                    )
+                            
+                            div(class="flex flex-col gap-2")
+                                label(for="destinatario" class="text-gray-700 font-medium") Destinatario
+                                div(class="relative")
+                                    i(class="fas fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400")
+                                    input(
+                                        type="text" 
+                                        name="destinatario" 
+                                        value=filtros && filtros.destinatario
+                                        placeholder="Buscar por destinatario..."
+                                        class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#FF6F17] focus:border-transparent transition-all duration-200 shadow-sm"
+                                    )
+                            
+                            div(class="flex items-end")
+                                button(
+                                    type="submit" 
+                                    class="w-full px-6 py-2.5 bg-[#FF6F17] text-white font-medium rounded-lg hover:bg-[#F99E00] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+                                )
+                                    i(class="fas fa-search")
+                                    span Buscar
                 if mensajes.length === 0
                     div(class="text-center text-gray-600")
                         p(class="text-lg font-medium") No hay mensajes que coincidan con los filtros

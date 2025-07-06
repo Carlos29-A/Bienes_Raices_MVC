@@ -5,11 +5,12 @@ block contenido
         include ./Administrador-Sidebar/administradorSidebar.pug
 
         //- Contenido Principal
-        main(class="flex-1 p-6 ml-64")
+        main(class="flex-1 p-6 pl-60")
             //- Encabezado
-            div(class="mb-8")
-                h1(class="text-2xl font-bold text-[#FF6F17]") Crear Nuevo Usuario
-                p(class="text-gray-600 mt-1") Registra un nuevo usuario en el sistema
+            div(class=" border-b border-gray-200 px-8 py-6 shadow-sm sticky top-0 z-40 mb-8")
+                div(class="flex flex-col max-w-3xl mx-auto")
+                    h1(class="text-2xl font-bold text-[#FF6F17]") Crear Nuevo Usuario
+                    p(class="text-gray-600 mt-1") Registra un nuevo usuario en el sistema
 
             //- Contenedor Principal
             div(class="max-w-3xl mx-auto")
