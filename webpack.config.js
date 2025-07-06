@@ -17,7 +17,8 @@ export default {
         filtrarPropiedades: './src/js/filtrarPropiedades.js',
         filtrosAdmin: './src/js/filtrosAdmin.js',
         accesibilidad: './src/js/accesibilidad.js',
-        audio: './src/js/audio.js'
+        audio: './src/js/audio.js',
+        agregarVentanaModal: './src/js/agregarVentanaModal.js'
     },
     output: {
         filename: '[name].js',

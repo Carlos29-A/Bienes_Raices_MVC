@@ -10,9 +10,8 @@ div(id="modalMensaje" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex ite
                 
             //- Mensaje dinámico
             div(id="mensajeModal" class="mb-6")
-                h3(class="text-xl font-semibold text-gray-900 mb-2")= mensajesFlash[0]
+                h3(class="text-xl font-semibold text-gray-900 mb-2" id ="textoFinModal")= mensajesFlash[0]
                 p(id="mensajeCarga" class="text-sm text-gray-600") Procesando...
-            
             //- Botones
             div(class="flex justify-center gap-4")
                 button(

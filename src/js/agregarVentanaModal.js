@@ -8,9 +8,9 @@ if (valorMensaje && valorMensaje.dataset.show === 'true') {
         const contenedorSpinner = document.querySelector('#contenedorSpinner');
         
         //- Ocultar el mensaje principal inicialmente
-        const mensajePrincipal = document.getElementById('mensajePrincipal');
-        if (mensajePrincipal) {
-            mensajePrincipal.classList.add('hidden');
+        const textoFinModal = document.getElementById('textoFinModal');
+        if (textoFinModal) {
+            textoFinModal.classList.add('hidden');
         }
         
         //- Animacion de entrada
@@ -91,9 +91,9 @@ if (valorMensaje && valorMensaje.dataset.show === 'true') {
                     contenedorIconoCheck.classList.add('flex');
                 }
                 
-                //- Mostrar el mensaje principal
-                if (mensajePrincipal) {
-                    mensajePrincipal.classList.remove('hidden');
+                //- Mostrar el texto final
+                if (textoFinModal) {
+                    textoFinModal.classList.remove('hidden');
                 }
                 
                 //- Mostrar mensaje final
@@ -170,10 +170,10 @@ function cerrarModalMensaje() {
             contenedorIconoCheck.classList.remove('flex');
         }
         
-        //- Ocultar el mensaje principal
-        const mensajePrincipal = document.getElementById('mensajePrincipal');
-        if (mensajePrincipal) {
-            mensajePrincipal.classList.add('hidden');
+        //- Ocultar el texto final
+        const textoFinModal = document.getElementById('textoFinModal');
+        if (textoFinModal) {
+            textoFinModal.classList.add('hidden');
         }
         
         //- Resetear el mensaje de carga
