@@ -2,6 +2,13 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { generateText, generateObject, streamText } from "ai";
 
+// Variables para control de velocidad y reintentos
+let lastRequestTime = 0;
+const MIN_REQUEST_INTERVAL = 5000; // 5 segundos entre solicitudes
+const MAX_RETRIES = 3;
+let retryCount = 0;
+let isProcessing = false;
+
 // Función para inicializar el chatbot
 function initializeChatbot() {
     // Verificar si tenemos la clave API
@@ -11,7 +18,12 @@ function initializeChatbot() {
     }
 
     const openRouter = createOpenRouter({
-        apiKey: window.OPENROUTER_API_KEY
+        apiKey: window.OPENROUTER_API_KEY,
+        baseURL: 'https://openrouter.ai/api/v1',
+        defaultHeaders: {
+            'HTTP-Referer': window.location.origin,
+            'X-Title': 'Bienes Raices MVC'
+        }
     });
 
     // Contexto base del sistema
@@ -113,6 +125,43 @@ function initializeChatbot() {
     const enviarBtn = document.querySelector('#enviar');
     const respuestaContainer = document.querySelector('#respuesta');
 
+    // Función para esperar un tiempo específico
+    const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    // Función para verificar el intervalo entre solicitudes
+    function canMakeRequest() {
+        const now = Date.now();
+        const timeSinceLastRequest = now - lastRequestTime;
+        
+        if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
+            const waitTime = MIN_REQUEST_INTERVAL - timeSinceLastRequest;
+            return { canMake: false, waitTime };
+        }
+        
+        lastRequestTime = now;
+        return { canMake: true, waitTime: 0 };
+    }
+
+    // Función para mostrar mensaje de error
+    function mostrarError(mensaje, isTemporary = false) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = `bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded ${isTemporary ? 'temporary-error' : ''}`;
+        errorDiv.textContent = mensaje;
+        
+        // Eliminar errores temporales anteriores
+        if (isTemporary) {
+            const previousTemporaryErrors = respuestaContainer.querySelectorAll('.temporary-error');
+            previousTemporaryErrors.forEach(error => error.remove());
+        }
+        
+        respuestaContainer.appendChild(errorDiv);
+        scrollToBottom();
+
+        if (isTemporary) {
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+    }
+
     // Función para ajustar la altura del textarea
     function adjustTextareaHeight() {
         mensajeInput.style.height = 'auto';
@@ -128,10 +177,10 @@ function initializeChatbot() {
         iconContainer.className = 'bg-white rounded-full p-2 flex items-center justify-center';
         
         const icon = document.createElement('i');
-        icon.className = isUser ? 'fas fa-user text-indigo-600 text-sm' : 'fas fa-robot text-indigo-600 text-sm';
+        icon.className = isUser ? 'fas fa-user text-[#FF6819] text-sm' : 'fas fa-robot text-[#FF6819] text-sm';
         
         const messageContent = document.createElement('div');
-        messageContent.className = `rounded-lg p-3 shadow-sm ${isUser ? 'bg-indigo-600 text-white' : 'bg-white text-gray-800'} ${isUser ? 'ml-auto' : ''} max-w-[80%]`;
+        messageContent.className = `rounded-lg p-3 shadow-sm ${isUser ? 'bg-[#FF6819] text-white' : 'bg-white text-gray-800'} ${isUser ? 'ml-auto' : ''} max-w-[80%]`;
         
         const messageText = document.createElement('p');
         messageText.className = 'whitespace-pre-wrap'; // Preservar saltos de línea
@@ -191,6 +240,78 @@ function initializeChatbot() {
         });
     }
 
+    // Función para procesar el mensaje
+    async function procesarMensaje(mensaje, typingIndicator) {
+        if (isProcessing) {
+            mostrarError('Ya hay un mensaje siendo procesado. Por favor espera.', true);
+            return false;
+        }
+
+        isProcessing = true;
+        retryCount = 0;
+
+        try {
+            const promptCompleto = `${SYSTEM_CONTEXT}\n\nPregunta del usuario: ${mensaje}\n\nPor favor, proporciona una respuesta detallada y específica basada en el sistema de Bienes Raíces:`;
+
+            while (retryCount < MAX_RETRIES) {
+                const { canMake, waitTime } = canMakeRequest();
+                
+                if (!canMake) {
+                    mostrarError(`Esperando ${Math.ceil(waitTime/1000)} segundos antes del siguiente intento...`, true);
+                    await wait(waitTime);
+                    continue;
+                }
+
+                try {
+                    const resultado = streamText({
+                        model: openRouter('google/gemini-2.0-flash-exp:free'),
+                        prompt: promptCompleto,
+                        temperature: 0.7,
+                        max_tokens: 1000,
+                        headers: {
+                            'HTTP-Referer': window.location.origin,
+                            'X-Title': 'Bienes Raices MVC'
+                        }
+                    });
+
+                    let respuestaCompleta = '';
+                    for await (const text of resultado.textStream) {
+                        respuestaCompleta += text;
+                        typingIndicator.querySelector('p').textContent = respuestaCompleta;
+                        scrollToBottom();
+                    }
+
+                    typingIndicator.replaceWith(createMessageElement(respuestaCompleta, false));
+                    return true;
+
+                } catch (error) {
+                    retryCount++;
+                    
+                    if (error.status === 429) {
+                        const waitTime = Math.pow(2, retryCount) * 1000; // Espera exponencial
+                        mostrarError(`Límite de solicitudes alcanzado. Reintentando en ${waitTime/1000} segundos...`, true);
+                        await wait(waitTime);
+                    } else {
+                        throw error;
+                    }
+                }
+            }
+
+            throw new Error('Máximo número de reintentos alcanzado');
+
+        } catch (error) {
+            console.error('Error en procesarMensaje:', error);
+            mostrarError(
+                error.status === 429 
+                    ? 'Has alcanzado el límite de mensajes. Por favor, intenta más tarde.'
+                    : 'Hubo un error al procesar tu mensaje. Por favor, intenta de nuevo.'
+            );
+            return false;
+        } finally {
+            isProcessing = false;
+        }
+    }
+
     if (formulario) {
         formulario.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -201,10 +322,7 @@ function initializeChatbot() {
                 }
 
                 const mensaje = mensajeInput.value.trim();
-
-                if (mensaje === '') {
-                    return;
-                }
+                if (mensaje === '') return;
 
                 // Agregar mensaje del usuario
                 respuestaContainer.appendChild(createMessageElement(mensaje, true));
@@ -220,37 +338,15 @@ function initializeChatbot() {
                 respuestaContainer.appendChild(typingIndicator);
                 scrollToBottom();
 
-                // Construir el prompt
-                const promptCompleto = `${SYSTEM_CONTEXT}\n\nPregunta del usuario: ${mensaje}\n\nPor favor, proporciona una respuesta detallada y específica basada en el sistema de Bienes Raíces:`;
-
-                const resultado = streamText({
-                    model: openRouter('google/gemini-2.0-flash-exp:free'),
-                    prompt: promptCompleto,
-                    temperature: 0.7,
-                    max_tokens: 1000,
-                });
-
-                // Preparar para la nueva respuesta
-                let respuestaCompleta = '';
-
-                // Procesar la respuesta
-                for await (const text of resultado.textStream) {
-                    respuestaCompleta += text;
-                    typingIndicator.querySelector('p').textContent = respuestaCompleta;
-                    scrollToBottom();
-                }
-
-                // Reemplazar el indicador de escritura con la respuesta final
-                typingIndicator.replaceWith(createMessageElement(respuestaCompleta, false));
-                scrollToBottom();
-
-                enviarBtn.disabled = false;
-                mensajeInput.focus();
+                // Procesar mensaje
+                await procesarMensaje(mensaje, typingIndicator);
 
             } catch (error) {
-                console.error('Error al procesar el mensaje:', error);
-                alert('Hubo un error al procesar tu mensaje. Por favor, intenta de nuevo.');
+                console.error('Error general:', error);
+                mostrarError('Error inesperado. Por favor, intenta de nuevo más tarde.');
+            } finally {
                 enviarBtn.disabled = false;
+                mensajeInput.focus();
             }
         });
     }
