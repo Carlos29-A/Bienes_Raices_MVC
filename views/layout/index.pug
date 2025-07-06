@@ -16,7 +16,24 @@ html(lang="es")
 
         block contenido
 
-        block scripts
+        //- Incluir el chatbot
+        include ../partials/chatbot.pug
+
+        //- Scripts
         script(src="/js/accesibilidad.js")
         script(src="/js/audio.js")
         script(src="/js/notificaciones.js")
+        
+        //- Configuración del chatbot
+        script.
+            // Establecer la API key como una propiedad del objeto window
+            Object.defineProperty(window, 'OPENROUTER_API_KEY', {
+                value: !{JSON.stringify(openrouterKey || '')},
+                writable: false,
+                configurable: false
+            });
+            
+        
+        script(src="/js/chatBot.js")
+        
+        block scripts

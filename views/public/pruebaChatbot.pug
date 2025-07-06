@@ -1,0 +1,17 @@
+extends ../layout/index.pug
+
+block contenido 
+    //- Crear un formulario para enviar un mensaje al chatbot
+    div(class="max-w-3xl mx-auto")
+        form(class="flex items-center gap-2" id="formulario")
+            input(type="text" name="mensaje" placeholder="Escribe tu mensaje" class="w-full p-2 rounded-md border border-gray-300" id="mensaje")
+            button(type="submit" class="bg-blue-500 text-white p-2 rounded-md" id="enviar") Enviar
+
+        //- Crear un div para mostrar la respuesta del chatbot
+        div(id="respuesta" class="mt-4 p-4 bg-gray-100 rounded-md text-gray-800")
+    
+block scripts
+    //- Inyectar la clave API como variable global
+    script.
+        window.OPENROUTER_API_KEY = '#{openrouterKey}';
+    script(src="/js/chatBot.js")

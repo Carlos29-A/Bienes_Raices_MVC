@@ -19,7 +19,8 @@ export default {
         accesibilidad: './src/js/accesibilidad.js',
         audio: './src/js/audio.js',
         agregarVentanaModal: './src/js/agregarVentanaModal.js',
-        notificaciones: './src/js/notificaciones.js'
+        notificaciones: './src/js/notificaciones.js',
+        chatBot: './src/js/chatBot.js'
     },
     output: {
         filename: '[name].js',

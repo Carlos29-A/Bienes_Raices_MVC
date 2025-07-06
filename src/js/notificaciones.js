@@ -1,6 +1,9 @@
 (function() {
     const notificacionesContainer = document.querySelector('#notificaciones-container')
-    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+
+    // Si no hay token, probablemente el usuario no ha iniciado sesión
+    if (!token) return;
 
     // Función para obtener el conteo de mensajes no leídos
     async function actualizarNotificaciones() {
@@ -10,6 +13,16 @@
                     'CSRF-Token': token
                 }
             })
+
+            // Si la respuesta no es OK, probablemente no ha iniciado sesión
+            if (!response.ok) {
+                if (response.status === 401) {
+                    // Usuario no autenticado, simplemente retornamos sin error
+                    return;
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.json()
 
             if (data.cantidadNoLeidos > 0) {
@@ -40,11 +53,16 @@
                 }
             }
         } catch (error) {
-            console.error('Error al obtener notificaciones:', error)
+            // Solo mostramos errores que no sean de autenticación
+            if (!error.message.includes('401')) {
+                console.error('Error al obtener notificaciones:', error)
+            }
         }
     }
 
-    // Actualizar notificaciones cada minuto
-    actualizarNotificaciones()
-    setInterval(actualizarNotificaciones, 60000)
+    // Actualizar notificaciones cada minuto solo si hay token
+    if (token) {
+        actualizarNotificaciones()
+        setInterval(actualizarNotificaciones, 60000)
+    }
 })(); 

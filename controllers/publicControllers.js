@@ -262,6 +262,25 @@ const verPerfilVendedor = async (req, res) => {
     })
 }
 
+// Middleware para agregar la clave API a todas las vistas
+const addOpenRouterKey = (req, res, next) => {
+    // Verificar que la clave API existe
+    if (!process.env.OPENROUTER_API_KEY) {
+        console.warn('ADVERTENCIA: OPENROUTER_API_KEY no está configurada en el archivo .env');
+    }
+    res.locals.openrouterKey = process.env.OPENROUTER_API_KEY || '';
+    next();
+};
+
+// Prueba ChatBot
+const pruebaChatbot = (req, res) => {
+    res.render('public/pruebaChatbot', {
+        titulo: 'Prueba ChatBot',
+        pagina: 'pruebaChatbot',
+        ruta: '/pruebaChatbot'
+    });
+};
+
 export {
     paginaPrincipal,
     nosotros,
@@ -269,7 +288,9 @@ export {
     buscarPropiedades,
     verPropiedad,
     enviarContacto,
-    verPerfilVendedor
+    verPerfilVendedor,
+    pruebaChatbot,
+    addOpenRouterKey
 }
 
 
