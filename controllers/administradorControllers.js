@@ -365,7 +365,8 @@ const editarUsuarioAdministrador = async (req, res) => {
     })
 }
 const editarUsuarioAdministradorPost = async (req, res) => {
-
+        // Recoger el administrador
+        const administrador = await Usuario.findOne({ where: { id: req.usuario.id } })
         // Recoger al usuario a editar
         const { id } = req.params
         const usuario = await Usuario.findByPk(id)

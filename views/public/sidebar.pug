@@ -18,13 +18,14 @@ nav(class="bg-gradient-to-r from-[#1E2939] to-[#101828] shadow-lg")
                     i(class="fas fa-search mr-2")
                     span Buscar
                 //- Inicio de sesion
-                a(href="/auth/login" class=`${ruta === "/auth/login" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
-                    i(class="fas fa-user mr-2")
-                    span Iniciar Sesión
-                //- Registrarse
-                a(href="/auth/registro" class=`${ruta === "/auth/registro" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
-                    i(class="fas fa-user-plus mr-2")
-                    span Registrarse
+                if !usuario
+                    a(href="/auth/login" class=`${ruta === "/auth/login" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
+                        i(class="fas fa-user mr-2")
+                        span Iniciar Sesión
+                    //- Registrarse
+                    a(href="/auth/registro" class=`${ruta === "/auth/registro" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
+                        i(class="fas fa-user-plus mr-2")
+                        span Registrarse
                 //- Nosotros
                 a(href="/nosotros" class=`${ruta === "/nosotros" ? "text-[#FF6819]" : "text-white"} font-medium hover:text-[#FF6819] transition-colors duration-200 flex items-center`)
                     i(class="fas fa-info-circle mr-2")

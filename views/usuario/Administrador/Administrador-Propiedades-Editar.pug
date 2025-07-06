@@ -62,22 +62,21 @@ block contenido
                                     p(class="text-gray-600") Ingresa los detalles principales de la propiedad
                         
                         div(class="p-8 space-y-8")
-                            // Mensajes de error
-                            if errores
-                                div(class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6")
-                                    each error in errores
-                                        p(class="text-red-600 text-sm flex items-center")
-                                            i(class="fas fa-exclamation-circle mr-2")
-                                            | #{error.msg}
                             div(class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6")
                                 div(class="sm:col-span-3")
                                     label(for="titulo" class="block text-sm font-medium text-gray-700") Título
                                     div(class="mt-1")
                                         input(type="text" name="titulo" id="titulo" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=propiedad.titulo? propiedad.titulo : '')
+                                        - const tituloError = errores?.find(error => error.path === 'titulo');
+                                        if tituloError
+                                            p(class="text-red-500 text-sm")= tituloError.msg
                                 div(class="sm:col-span-3")
                                     label(for="precio" class="block text-sm font-medium text-gray-700") Precio $
                                     div(class="mt-1")
                                         input(type="number" name="precio" id="precio" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200" value=propiedad.precio? propiedad.precio : '')
+                                        - const precioError = errores?.find(error => error.path === 'precio');
+                                        if precioError
+                                            p(class="text-red-500 text-sm")= precioError.msg
                                 div(class="sm:col-span-3")
                                     label(for="categoria" class="block text-sm font-medium text-gray-700") Categoría
                                     div(class="mt-1")
@@ -85,6 +84,9 @@ block contenido
                                             option(value="") -- Seleccione --
                                             each categoria in categorias
                                                 option(value=categoria.id selected=propiedad.categoriaRelacion.nombre? propiedad.categoriaRelacion.nombre == categoria.nombre : false)= categoria.nombre
+                                        - const categoriaError = errores?.find(error => error.path === 'categoria');
+                                        if categoriaError
+                                            p(class="text-red-500 text-sm")= categoriaError.msg
                                 div(class="sm:col-span-3")
                                     label(for="habitaciones" class="block text-sm font-medium text-gray-700") Habitaciones
                                     div(class="mt-1")
@@ -92,6 +94,9 @@ block contenido
                                             option(value="") -- Seleccione --
                                             each habitacion in [0,1, 2, 3, 4, 5]
                                                 option(value=habitacion selected=propiedad.habitaciones >=0 ? propiedad.habitaciones == habitacion : false)= habitacion
+                                        - const habitacionesError = errores?.find(error => error.path === 'habitaciones');
+                                        if habitacionesError
+                                            p(class="text-red-500 text-sm")= habitacionesError.msg
                                 div(class="sm:col-span-3")
                                     label(for="wc" class="block text-sm font-medium text-gray-700") Baños
                                     div(class="mt-1")
@@ -99,6 +104,9 @@ block contenido
                                             option(value="") -- Seleccione --
                                             each wc in [0,1, 2, 3, 4, 5]
                                                 option(value=wc selected=propiedad.wc >=0 ? propiedad.wc == wc : false)= wc
+                                        - const wcError = errores?.find(error => error.path === 'wc');
+                                        if wcError
+                                            p(class="text-red-500 text-sm")= wcError.msg
                                 div(class="sm:col-span-3")
                                     label(for="estacionamiento" class="block text-sm font-medium text-gray-700") Estacionamientos
                                     div(class="mt-1")
@@ -106,7 +114,9 @@ block contenido
                                             option(value="") -- Seleccione --
                                             each estacionamiento in [0,1, 2, 3, 4, 5]
                                                 option(value=estacionamiento selected=propiedad.estacionamiento >=0 ? propiedad.estacionamiento == estacionamiento : false)= estacionamiento
-
+                                        - const estacionamientoError = errores?.find(error => error.path === 'estacionamiento');
+                                        if estacionamientoError
+                                            p(class="text-red-500 text-sm")= estacionamientoError.msg
                         // Ubicación
                         div(class="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white")
                             div(class="flex items-center space-x-3")
@@ -142,7 +152,9 @@ block contenido
                             label(for="descripcion" class="block text-sm font-medium text-gray-700") Descripción
                             div(class="mt-1")
                                 textarea(name="descripcion" id="descripcion" rows="4" required class="block w-full border-0 border-b-2 border-gray-300 focus:ring-0 focus:border-blue-500 px-0 py-2 text-gray-900 placeholder-gray-400 transition-colors duration-200")= propiedad.descripcion? propiedad.descripcion : ''
-
+                                - const descripcionError = errores?.find(error => error.path === 'descripcion');
+                                if descripcionError
+                                    p(class="text-red-500 text-sm")= descripcionError.msg
                         // Usuario
                         div(class="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white")
                             div(class="flex items-center space-x-3")

@@ -45,7 +45,9 @@ const obtenerPropiedadesFiltradas = async (req, res) => {
     const { estado, categoria, habitaciones, wc, estacionamiento, buscar } = req.query
     
     // Construir el objeto where
-    const where = {}
+    const where = {
+        usuarioId: id // Agregar el usuarioId desde el inicio
+    }
     
     // Filtro por estado (publicado/no publicado)
     if (estado !== undefined && estado !== '') {
@@ -91,10 +93,7 @@ const obtenerPropiedadesFiltradas = async (req, res) => {
     
     try {
         const propiedades = await Propiedad.findAll({
-            where,
-            where : {
-                usuarioId : id
-            },
+            where, // Usar el objeto where que ya incluye usuarioId y todos los filtros
             include: [
                 {
                     model: Categoria,

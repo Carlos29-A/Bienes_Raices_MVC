@@ -553,13 +553,20 @@ const responderMensajePost = async (req, res) => {
         })
     }
     const ruta = remitente.tipo.toString() === '1' ? '/mensajes/obtener/vendedor' : '/mensajes/obtener/comprador'
+    
+    // Marcar el mensaje original como leído
+    await mensaje.update({
+        leido: true
+    })
+
     // Crear la respuesta
     const respuesta = await Mensaje.create({
         mensaje : req.body.respuesta,
         remitenteId : id,
         destinatarioId : mensaje.remitenteId,
         propiedadId : mensaje.propiedadId,
-        respuestaId : mensaje.id
+        respuestaId : mensaje.id,
+        leido: false // La respuesta inicia como no leída para el destinatario
     })
     //Enviar mensaje de exito
     req.flash('mensajeFlash', 'Mensaje respondido correctamente')
