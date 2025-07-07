@@ -1,9 +1,9 @@
 //- Contenedor principal del chatbot
-div(class="fixed bottom-4 right-4 z-50")
+div(class="fixed bottom-4 right-4 z-[9999]")
     //- Botón principal para abrir/cerrar el chat
     button(
         id="toggleChat"
-        class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 transform hover:scale-110 flex items-center justify-center w-14 h-14"
+        class="bg-[#FF6819] hover:bg-[#FF6819] text-white rounded-full p-4 shadow-lg transition-all duration-300 transform hover:scale-110 flex items-center justify-center w-14 h-14"
         title="Abrir chat"
         aria-label="Abrir chat con asistente virtual"
     )
@@ -12,13 +12,13 @@ div(class="fixed bottom-4 right-4 z-50")
     //- Ventana principal del chat
     div(
         id="chatWindow"
-        class="hidden fixed bottom-20 right-4 bg-white rounded-xl shadow-2xl transition-all duration-300 transform w-[380px]"
+        class="hidden fixed bottom-4 right-20 bg-[#FF6819] text-white rounded-xl shadow-2xl transition-all duration-300 transform -translate-x-[20px] w-[380px] z-[9999]"
         role="dialog"
         aria-labelledby="chatTitle"
     )
         //- Encabezado del chat
         header(
-            class="bg-indigo-600 text-white p-4 rounded-t-xl flex justify-between items-center"
+            class="bg-[#FF6819] text-white p-4 rounded-t-xl flex justify-between items-center"
             role="banner"
         )
             //- Información del asistente
@@ -28,7 +28,7 @@ div(class="fixed bottom-4 right-4 z-50")
                     class="bg-white rounded-full p-2 flex items-center justify-center"
                     aria-hidden="true"
                 )
-                    i(class="fas fa-robot text-indigo-600 text-xl")
+                    i(class="fas fa-robot text-[#FF6819] text-xl")
                 
                 //- Título y estado
                 div(class="flex flex-col")
@@ -68,7 +68,7 @@ div(class="fixed bottom-4 right-4 z-50")
                     class="bg-white rounded-full p-2 flex items-center justify-center"
                     aria-hidden="true"
                 )
-                    i(class="fas fa-robot text-indigo-600 text-sm")
+                    i(class="fas fa-robot text-[#FF6819] text-sm")
                 
                 //- Contenido del mensaje
                 div(
@@ -114,7 +114,7 @@ div(class="fixed bottom-4 right-4 z-50")
                 button(
                     id="enviar"
                     type="submit"
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl p-3 transition-colors duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed h-[44px] w-[44px]"
+                    class="bg-[#FF6819] hover:bg-[#FF6819] text-white rounded-xl p-3 transition-colors duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed h-[44px] w-[44px]"
                     aria-label="Enviar mensaje"
                 )
                     i(class="fas fa-paper-plane" aria-hidden="true")

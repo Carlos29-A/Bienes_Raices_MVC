@@ -1,10 +1,7 @@
-// Importamos las librerias
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { generateText, generateObject, streamText } from "ai";
+import { streamText } from "ai";
 
-// Función para inicializar el chatbot
 function initializeChatbot() {
-    // Verificar si tenemos la clave API
     if (!window.OPENROUTER_API_KEY) {
         console.error('Error: OPENROUTER_API_KEY no está configurada.');
         return;
@@ -14,9 +11,7 @@ function initializeChatbot() {
         apiKey: window.OPENROUTER_API_KEY
     });
 
-    // Contexto base del sistema
-    const SYSTEM_CONTEXT = `
-    Soy un asistente virtual especializado en el sistema de Bienes Raíces. Te ayudaré a entender cómo funciona cada parte del sistema:
+    const SYSTEM_CONTEXT = ` Soy un asistente virtual especializado en el sistema de Bienes Raíces. Te ayudaré a entender cómo funciona cada parte del sistema:
 
     📌 TIPOS DE USUARIOS Y FUNCIONES:
 
@@ -102,9 +97,8 @@ function initializeChatbot() {
     - Detalles de cada tipo de usuario
     - Procesos del sistema
     - Funcionalidades disponibles
-    `;
+`; // Tu contexto original aquí
 
-    // Elementos del DOM
     const toggleChat = document.querySelector('#toggleChat');
     const minimizeChat = document.querySelector('#minimizeChat');
     const chatWindow = document.querySelector('#chatWindow');
@@ -113,39 +107,36 @@ function initializeChatbot() {
     const enviarBtn = document.querySelector('#enviar');
     const respuestaContainer = document.querySelector('#respuesta');
 
-    // Función para ajustar la altura del textarea
     function adjustTextareaHeight() {
         mensajeInput.style.height = 'auto';
-        mensajeInput.style.height = (mensajeInput.scrollHeight) + 'px';
+        mensajeInput.style.height = `${mensajeInput.scrollHeight}px`;
     }
 
-    // Función para crear un elemento de mensaje
     function createMessageElement(text, isUser = false) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `flex items-start gap-2 animate-fade-in ${isUser ? 'flex-row-reverse' : ''}`;
-        
+
         const iconContainer = document.createElement('div');
         iconContainer.className = 'bg-white rounded-full p-2 flex items-center justify-center';
-        
+
         const icon = document.createElement('i');
-        icon.className = isUser ? 'fas fa-user text-indigo-600 text-sm' : 'fas fa-robot text-indigo-600 text-sm';
-        
+        icon.className = isUser ? 'fas fa-user text-[#FF6819] text-sm' : 'fas fa-robot text-[#FF6819] text-sm';
+
         const messageContent = document.createElement('div');
-        messageContent.className = `rounded-lg p-3 shadow-sm ${isUser ? 'bg-indigo-600 text-white' : 'bg-white text-gray-800'} ${isUser ? 'ml-auto' : ''} max-w-[80%]`;
-        
+        messageContent.className = `rounded-lg p-3 shadow-sm ${isUser ? 'bg-[#FF6819] text-white' : 'bg-white text-gray-800'} ${isUser ? 'ml-auto' : ''} max-w-[80%]`;
+
         const messageText = document.createElement('p');
-        messageText.className = 'whitespace-pre-wrap'; // Preservar saltos de línea
+        messageText.className = 'whitespace-pre-wrap';
         messageText.innerHTML = isUser ? text : formatMessage(text);
-        
+
         iconContainer.appendChild(icon);
         messageContent.appendChild(messageText);
         messageDiv.appendChild(iconContainer);
         messageDiv.appendChild(messageContent);
-        
+
         return messageDiv;
     }
 
-    // Función para formatear el texto con emojis y estilos
     function formatMessage(text) {
         return text
             .replace(/VISITANTE/g, '👤 VISITANTE')
@@ -155,22 +146,23 @@ function initializeChatbot() {
             .replace(/REGISTRO:/g, '📝 REGISTRO:')
             .replace(/FUNCIONES:/g, '🔑 FUNCIONES:')
             .replace(/PASOS:/g, '📋 PASOS:')
-            .replace(/\n-/g, '\n• ') // Convertir guiones en bullets
-            .replace(/\n\d\./g, match => `\n${match.replace('.', ')')}`) // Convertir números en formato de lista
+            .replace(/\n-/g, '\n• ')
+            .replace(/\n\d\./g, match => `\n${match.replace('.', ')')}`)
             .trim();
     }
 
-    // Función para hacer scroll al último mensaje
     function scrollToBottom() {
         respuestaContainer.scrollTop = respuestaContainer.scrollHeight;
     }
 
-    // Event Listeners
     if (toggleChat) {
         toggleChat.addEventListener('click', () => {
             chatWindow.classList.toggle('hidden');
             if (!chatWindow.classList.contains('hidden')) {
+                chatWindow.style.right = '5rem';
                 mensajeInput.focus();
+            } else {
+                chatWindow.style.right = '-24rem';
             }
         });
     }
@@ -178,6 +170,7 @@ function initializeChatbot() {
     if (minimizeChat) {
         minimizeChat.addEventListener('click', () => {
             chatWindow.classList.add('hidden');
+            chatWindow.style.right = '-24rem';
         });
     }
 
@@ -191,82 +184,82 @@ function initializeChatbot() {
         });
     }
 
+    let ultimaPeticion = 0;
+
     if (formulario) {
         formulario.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            if (!window.OPENROUTER_API_KEY) {
+                alert('Error: Clave de API no disponible.');
+                return;
+            }
+
+            const ahora = Date.now();
+            if (ahora - ultimaPeticion < 2000) return; // 2 segundos entre envíos
+            ultimaPeticion = ahora;
+
+            const mensaje = mensajeInput.value.trim();
+            if (mensaje === '') return;
+
+            respuestaContainer.appendChild(createMessageElement(mensaje, true));
+            scrollToBottom();
+
+            mensajeInput.value = '';
+            adjustTextareaHeight();
+            enviarBtn.disabled = true;
+
+            const typingIndicator = createMessageElement('...', false);
+            respuestaContainer.appendChild(typingIndicator);
+            scrollToBottom();
+
+            const promptCompleto = `${SYSTEM_CONTEXT}\n\nPregunta del usuario: ${mensaje}\n\nPor favor, proporciona una respuesta detallada y específica basada en el sistema de Bienes Raíces:`;
+
             try {
-                if (!window.OPENROUTER_API_KEY) {
-                    throw new Error('OPENROUTER_API_KEY no está configurada.');
-                }
-
-                const mensaje = mensajeInput.value.trim();
-
-                if (mensaje === '') {
-                    return;
-                }
-
-                // Agregar mensaje del usuario
-                respuestaContainer.appendChild(createMessageElement(mensaje, true));
-                scrollToBottom();
-
-                // Limpiar input y ajustar altura
-                mensajeInput.value = '';
-                adjustTextareaHeight();
-                enviarBtn.disabled = true;
-
-                // Indicador de escritura
-                const typingIndicator = createMessageElement('...', false);
-                respuestaContainer.appendChild(typingIndicator);
-                scrollToBottom();
-
-                // Construir el prompt
-                const promptCompleto = `${SYSTEM_CONTEXT}\n\nPregunta del usuario: ${mensaje}\n\nPor favor, proporciona una respuesta detallada y específica basada en el sistema de Bienes Raíces:`;
-
-                const resultado = streamText({
+                const resultado = await streamText({
                     model: openRouter('google/gemini-2.0-flash-exp:free'),
                     prompt: promptCompleto,
                     temperature: 0.7,
                     max_tokens: 1000,
                 });
 
-                // Preparar para la nueva respuesta
                 let respuestaCompleta = '';
 
-                // Procesar la respuesta
                 for await (const text of resultado.textStream) {
                     respuestaCompleta += text;
                     typingIndicator.querySelector('p').textContent = respuestaCompleta;
                     scrollToBottom();
                 }
 
-                // Reemplazar el indicador de escritura con la respuesta final
                 typingIndicator.replaceWith(createMessageElement(respuestaCompleta, false));
                 scrollToBottom();
-
-                enviarBtn.disabled = false;
-                mensajeInput.focus();
-
             } catch (error) {
                 console.error('Error al procesar el mensaje:', error);
-                alert('Hubo un error al procesar tu mensaje. Por favor, intenta de nuevo.');
+
+                if (error.response?.status === 429) {
+                    alert('⚠️ Límite de uso alcanzado. Intenta de nuevo más tarde.');
+                } else {
+                    alert('❌ Ocurrió un error. Intenta de nuevo.');
+                }
+
+                typingIndicator.remove();
+            } finally {
                 enviarBtn.disabled = false;
+                mensajeInput.focus();
             }
         });
     }
 }
 
-// Esperar a que el DOM esté cargado y la API key esté disponible
+// Esperar a que el DOM esté cargado y la API key esté lista
 document.addEventListener('DOMContentLoaded', () => {
-    // Intentar inicializar cada 100ms hasta que la API key esté disponible
     const initInterval = setInterval(() => {
         if (window.OPENROUTER_API_KEY) {
             clearInterval(initInterval);
             initializeChatbot();
         }
-    }, 100);
+    }, 500); // Menos agresivo
 
-    // Timeout después de 5 segundos para evitar bucle infinito
     setTimeout(() => {
         clearInterval(initInterval);
         if (!window.OPENROUTER_API_KEY) {
