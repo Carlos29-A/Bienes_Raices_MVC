@@ -22,6 +22,7 @@ dotenv.config({ path: '.env' })
 // Verificar la carga de variables de entorno
 console.log('Verificando variables de entorno:')
 console.log('OPENROUTER_API_KEY:', process.env.OPENROUTER_API_KEY ? 'Configurada' : 'No configurada')
+console.log(process.env.OPENROUTER_API_KEY)
 console.log('PORT:', process.env.PORT || 3000)
 
 // Configuración de la aplicación

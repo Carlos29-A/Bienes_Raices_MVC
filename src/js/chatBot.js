@@ -128,10 +128,10 @@ function initializeChatbot() {
         iconContainer.className = 'bg-white rounded-full p-2 flex items-center justify-center';
         
         const icon = document.createElement('i');
-        icon.className = isUser ? 'fas fa-user text-indigo-600 text-sm' : 'fas fa-robot text-indigo-600 text-sm';
+        icon.className = isUser ? 'fas fa-user text-[#FF6819] text-sm' : 'fas fa-robot text-[#FF6819] text-sm';
         
         const messageContent = document.createElement('div');
-        messageContent.className = `rounded-lg p-3 shadow-sm ${isUser ? 'bg-indigo-600 text-white' : 'bg-white text-gray-800'} ${isUser ? 'ml-auto' : ''} max-w-[80%]`;
+        messageContent.className = `rounded-lg p-3 shadow-sm ${isUser ? 'bg-[#FF6819] text-white' : 'bg-white text-gray-800'} ${isUser ? 'ml-auto' : ''} max-w-[80%]`;
         
         const messageText = document.createElement('p');
         messageText.className = 'whitespace-pre-wrap'; // Preservar saltos de línea
