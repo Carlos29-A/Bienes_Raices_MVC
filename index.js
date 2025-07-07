@@ -21,8 +21,8 @@ dotenv.config({ path: '.env' })
 
 // Verificar la carga de variables de entorno
 console.log('Verificando variables de entorno:')
-console.log('OPENROUTER_API_KEY:', process.env.OPENROUTER_API_KEY ? 'Configurada' : 'No configurada')
-console.log('OPENROUTER_API_KEY:', process.env.OPENROUTER_API_KEY)
+console.log('GEMINI_API_KEY:', process.env.GEMINI_API_KEY ? 'Configurada' : 'No configurada')
+console.log('GEMINI_API_KEY:', process.env.GEMINI_API_KEY)
 console.log('PORT:', process.env.PORT || 3000)
 
 // Configuración de la aplicación
@@ -60,7 +60,7 @@ app.use((req, res, next) => {
     res.locals.mensajesFlash = req.flash('mensajeFlash')
     res.locals.tipoFlash = req.flash('tipoFlash')[0]
     res.locals.csrfToken = req.csrfToken() // Hacer disponible el token CSRF globalmente
-    res.locals.openrouterKey = process.env.OPENROUTER_API_KEY || '' // Hacer disponible la clave API globalmente
+    res.locals.geminiKey = process.env.GEMINI_API_KEY || '' // Hacer disponible la clave API globalmente
     next()
 })
 

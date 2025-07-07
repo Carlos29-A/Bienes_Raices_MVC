@@ -1,103 +1,114 @@
-import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { streamText } from "ai";
+import { GoogleGenAI } from "@google/genai";
 
 function initializeChatbot() {
-    if (!window.OPENROUTER_API_KEY) {
-        console.error('Error: OPENROUTER_API_KEY no está configurada.');
+    if (!window.GEMINI_API_KEY) {
+        console.error('Error: GEMINI_API_KEY no está configurada.');
         return;
     }
 
-    const openRouter = createOpenRouter({
-        apiKey: window.OPENROUTER_API_KEY
+    const ai = new GoogleGenAI({
+        apiKey: window.GEMINI_API_KEY
     });
 
-    const SYSTEM_CONTEXT = ` Soy un asistente virtual especializado en el sistema de Bienes Raíces. Te ayudaré a entender cómo funciona cada parte del sistema:
+    const SYSTEM_CONTEXT = `Soy un asistente virtual especializado en el sistema de Bienes Raíces. Te ayudo a entender cómo funciona cada parte del sistema.
 
-    📌 TIPOS DE USUARIOS Y FUNCIONES:
+INSTRUCCIONES IMPORTANTES:
+- Responde de forma CONCISA y DIRECTA
+- NO uses negritas, cursivas, subrayados ni formato markdown
+- Solo usa texto plano e iconos emoji
+- Responde en máximo 3 a 6  líneas
+- Solo menciona funcionalidades que están en este contexto
+- NO inventes funcionalidades que no estén listadas aquí
 
-    👤 USUARIO PÚBLICO
-    - Ver listado de propiedades
-    - Usar filtros de búsqueda
-    - Ver detalles de propiedades
-    - Registrarse como comprador o vendedor
+SISTEMA DE BIENES RAÍCES - FUNCIONALIDADES PRINCIPALES:
 
-    Proceso de Registro:
-    1. Clic en "Crear Cuenta"
-    2. Elegir tipo: Comprador o Vendedor
-    3. Completar datos personales
-    4. Verificar email
-    5. [Vendedor] Esperar aprobación
+TIPOS DE USUARIOS:
 
-    🏠 COMPRADOR
-    Acceso:
-    1. Registrarse como comprador
-    2. Confirmar email
-    3. Iniciar sesión
+USUARIO PÚBLICO (Sin registro):
+- Ver listado de propiedades disponibles
+- Usar filtros de búsqueda (ubicación, habitaciones, baños, estacionamiento, precio)
+- Ver detalles completos de propiedades
+- Ver perfil de vendedores
+- Registrarse como comprador o vendedor
+- Contactar vendedores (redirige a login)
 
-    Funciones:
-    - Guardar y gestionar favoritos
-    - Enviar mensajes a vendedores
-    - Calificar propiedades visitadas
-    - Usar búsqueda avanzada
-    - Ver historial de mensajes
-    - Recibir notificaciones
+COMPRADOR (Tipo 2):
+- Acceso: Registro + confirmación email + login
+- Funciones principales:
+  * Guardar propiedades en favoritos (corazón)
+  * Gestionar lista de favoritos con filtros
+  * Enviar mensajes a vendedores sobre propiedades
+  * Recibir y responder mensajes de vendedores
+  * Calificar vendedores (1-5 estrellas + comentarios)
+  * Editar y eliminar sus calificaciones
+  * Buscar propiedades con filtros avanzados
+  * Ver historial de mensajes enviados
+  * Ver perfil con estadísticas y calificaciones de los vendedores
+  * Acceder a mapa interactivo de propiedades
 
-    💼 VENDEDOR
-    Acceso:
-    1. Registrarse como vendedor
-    2. Confirmar email
-    3. Esperar aprobación admin
-    4. Iniciar sesión
+VENDEDOR (Tipo 1):
+- Acceso: Registro + confirmación email + login
+- Funciones principales:
+  * Publicar propiedades (título, precio, descripción, características)
+  * Subir una imagen por propiedad
+  * Gestionar publicaciones (activar/desactivar)
+  * Editar información de propiedades
+  * Eliminar propiedades
+  * Recibir mensajes de compradores
+  * Responder mensajes
+  * Gestionar información personal
 
-    Funciones:
-    - Publicar propiedades
-    - Gestionar publicaciones
-    - Subir y organizar imágenes
-    - Responder mensajes
-    - Ver estadísticas
-    - Gestionar perfil
+ADMINISTRADOR (Tipo 3):
+- Acceso: Credenciales especiales
+- Funciones principales:
+  * Panel de control con estadísticas
+  * Gestionar usuarios (crear, editar, eliminar)
+  * Gestionar propiedades (crear, editar, eliminar)
+  * Gestionar categorías (crear, editar, eliminar)
+  * Supervisar mensajes entre usuarios
+  * Ver estadísticas del sistema
 
-    👨‍💼 ADMINISTRADOR
-    Acceso:
-    - Credenciales especiales de administrador
+FUNCIONALIDADES ESPECÍFICAS:
 
-    Funciones:
-    - Aprobar vendedores
-    - Moderar propiedades
-    - Gestionar categorías
-    - Supervisar mensajes
-    - Ver estadísticas
-    - Gestionar usuarios
+BÚSQUEDA Y FILTROS DE PROPIEDADES:
+- Filtros por: ubicación, categoría, habitaciones, baños, estacionamiento, precio
+- Búsqueda por texto en título
+- Vista de mapa interactivo con propiedades
+- Resultados en tiempo real
 
-    🔄 PROCESOS PRINCIPALES:
+SISTEMA DE MENSAJES:
+- Compradores envían mensajes a vendedores sobre propiedades
+- Vendedores pueden responder mensajes
+- Historial de conversaciones
+- Marcado de mensajes leídos/no leídos
+- Edición y eliminación de mensajes propios
 
-    📝 PUBLICAR PROPIEDAD:
-    1. Iniciar sesión como vendedor
-    2. Ir a "Publicar Propiedad"
-    3. Completar información
-    4. Subir imágenes
-    5. Esperar aprobación
+SISTEMA DE FAVORITOS:
+- Compradores guardan propiedades en favoritos
+- Gestión de lista de favoritos
+- Filtros en favoritos
+- Indicador visual (corazón rojo/gris)
 
-    💬 CONTACTAR VENDEDOR:
-    1. Ver detalle de propiedad
-    2. Clic en "Contactar"
-    3. Escribir mensaje
-    4. Esperar respuesta
-    5. Chat activo
+SISTEMA DE CALIFICACIONES:
+- Compradores califican vendedores (1-5 estrellas)
+- Comentarios asociados a calificaciones
+- Edición y eliminación de calificaciones propias
+- Promedio de calificaciones en perfil de vendedor
 
-    ⭐ CALIFICAR PROPIEDAD:
-    1. Visitar propiedad
-    2. Ir a "Calificar"
-    3. Asignar puntuación
-    4. Dejar comentario
-    5. Enviar calificación
+GESTIÓN DE PROPIEDADES:
+- Información completa: título, precio, descripción, ubicación, habitaciones, baños, estacionamiento
+- Una imagen por propiedad
+- Estados: activa/inactiva
+- Categorización por tipo de propiedad (casa, departamento, terreno, etc.)
 
-    ❓ ¿En qué puedo ayudarte? Puedes preguntarme sobre:
-    - Cómo realizar acciones específicas
-    - Detalles de cada tipo de usuario
-    - Procesos del sistema
-    - Funcionalidades disponibles
-`; // Tu contexto original aquí
+INTERFAZ Y ACCESIBILIDAD:
+- Diseño responsive con colores naranja (#FF6819)
+- Chatbot integrado para ayuda
+- Sistema de audio para comandos de voz
+- Iconos de accesibilidad
+- Notificaciones flash para acciones
+
+¿En qué puedo ayudarte específicamente? Puedo explicarte procesos, funcionalidades, o guiarte en el uso del sistema.`;
 
     const toggleChat = document.querySelector('#toggleChat');
     const minimizeChat = document.querySelector('#minimizeChat');
@@ -190,7 +201,7 @@ function initializeChatbot() {
         formulario.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            if (!window.OPENROUTER_API_KEY) {
+            if (!window.GEMINI_API_KEY) {
                 alert('Error: Clave de API no disponible.');
                 return;
             }
@@ -216,21 +227,16 @@ function initializeChatbot() {
             const promptCompleto = `${SYSTEM_CONTEXT}\n\nPregunta del usuario: ${mensaje}\n\nPor favor, proporciona una respuesta detallada y específica basada en el sistema de Bienes Raíces:`;
 
             try {
-                const resultado = await streamText({
-                    model: openRouter('google/gemini-2.0-flash-exp:free'),
-                    prompt: promptCompleto,
-                    temperature: 0.7,
-                    max_tokens: 1000,
+                const response = await ai.models.generateContent({
+                    model: "gemini-2.0-flash-exp",
+                    contents: promptCompleto,
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 1000,
+                    }
                 });
 
-                let respuestaCompleta = '';
-
-                for await (const text of resultado.textStream) {
-                    respuestaCompleta += text;
-                    typingIndicator.querySelector('p').textContent = respuestaCompleta;
-                    scrollToBottom();
-                }
-
+                const respuestaCompleta = response.text;
                 typingIndicator.replaceWith(createMessageElement(respuestaCompleta, false));
                 scrollToBottom();
             } catch (error) {
@@ -254,7 +260,7 @@ function initializeChatbot() {
 // Esperar a que el DOM esté cargado y la API key esté lista
 document.addEventListener('DOMContentLoaded', () => {
     const initInterval = setInterval(() => {
-        if (window.OPENROUTER_API_KEY) {
+        if (window.GEMINI_API_KEY) {
             clearInterval(initInterval);
             initializeChatbot();
         }
@@ -262,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
         clearInterval(initInterval);
-        if (!window.OPENROUTER_API_KEY) {
+        if (!window.GEMINI_API_KEY) {
             console.error('Error: No se pudo inicializar el chatbot después de 5 segundos.');
         }
     }, 5000);

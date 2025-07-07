@@ -27,12 +27,12 @@ html(lang="es")
         //- Configuración del chatbot
         script.
             // Establecer la API key como una propiedad del objeto window
-            Object.defineProperty(window, 'OPENROUTER_API_KEY', {
-                value: !{JSON.stringify(openrouterKey || '')},
+            Object.defineProperty(window, 'GEMINI_API_KEY', {
+                value: !{JSON.stringify(geminiKey || '')},
                 writable: false,
                 configurable: false
             });
-            console.log('OPENROUTER_API_KEY desde el layout:', window.OPENROUTER_API_KEY)
+            console.log('GEMINI_API_KEY desde el layout:', window.GEMINI_API_KEY)
         
         script(src="/js/chatBot.js")
         
