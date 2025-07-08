@@ -109,6 +109,13 @@ app.use('/api', apiRoute)
 app.use('/comentario-calificacion', comentarioCalificacionRouter)
 app.use('/', publicoRoute)
 
+// Middleware para mostrar una pagina 404
+app.use((req, res, next) => {
+    res.render('error/404', {
+        pagina: 'Pagina no encontrada'
+    })
+})
+
 // Puerto
 const port = process.env.PORT || 3000
 app.listen(port, () => {

@@ -97,3 +97,7 @@
         transform: scale(1.0);
     }
 }
+
+.leaflet-container a{
+    color: #FFF !important;
+}

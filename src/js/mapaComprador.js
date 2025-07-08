@@ -85,7 +85,7 @@
                     ${propiedad.wc} baños
                    </p>
                  </div>
-                 <a href="/propiedades/${propiedad.id}" class="text-white mt-2 block bg-yellow-500 p-2 text-center hover:bg-yellow-600 transition-colors transition-all rounded-md">Ver Propiedad</a>
+                 <a href="/propiedades/${propiedad.id}" class="text-white mt-2 block bg-yellow-500 p-2 text-center hover:bg-yellow-600 transition-colors transition-all rounded-md font-bold">Ver Propiedad</a>
                  `
                  
                  
